@@ -1,0 +1,32 @@
+<rdf:RDF
+    xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+    xmlns:j.0="http://www.example.org#"
+    xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#">
+  <rdf:Description rdf:about="http://www.example.org#Fish">
+    <j.0:affraidOf>
+      <rdf:Description rdf:about="http://www.example.org#Whale">
+        <j.0:eates rdf:resource="http://www.example.org#Fish"/>
+        <j.0:livesIn rdf:resource="http://www.example.org#Water"/>
+        <rdfs:subClassOf>
+          <rdf:Description rdf:about="http://www.example.org#Mammal">
+            <j.0:has rdf:resource="http://www.example.org#Vertebra"/>
+            <rdfs:subClassOf rdf:resource="http://www.example.org#Animal"/>
+          </rdf:Description>
+        </rdfs:subClassOf>
+      </rdf:Description>
+    </j.0:affraidOf>
+    <j.0:livesIn rdf:resource="http://www.example.org#Water"/>
+    <rdfs:subClassOf rdf:resource="http://www.example.org#Animal"/>
+  </rdf:Description>
+  <rdf:Description rdf:about="http://www.example.org#Bear">
+    <j.0:eates>
+      <rdf:Description rdf:about="http://www.example.org#Cat">
+        <j.0:affraidOf rdf:resource="http://www.example.org#Bear"/>
+        <j.0:has rdf:resource="http://www.example.org#Fur"/>
+        <rdfs:subClassOf rdf:resource="http://www.example.org#Mammal"/>
+      </rdf:Description>
+    </j.0:eates>
+    <j.0:has rdf:resource="http://www.example.org#Fur"/>
+    <rdfs:subClassOf rdf:resource="http://www.example.org#Mammal"/>
+  </rdf:Description>
+</rdf:RDF>
