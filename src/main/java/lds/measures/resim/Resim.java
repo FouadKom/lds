@@ -49,8 +49,7 @@ public class Resim extends LdSimilarityMeasureBase {
 		this.resimLDLoader = resimLDLoader;
 	}
 
-	public Resim(LdDataset dataset, G graph, Set<URI> edges) throws SLIB_Ex_Critic {// this constructor is added to be
-																					// used in tests classes
+	public Resim(LdDataset dataset, G graph, Set<URI> edges) throws SLIB_Ex_Critic {// this constructor is added to be used in tests classes
 		this.dataset = dataset;
 		this.graph = graph;
 		this.edges = edges;
@@ -107,10 +106,10 @@ public class Resim extends LdSimilarityMeasureBase {
 		double cdA_norm = 0, cdB_norm = 0, cii_norm = 0, cio_norm = 0;
 
 		for (URI l : edges) {
-			cdA_norm = cdA_norm + Cd_normalized(l, a.getUri(), b.getUri());
-			cdB_norm = cdB_norm + Cd_normalized(l, b.getUri(), a.getUri());
-			cii_norm = cii_norm + Cii_normalized(l, a.getUri(), b.getUri());
-			cio_norm = cio_norm + Cio_normalized(l, a.getUri(), b.getUri());
+			cdA_norm = cdA_norm + Cd_normalized(l, a, b);
+			cdB_norm = cdB_norm + Cd_normalized(l, b, a);
+			cii_norm = cii_norm + Cii_normalized(l, a , b);
+			cio_norm = cio_norm + Cio_normalized(l, a , b);
 
 		}
 
@@ -122,33 +121,37 @@ public class Resim extends LdSimilarityMeasureBase {
 	}
 
 	public int Cip(R a) {
-		Set<E> ingoing = graph.getE(a.getUri(), Direction.IN);
-		return ingoing.size();
+//		Set<E> ingoing = graph.getE(a.getUri(), Direction.IN); // count of ingoing edges to a
+//		return ingoing.size();
+                return resimLDLoader.countIngoingEdges(a , dataset);
 	}
 
 	public int Cop(R a) {
-		Set<E> outgoing = graph.getE(a.getUri(), Direction.OUT);
-		return outgoing.size();
+//		Set<E> outgoing = graph.getE(a.getUri(), Direction.OUT); // count of outgoing edges frm a 
+//		return outgoing.size();
+                return resimLDLoader.countOutgoingEdges(a , dataset);
 	}
 
 	public int Csip(URI l, R a, R b) {
-		Set<E> edgesA = graph.getE(l, a.getUri(), Direction.IN);
-		Set<E> edgesB = graph.getE(l, b.getUri(), Direction.IN);
-		if (edgesA.isEmpty() || edgesB.isEmpty())
-			return 0;
-		return 1;
+//		Set<E> edgesA = graph.getE(l, a.getUri(), Direction.IN); //count of ingoing edges of type l to a
+//		Set<E> edgesB = graph.getE(l, b.getUri(), Direction.IN); // count of ingoing edges of type l to b
+//		if (edgesA.isEmpty() || edgesB.isEmpty())
+//			return 0;
+//		return 1;
+                return (resimLDLoader.countIngoingEdges(l , a , dataset) * resimLDLoader.countIngoingEdges(l , b , dataset));
 	}
 
 	public int Csop(URI l, R a, R b) {
-		Set<E> edgesA = graph.getE(l, a.getUri(), Direction.OUT);
-		Set<E> edgesB = graph.getE(l, b.getUri(), Direction.OUT);
-		if (edgesA.isEmpty() || edgesB.isEmpty())
-			return 0;
-		return 1;
+//		Set<E> edgesA = graph.getE(l, a.getUri(), Direction.OUT); 
+//		Set<E> edgesB = graph.getE(l, b.getUri(), Direction.OUT); 
+//		if (edgesA.isEmpty() || edgesB.isEmpty())
+//			return 0;
+//		return 1;
+                return (resimLDLoader.countOutgoingEdges(l , a , dataset) * resimLDLoader.countOutgoingEdges(l , b , dataset));
 	}
 
-	public int Cd(URI l, URI a, URI b) {
-		Set<E> a_edgeOut = graph.getE(l, a, Direction.OUT);
+	public int Cd(URI l, R a, R b) {
+		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT); 
 
 		for (E e : a_edgeOut) {
 			if (e.getTarget().equals(b))
@@ -158,17 +161,18 @@ public class Resim extends LdSimilarityMeasureBase {
 		return 0;
 	}
 
-	public int Cd(URI l, URI a) {
-		Set<E> a_edgeOut = graph.getE(l, a, Direction.OUT);
-
-		return a_edgeOut.size();
+	public int Cd(URI l, R a) {
+//		Set<E> a_edgeOut = graph.getE(l, a, Direction.OUT);
+//
+//		return a_edgeOut.size();
+                return resimLDLoader.countOutgoingEdges(l , a , dataset);
 	}
 
 	public int Cd(URI l) {
 		return ResimLdManager.countPropertyOccurrence(l, dataset);
 	}
 
-	public double Cd_normalized(URI l, URI a, URI b) {
+	public double Cd_normalized(URI l, R a, R b) {
 		int cd = Cd(l, a, b);
 		double cd_norm;
 
@@ -180,25 +184,25 @@ public class Resim extends LdSimilarityMeasureBase {
 
 	}
 
-	public int Cii(URI l, URI a, URI b) {
+	public int Cii(URI l, R a, R b) {
 
-		Set<E> a_edgeIn = graph.getE(l, a, Direction.IN);
+		Set<E> a_edgeIn = graph.getE(l, a.getUri(), Direction.IN);
 		for (E e : a_edgeIn) {
 			URI x = e.getSource();
-			if (graph.containsEdge(x, e.getURI(), b))
+			if (graph.containsEdge(x, e.getURI(), b.getUri()))
 				return 1;
 		}
 		return 0;
 	}
 
-	public int Cii(URI l, URI a) {
+	public int Cii(URI l, R a) {
 
-		Set<E> a_edgeIn = graph.getE(l, a, Direction.IN);
+		Set<E> a_edgeIn = graph.getE(l, a.getUri(), Direction.IN);
 		int count = 0;
 		for (E e : a_edgeIn) {
 			URI x = e.getSource();
 			Set<E> x_edgeOut = graph.getE(l, x, Direction.OUT);
-			E edge = new Edge(x, l, a);
+			E edge = new Edge(x, l, a.getUri());
 			count = count + x_edgeOut.size();
 			if (x_edgeOut.contains(edge))
 				count--;
@@ -208,7 +212,7 @@ public class Resim extends LdSimilarityMeasureBase {
 		return count;
 	}
 
-	public double Cii_normalized(URI l, URI a, URI b) {
+	public double Cii_normalized(URI l, R a, R b) {
 
 		int ciiA, ciiB, cii;
 		double x, cii_norm;
@@ -224,26 +228,26 @@ public class Resim extends LdSimilarityMeasureBase {
 
 	}
 
-	public int Cio(URI l, URI a, URI b) {
+	public int Cio(URI l, R a, R b) {
 
-		Set<E> a_edgeOut = graph.getE(l, a, Direction.OUT);
+		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT);
 		for (E e : a_edgeOut) {
 			URI x = e.getTarget();
-			if (graph.containsEdge(b, e.getURI(), x))
+			if (graph.containsEdge(b.getUri(), e.getURI(), x))
 				return 1;
 		}
 
 		return 0;
 	}
 
-	public int Cio(URI l, URI a) {
+	public int Cio(URI l, R a) {
 
-		Set<E> a_edgeOut = graph.getE(l, a, Direction.OUT);
+		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT);
 		int count = 0;
 		for (E e : a_edgeOut) {
 			URI x = e.getTarget();
 			Set<E> x_edgeIn = graph.getE(l, x, Direction.IN);
-			E edge = new Edge(a, l, x);
+			E edge = new Edge(a.getUri() , l, x);
 			count = count + x_edgeIn.size();
 			if (x_edgeIn.contains(edge))
 				count--;
@@ -253,7 +257,7 @@ public class Resim extends LdSimilarityMeasureBase {
 		return count;
 	}
 
-	public double Cio_normalized(URI l, URI a, URI b) {
+	public double Cio_normalized(URI l, R a, R b) {
 
 		int cioA, cioB, cio;
 		double cio_norm, x;

@@ -1,5 +1,12 @@
-lds/measures/TestUtility.class
-lds/measures/LDSDTest.class
-lds/engine/EngineTest.class
-lds/graph/CreateFile.class
-lds/graph/GraphManagerTest.class
+lds\engine\EngineTest.class
+lds\measures\PICSSTest.class
+lds\benchmark\Benchmarking.class
+lds\LdManager\LdManagerTest.class
+lds\LdManager\Util.class
+lds\measures\ResimTest.class
+lds\measures\TestUtility.class
+lds\graph\GraphManagerTest.class
+lds\measures\LDSDTest.class
+lds\benchmark\B.class
+lds\graph\CreateFile.class
+lds\indexing\LdIndexerTest.class

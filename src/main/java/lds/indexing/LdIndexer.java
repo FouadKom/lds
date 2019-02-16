@@ -45,15 +45,22 @@ public class LdIndexer {
 		db.commit();
 
 	}
+             
 
 	// add one value, get by list
 	public void addValue(String key, String value) {
 
-		List<String> values = new ArrayList<String>();
+		List<String> values = new ArrayList();
 		values.add(value);
 
 		addList(key, values);
 	}
+        
+        public String getValue(String key){
+            List<String> values = getList(key);
+            return values.get(0);
+        }
+        
 
 	public List<String> getList(String key) {
 

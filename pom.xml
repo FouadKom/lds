@@ -11,8 +11,8 @@
 		<dependency>
 			<groupId>junit</groupId>
 			<artifactId>junit</artifactId>
-			<version>4.10</version>
-			<scope>test</scope>
+			<version>4.12</version>
+		 <type>jar</type>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.tinkerpop</groupId>
@@ -38,7 +38,7 @@
 			<artifactId>ldq</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-			<systemPath>/Users/nasredine/dev/ldq/target/ldq-0.0.1.jar</systemPath>
+			<systemPath>C:\Users\LENOVO\Documents\NetBeansProjects\ldq\target\ldq-0.0.1.jar</systemPath>
 		</dependency>
 
 		<dependency>
@@ -70,9 +70,22 @@
 
 	</dependencies>
 	<build>
+		
 		<plugins>
+                    <plugin>
+                        <groupId>org.apache.maven.plugins</groupId>
+                        <artifactId>maven-compiler-plugin</artifactId>
+                        <version>3.5.1</version>
+                        <configuration>
+                            <source>1.8</source>
+                            <target>1.8</target>
+                        </configuration>
+                    </plugin>
 
 
 		</plugins>
+
+
+		
 	</build>
 </project>
