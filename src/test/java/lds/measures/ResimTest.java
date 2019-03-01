@@ -9,6 +9,7 @@ import java.util.Set;
 import lds.graph.GraphManager;
 import lds.graph.LdResources;
 import lds.measures.resim.Resim;
+import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
@@ -32,7 +33,10 @@ public class ResimTest {
 		LdDataset dataSet = null;
 		URIFactory factory = URIFactoryMemory.getSingleton();
 		G graph = new GraphManager().generateGraph("http://graphResim/dataset");
-		URI r1 = factory.getURI("http://www.example.org#Fish"), r2 = factory.getURI("http://www.example.org#Whale");
+//		URI r1 = factory.getURI("http://www.example.org#Fish"), r2 = factory.getURI("http://www.example.org#Whale");
+                R r1 = new R("http://www.example.org#Fish");
+                R r2 = new R("http://www.example.org#Whale");
+                
 		LdResources resources = new LdResources();
 
 		try {
@@ -52,10 +56,15 @@ public class ResimTest {
 			// R.getInOutResources(graph, fish, 2, dataSet);
 			// R.getInOutResources(graph, whale, 2, dataSet);
 
-			resources.addIngoingResources(graph, r1.toString(), 2, dataSet);
+			/*resources.addIngoingResources(graph, r1.toString(), 2, dataSet);
 			resources.addOutgoingResources(graph, r1.toString(), 2, dataSet);
 			resources.addIngoingResources(graph, r2.toString(), 2, dataSet);
-			resources.addOutgoingResources(graph, r2.toString(), 2, dataSet);
+			resources.addOutgoingResources(graph, r2.toString(), 2, dataSet);*/
+                        
+                        resources.addIngoingResources(graph, r1.getUri().toString() ,  2, dataSet);
+			resources.addOutgoingResources(graph, r1.getUri().toString(), 2, dataSet);
+			resources.addIngoingResources(graph, r2.getUri().toString(), 2, dataSet);
+			resources.addOutgoingResources(graph, r2.getUri().toString(), 2, dataSet);
 
 		} catch (Exception e) {
 			fail(e.getMessage());
@@ -72,7 +81,7 @@ public class ResimTest {
 
 		for (URI edge : edges) {
 			cii = cii + resim.Cii(edge, r1, r2);
-			cio = cio + resim.Cio(edge, r1, r2);
+			cio = cio + resim.Cio(edge, r1 , r2 );
 			cii_r1 = cii_r1 + resim.Cii(edge, r1);
 			cio_r1 = cio_r1 + resim.Cio(edge, r1);
 			cii_r2 = cii_r2 + resim.Cii(edge, r2);

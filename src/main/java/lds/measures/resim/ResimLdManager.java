@@ -5,6 +5,7 @@
  */
 package lds.measures.resim;
 
+import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -31,7 +32,16 @@ public class ResimLdManager extends LdManagerBase {
 	
 	// TODO: specify an index directory
 	String sameAsIndexFile = "resim_sameAs_index.db";
+        String ingoingEdgesIndexFile = "resim_ingoingEdges_index.db";
+        String outgoingEdgesIndexFile = "resim_outgoingEdges_index.db";
+        String ingoingTypedEdgesIndexFile = "resim_ingoingTypedEdges_index.db";
+        String outgoingTypedEdgesIndexFile = "resim_outgoingTypedEdges_index.db";
+        
 	public LdIndexer sameAsIndex;
+        public LdIndexer ingoingEdgesIndex;
+        public LdIndexer outgoingEdgesIndex;
+        public LdIndexer ingoingTypedEdgesIndex;
+        public LdIndexer outgoingTypedEdgesIndex;
 
 	public ResimLdManager(LdDataset dataset, Conf config) {
 		super(dataset, config);
@@ -41,6 +51,11 @@ public class ResimLdManager extends LdManagerBase {
 
 	private void loadIndexes() {
 		sameAsIndex = new LdIndexer(sameAsIndexFile);
+                ingoingEdgesIndex = new LdIndexer(ingoingEdgesIndexFile);
+                outgoingEdgesIndex = new LdIndexer(outgoingEdgesIndexFile);
+                ingoingTypedEdgesIndex = new LdIndexer(ingoingTypedEdgesIndexFile);
+                outgoingTypedEdgesIndex = new LdIndexer(outgoingTypedEdgesIndexFile);
+                
 	}
 
 	// public static int getCountOutgoing(URI a , LdDataset dataset){
@@ -93,7 +108,7 @@ public class ResimLdManager extends LdManagerBase {
 
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-		query_cmd.setCommandText("select ?property where {" + "?subject ?property ?object. }");
+		query_cmd.setCommandText("select ?property where {?subject ?property ?object. }");
 
 		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
@@ -106,11 +121,115 @@ public class ResimLdManager extends LdManagerBase {
 		return edges;
 
 	}
+        
+        @Override
+        public int countIngoingEdges(URI link , R a , LdDataset dataset) {
+		      
+                if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    
+                    String ingoingEdges_a = ingoingTypedEdgesIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());
+
+                    if(ingoingEdges_a != null){
+                        return Integer.parseInt(ingoingEdges_a);
+
+                    }
+                    else
+                    {
+                        ingoingTypedEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countIngoingEdges(link , a, dataset)));
+
+                        return Integer.parseInt(ingoingTypedEdgesIndex.getValue(a.getUri().stringValue()));
+                    }                      
+
+                }
+                
+            return super.countIngoingEdges(link , a, dataset);
+	}
+        
+        @Override
+        public int countIngoingEdges(R a , LdDataset dataset) {
+		      
+                if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    
+                    String ingoingEdges_a = ingoingEdgesIndex.getValue(a.getUri().stringValue());
+
+                    if(ingoingEdges_a != null){
+                        return Integer.parseInt(ingoingEdges_a);
+
+                    }
+                    else
+                    {
+                        ingoingEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countIngoingEdges(a, dataset)));
+
+                        return Integer.parseInt(ingoingEdgesIndex.getValue(a.getUri().stringValue()));
+                    }                      
+
+                }
+                
+            return super.countOutgoingEdges(a, dataset);
+	}
+        
+        
+        @Override
+        public int countOutgoingEdges(URI link , R a , LdDataset dataset) {
+                
+                if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    String outgoingEdges_a = outgoingTypedEdgesIndex.getValue(a.getUri().stringValue() + ":" + link.stringValue());
+                    
+                    if(outgoingEdges_a != null){
+                        return Integer.parseInt(outgoingEdges_a);
+                        
+                    }
+                    else
+                    {
+                        
+                        outgoingTypedEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countOutgoingEdges(link , a, dataset)));
+                        
+                        return Integer.parseInt(outgoingTypedEdgesIndex.getValue(a.getUri().stringValue()));
+                        
+                    }
+                }
+                
+            return super.countOutgoingEdges(link , a, dataset);
+	}
+        
+        
+        @Override
+        public int countOutgoingEdges(R a , LdDataset dataset) {
+                
+                if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    String outgoingEdges_a = outgoingEdgesIndex.getValue(a.getUri().stringValue());
+                    
+                    if(outgoingEdges_a != null){
+                        return Integer.parseInt(outgoingEdges_a);
+                        
+                    }
+                    else
+                    {
+                        
+                        outgoingEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countOutgoingEdges( a, dataset)));
+                        
+                        return Integer.parseInt(outgoingEdgesIndex.getValue(a.getUri().stringValue()));
+                        
+                    }
+                }
+                
+            return super.countOutgoingEdges(a, dataset);
+	}
+        
+        
 
 	/**
 	 * NEW methods based on index ----------------
+     * @param a
+     * @param b
+     * @return 
 	 */
 
+        @Override
 	public boolean isSameAs(R a, R b) {
 
 		if (this.config.getParam("useIndexes").equals(true)) {
@@ -141,5 +260,5 @@ public class ResimLdManager extends LdManagerBase {
 		}
 		return super.getSameAsResoures(a).contains(b.getUri().stringValue());
 	}
-
+       
 }
