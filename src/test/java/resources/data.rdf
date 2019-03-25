@@ -18,6 +18,7 @@
     <j.0:livesIn rdf:resource="http://www.example.org#Water"/>
     <rdfs:subClassOf rdf:resource="http://www.example.org#Animal"/>
   </rdf:Description>
+
   <rdf:Description rdf:about="http://www.example.org#Bear">
     <j.0:eates>
       <rdf:Description rdf:about="http://www.example.org#Cat">
@@ -29,4 +30,5 @@
     <j.0:has rdf:resource="http://www.example.org#Fur"/>
     <rdfs:subClassOf rdf:resource="http://www.example.org#Mammal"/>
   </rdf:Description>
+
 </rdf:RDF>

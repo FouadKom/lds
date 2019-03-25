@@ -22,17 +22,16 @@ public interface LdManager {
         
         boolean shareCommonSubject(URI link , R a, R b);
         
-        int countDirectlyConnected(R a , LdDataset dataset);
+
+        int countShareCommonObjects(URI link , R a);
         
-        int countCommonObjects(R a , LdDataset dataset) ;
+        int countShareCommonSubjects(URI link , R a);
         
-        int countCommonSubjects(R a , LdDataset dataset) ;
+        int countIngoingEdges(R a ) ;
         
-        int countIngoingEdges(R a , LdDataset dataset) ;
-        
-        int countIngoingEdges(URI link , R a , LdDataset dataset) ;
-        
-        int countOutgoingEdges(R a , LdDataset dataset);
-        
-        int countOutgoingEdges(URI link , R a , LdDataset dataset) ;
+        int countIngoingEdges(URI link , R a );
+
+        int countOutgoingEdges(R a);
+
+        int countOutgoingEdges(URI link , R a);
 }

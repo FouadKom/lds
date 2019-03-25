@@ -39,26 +39,28 @@ public class Resim extends LdSimilarityMeasureBase {
 
 	}
 
-	// TODO, remove, because dataset is inside LdLoader
-	public Resim(LdDataset dataset) {
-		this.dataset = dataset;
-		this.edges = ResimLdManager.getEdges(dataset);
-	}
+////	 TODO, remove, because dataset is inside LdLoader
+//	public Resim(LdDataset dataset) {
+//		this.dataset = dataset;
+//		this.edges = ResimLdManager.getEdges(dataset);
+//	}
 
 	public Resim(LdManager resimLDLoader) {
 		this.resimLDLoader = resimLDLoader;
+//                this.edges = ResimLdManager.getEdges();
 	}
-
-	public Resim(LdDataset dataset, G graph, Set<URI> edges) throws SLIB_Ex_Critic {// this constructor is added to be used in tests classes
-		this.dataset = dataset;
-		this.graph = graph;
-		this.edges = edges;
-	}
+        
+        
+//	public Resim(LdDataset dataset, G graph, Set<URI> edges) throws SLIB_Ex_Critic {// this constructor is added to be used in tests classes
+//		this.dataset = dataset;
+//		this.graph = graph;
+//		this.edges = edges;
+//	}
 
 	public double compare(R a, R b) {
 		double sim = 0;
 		try {
-
+                        
 			sim = Resim(a, b);
 
 		} catch (SLIB_Ex_Critic ex) {
@@ -77,9 +79,12 @@ public class Resim extends LdSimilarityMeasureBase {
 		 */
 		int w1 = 1, w2 = 1;
 		double x = 0, y = 0;
+                
+                this.edges = ResimLdManager.getEdges(a , b);
 		// TODO: if we're in the same dataset, it's not necessary to check sameAs ?
 		if (a.equals(b) || resimLDLoader.isSameAs(a, b))
 			return 1;
+                        
 		x = w1 * PropertySim(a, b);
 		y = w2 * LDSDsim(a, b);
 		return (x + y) / (w1 + w2);
@@ -123,13 +128,13 @@ public class Resim extends LdSimilarityMeasureBase {
 	public int Cip(R a) {
 //		Set<E> ingoing = graph.getE(a.getUri(), Direction.IN); // count of ingoing edges to a
 //		return ingoing.size();
-                return resimLDLoader.countIngoingEdges(a , dataset);
+                return resimLDLoader.countIngoingEdges(a);
 	}
 
 	public int Cop(R a) {
 //		Set<E> outgoing = graph.getE(a.getUri(), Direction.OUT); // count of outgoing edges frm a 
 //		return outgoing.size();
-                return resimLDLoader.countOutgoingEdges(a , dataset);
+                return resimLDLoader.countOutgoingEdges(a);
 	}
 
 	public int Csip(URI l, R a, R b) {
@@ -138,7 +143,9 @@ public class Resim extends LdSimilarityMeasureBase {
 //		if (edgesA.isEmpty() || edgesB.isEmpty())
 //			return 0;
 //		return 1;
-                return (resimLDLoader.countIngoingEdges(l , a , dataset) * resimLDLoader.countIngoingEdges(l , b , dataset));
+                if (resimLDLoader.countIngoingEdges(l , a) > 0 && resimLDLoader.countIngoingEdges(l , b ) > 0)
+                    return 1;
+                return 0;
 	}
 
 	public int Csop(URI l, R a, R b) {
@@ -147,29 +154,36 @@ public class Resim extends LdSimilarityMeasureBase {
 //		if (edgesA.isEmpty() || edgesB.isEmpty())
 //			return 0;
 //		return 1;
-                return (resimLDLoader.countOutgoingEdges(l , a , dataset) * resimLDLoader.countOutgoingEdges(l , b , dataset));
+                 if (resimLDLoader.countOutgoingEdges(l , a) > 0 && resimLDLoader.countOutgoingEdges(l , b ) > 0)
+                    return 1;
+                return 0;
 	}
 
 	public int Cd(URI l, R a, R b) {
-		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT); 
-
-		for (E e : a_edgeOut) {
-			if (e.getTarget().equals(b))
-				return 1;
-		}
-
-		return 0;
+//		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT); 
+//
+//		for (E e : a_edgeOut) {
+//			if (e.getTarget().equals(b))
+//				return 1;
+//		}
+//
+//		return 0;
+                
+                if(resimLDLoader.isDirectlyConnected(l, a, b))
+                    return 1;
+                else
+                    return 0;
 	}
 
 	public int Cd(URI l, R a) {
 //		Set<E> a_edgeOut = graph.getE(l, a, Direction.OUT);
 //
 //		return a_edgeOut.size();
-                return resimLDLoader.countOutgoingEdges(l , a , dataset);
+                return resimLDLoader.countOutgoingEdges(l , a);
 	}
 
 	public int Cd(URI l) {
-		return ResimLdManager.countPropertyOccurrence(l, dataset);
+		return ResimLdManager.countPropertyOccurrence(l);
 	}
 
 	public double Cd_normalized(URI l, R a, R b) {
@@ -186,30 +200,36 @@ public class Resim extends LdSimilarityMeasureBase {
 
 	public int Cii(URI l, R a, R b) {
 
-		Set<E> a_edgeIn = graph.getE(l, a.getUri(), Direction.IN);
-		for (E e : a_edgeIn) {
-			URI x = e.getSource();
-			if (graph.containsEdge(x, e.getURI(), b.getUri()))
-				return 1;
-		}
-		return 0;
+//		Set<E> a_edgeIn = graph.getE(l, a.getUri(), Direction.IN);
+//		for (E e : a_edgeIn) {
+//			URI x = e.getSource();
+//			if (graph.containsEdge(x, e.getURI(), b.getUri()))
+//				return 1;
+//		}
+//		return 0;
+                
+                if (resimLDLoader.shareCommonSubject(l, a , b))
+                    return 1;
+                return 0;
 	}
 
 	public int Cii(URI l, R a) {
 
-		Set<E> a_edgeIn = graph.getE(l, a.getUri(), Direction.IN);
-		int count = 0;
-		for (E e : a_edgeIn) {
-			URI x = e.getSource();
-			Set<E> x_edgeOut = graph.getE(l, x, Direction.OUT);
-			E edge = new Edge(x, l, a.getUri());
-			count = count + x_edgeOut.size();
-			if (x_edgeOut.contains(edge))
-				count--;
+//		Set<E> a_edgeIn = graph.getE(l, a.getUri(), Direction.IN);
+//		int count = 0;
+//		for (E e : a_edgeIn) {
+//			URI x = e.getSource();
+//			Set<E> x_edgeOut = graph.getE(l, x, Direction.OUT);
+//			E edge = new Edge(x, l, a.getUri());
+//			count = count + x_edgeOut.size();
+//			if (x_edgeOut.contains(edge))
+//				count--;
+//
+//		}
+//
+//		return count;
 
-		}
-
-		return count;
+                return resimLDLoader.countShareCommonSubjects(l, a);
 	}
 
 	public double Cii_normalized(URI l, R a, R b) {
@@ -230,31 +250,37 @@ public class Resim extends LdSimilarityMeasureBase {
 
 	public int Cio(URI l, R a, R b) {
 
-		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT);
-		for (E e : a_edgeOut) {
-			URI x = e.getTarget();
-			if (graph.containsEdge(b.getUri(), e.getURI(), x))
-				return 1;
-		}
+//		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT);
+//		for (E e : a_edgeOut) {
+//			URI x = e.getTarget();
+//			if (graph.containsEdge(b.getUri(), e.getURI(), x))
+//				return 1;
+//		}
+//
+//		return 0;
 
-		return 0;
+                if(resimLDLoader.shareCommonObject(l, a , b))
+                    return 1;
+                return 0;
 	}
 
 	public int Cio(URI l, R a) {
 
-		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT);
-		int count = 0;
-		for (E e : a_edgeOut) {
-			URI x = e.getTarget();
-			Set<E> x_edgeIn = graph.getE(l, x, Direction.IN);
-			E edge = new Edge(a.getUri() , l, x);
-			count = count + x_edgeIn.size();
-			if (x_edgeIn.contains(edge))
-				count--;
+//		Set<E> a_edgeOut = graph.getE(l, a.getUri(), Direction.OUT);
+//		int count = 0;
+//		for (E e : a_edgeOut) {
+//			URI x = e.getTarget();
+//			Set<E> x_edgeIn = graph.getE(l, x, Direction.IN);
+//			E edge = new Edge(a.getUri() , l, x);
+//			count = count + x_edgeIn.size();
+//			if (x_edgeIn.contains(edge))
+//				count--;
+//
+//		}
+//
+//		return count;
 
-		}
-
-		return count;
+                return resimLDLoader.countShareCommonObjects(l, a);
 	}
 
 	public double Cio_normalized(URI l, R a, R b) {

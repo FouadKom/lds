@@ -29,22 +29,30 @@ import slib.utils.i.Conf;
  * @author Nasredine CHENIKI
  */
 public class ResimLdManager extends LdManagerBase {
-	
+    	
 	// TODO: specify an index directory
 	String sameAsIndexFile = "resim_sameAs_index.db";
         String ingoingEdgesIndexFile = "resim_ingoingEdges_index.db";
         String outgoingEdgesIndexFile = "resim_outgoingEdges_index.db";
         String ingoingTypedEdgesIndexFile = "resim_ingoingTypedEdges_index.db";
         String outgoingTypedEdgesIndexFile = "resim_outgoingTypedEdges_index.db";
+        String shareCommonObjectsIndexFile = "resim_shareCommonObjects_index.db";
+        String shareCommonSubjectsIndexFile = "resim_shareCommonSubjects_index.db";
+//        String directlyConnectedIndexFile = "resim_directlyConnected_index.db";
         
 	public LdIndexer sameAsIndex;
         public LdIndexer ingoingEdgesIndex;
         public LdIndexer outgoingEdgesIndex;
         public LdIndexer ingoingTypedEdgesIndex;
         public LdIndexer outgoingTypedEdgesIndex;
+        public LdIndexer shareCommonObjectsIndex;
+        public LdIndexer shareCommonSubjectsIndex;
+//        public LdIndexer directlyConnectedIndex;
+        
 
 	public ResimLdManager(LdDataset dataset, Conf config) {
 		super(dataset, config);
+
 		if (config.getParam("useIndexes").equals(true))
 			loadIndexes();
 	}
@@ -55,8 +63,21 @@ public class ResimLdManager extends LdManagerBase {
                 outgoingEdgesIndex = new LdIndexer(outgoingEdgesIndexFile);
                 ingoingTypedEdgesIndex = new LdIndexer(ingoingTypedEdgesIndexFile);
                 outgoingTypedEdgesIndex = new LdIndexer(outgoingTypedEdgesIndexFile);
+                shareCommonObjectsIndex = new LdIndexer(shareCommonObjectsIndexFile);
+                shareCommonSubjectsIndex = new LdIndexer(shareCommonSubjectsIndexFile);
                 
 	}
+        
+        public void closeIndexes(){
+                sameAsIndex.close();
+                ingoingEdgesIndex.close();
+                outgoingEdgesIndex.close();
+                ingoingTypedEdgesIndex.close();
+                outgoingTypedEdgesIndex.close();
+                shareCommonObjectsIndex.close();
+             
+         }
+         
 
 	// public static int getCountOutgoing(URI a , LdDataset dataset){
 	// Literal count = null;
@@ -99,16 +120,19 @@ public class ResimLdManager extends LdManagerBase {
 	//
 	// return Integer.parseInt(count.toString());
 	// }
-
-	// TOFIX: Cannot get all edges of a dataset
-	public static Set<URI> getEdges(LdDataset dataset) {
+        
+        
+        // TOFIX: Cannot get all edges of a dataset
+	public static Set<URI> getEdges(R a , R b) {
 		Resource edge = null;
 		Set<URI> edges = new HashSet();
 		URIFactory factory = URIFactoryMemory.getSingleton();
 
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-		query_cmd.setCommandText("select ?property where {?subject ?property ?object. }");
+		query_cmd.setCommandText("select distinct ?property " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property ?object. "
+//                        + "filter(?subject IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) || ?object IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) ) }");
+                          + "filter( isuri(?object) ) } limit 10");
 
 		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
@@ -118,117 +142,251 @@ public class ResimLdManager extends LdManagerBase {
 			edges.add(factory.getURI(edge.toString()));
 
 		}
+                
+                dataset.close();
 		return edges;
 
 	}
         
         @Override
-        public int countIngoingEdges(URI link , R a , LdDataset dataset) {
+        public int countIngoingEdges(URI link , R a) {
 		      
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
+                    List<String> ingoingTypedEdges_a = ingoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
-                    String ingoingEdges_a = ingoingTypedEdgesIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());
-
-                    if(ingoingEdges_a != null){
-                        return Integer.parseInt(ingoingEdges_a);
+                    if(ingoingTypedEdges_a != null){
+                        
+                        return ingoingTypedEdges_a.size();
 
                     }
                     else
                     {
-                        ingoingTypedEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countIngoingEdges(link , a, dataset)));
-
-                        return Integer.parseInt(ingoingTypedEdgesIndex.getValue(a.getUri().stringValue()));
+                        ingoingTypedEdges_a = super.getIngoingEdges(link , a);
+                        
+                        if(ingoingTypedEdges_a != null){
+                            ingoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , ingoingTypedEdges_a);
+                            return ingoingTypedEdges_a.size();
+                        }
+                        
+                        return 0;
+                        
                     }                      
 
                 }
                 
-            return super.countIngoingEdges(link , a, dataset);
+                return super.countIngoingEdges(link , a);
 	}
         
         @Override
-        public int countIngoingEdges(R a , LdDataset dataset) {
+        public int countIngoingEdges(R a) {
 		      
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
                     
-                    String ingoingEdges_a = ingoingEdgesIndex.getValue(a.getUri().stringValue());
+                    List<String> ingoingEdges_a = ingoingEdgesIndex.getList(a.getUri().stringValue());
 
                     if(ingoingEdges_a != null){
-                        return Integer.parseInt(ingoingEdges_a);
+                        
+                        return ingoingEdges_a.size();
 
                     }
                     else
                     {
-                        ingoingEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countIngoingEdges(a, dataset)));
-
-                        return Integer.parseInt(ingoingEdgesIndex.getValue(a.getUri().stringValue()));
+                        ingoingEdges_a = super.getIngoingEdges(a);
+                        
+                        if(ingoingEdges_a != null){
+                            ingoingEdgesIndex.addList(a.getUri().stringValue(), ingoingEdges_a);
+                            return ingoingEdges_a.size();
+                        }
+                        
+                        return 0;
+                        
                     }                      
 
                 }
                 
-            return super.countOutgoingEdges(a, dataset);
+               return super.countIngoingEdges(a);
+               
+	}
+        
+        
+       @Override
+        public int countOutgoingEdges(URI link , R a) {
+                
+                if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    List<String> outgoingTypedEdges_a = outgoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    
+                    if(outgoingTypedEdges_a != null){
+                        
+                        return outgoingTypedEdges_a.size();
+
+                    }
+                    else
+                    {
+                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
+                        
+                        if(outgoingTypedEdges_a != null){
+                            outgoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
+                            return outgoingTypedEdges_a.size();
+                        }
+                        
+                        return 0;
+                        
+                    }                      
+
+                }
+                
+                return super.countOutgoingEdges(link , a);
 	}
         
         
         @Override
-        public int countOutgoingEdges(URI link , R a , LdDataset dataset) {
+        public int countOutgoingEdges(R a) {
                 
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    String outgoingEdges_a = outgoingTypedEdgesIndex.getValue(a.getUri().stringValue() + ":" + link.stringValue());
                     
+                    List<String> outgoingEdges_a = outgoingEdgesIndex.getList(a.getUri().stringValue());
+
                     if(outgoingEdges_a != null){
-                        return Integer.parseInt(outgoingEdges_a);
                         
+                        return outgoingEdges_a.size();
+
                     }
                     else
                     {
+                        outgoingEdges_a = super.getOutgoingEdges(a);
                         
-                        outgoingTypedEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countOutgoingEdges(link , a, dataset)));
+                        if(outgoingEdges_a != null){
+                            outgoingEdgesIndex.addList(a.getUri().stringValue(), outgoingEdges_a);
+                            return outgoingEdges_a.size();                            
+                        }
                         
-                        return Integer.parseInt(outgoingTypedEdgesIndex.getValue(a.getUri().stringValue()));
+                        return 0;
                         
-                    }
+                    }                      
+
                 }
                 
-            return super.countOutgoingEdges(link , a, dataset);
+               return super.countOutgoingEdges(a);
 	}
-        
         
         @Override
-        public int countOutgoingEdges(R a , LdDataset dataset) {
-                
-                if (this.config.getParam("useIndexes").equals(true)) {
+        public int countShareCommonObjects(URI link, R a ) {
+            if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    String outgoingEdges_a = outgoingEdgesIndex.getValue(a.getUri().stringValue());
+                    List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
-                    if(outgoingEdges_a != null){
-                        return Integer.parseInt(outgoingEdges_a);
+                    if(shareCommonObjects_a != null){
                         
+                        return shareCommonObjects_a.size();
+
                     }
                     else
-                    {
+                    {                     
+                        shareCommonObjects_a = super.listShareCommonObject(link, a) ;
                         
-                        outgoingEdgesIndex.addValue(a.getUri().stringValue() , Integer.toString(super.countOutgoingEdges( a, dataset)));
+                        if(shareCommonObjects_a != null ){
+                            shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonObjects_a);
+                            return shareCommonObjects_a.size();
+                        }
                         
-                        return Integer.parseInt(outgoingEdgesIndex.getValue(a.getUri().stringValue()));
-                        
-                    }
+                        return 0;
+                    }                      
+
                 }
                 
-            return super.countOutgoingEdges(a, dataset);
-	}
+                return super.countShareCommonObjects(link , a);
+        }
         
+         @Override
+         public boolean shareCommonObject(URI link , R a, R b){
+              if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    
+                    if(shareCommonObjects_a != null){
+                        
+                        return shareCommonObjects_a.contains(b.getUri().stringValue());
+
+                    }
+                    else
+                    {                     
+                        shareCommonObjects_a = super.listShareCommonObject(link, a);
+                        
+                        if(shareCommonObjects_a != null){
+                            shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() ,  shareCommonObjects_a);
+                            return shareCommonObjects_a.contains(b.getUri().stringValue());
+                        }
+                            
+                        return false;
+                    }                      
+
+                }
+                
+                return super.shareCommonObject(link , a , b);
+        }
         
+        @Override
+        public int countShareCommonSubjects(URI link, R a ) {
+             if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    
+                    if(shareCommonSubjects_a != null){
+                        
+                        return shareCommonSubjects_a.size();
 
-	/**
-	 * NEW methods based on index ----------------
-     * @param a
-     * @param b
-     * @return 
-	 */
+                    }
+                    else
+                    {   
+                        shareCommonSubjects_a = super.listShareCommonSubject(link, a);                        
+                        
+                        if(shareCommonSubjects_a != null){
+                            shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
+                            return shareCommonSubjects_a.size();
+                        }
+                            
+                        
+                        return 0;
+                    }                      
 
+                }
+                
+                return super.countShareCommonSubjects(link , a);
+        }
+        
+        @Override
+         public boolean shareCommonSubject(URI link , R a, R b){
+             if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    
+                    if(shareCommonSubjects_a != null){
+                        
+                        return shareCommonSubjects_a.contains(b.getUri().stringValue());
+
+                    }
+                    else
+                    {   
+                        shareCommonSubjects_a = super.listShareCommonSubject(link, a);
+                        
+                        if(shareCommonSubjects_a != null){
+                            shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
+                            return shareCommonSubjects_a.contains(b.getUri().stringValue());
+                        }
+                        
+                        return false;
+                    }                      
+
+                }
+                
+                return super.shareCommonSubject(link , a , b);
+        }
+
+       
         @Override
 	public boolean isSameAs(R a, R b) {
 
@@ -242,9 +400,14 @@ public class ResimLdManager extends LdManagerBase {
 				try {
 					sameAs_a = super.getSameAsResoures(a);
 					// index
-					sameAsIndex.addList(a.getUri().stringValue(), sameAs_a);
-
-					return sameAs_a.contains(b.getUri().stringValue());
+					
+                                        if(sameAs_a != null){
+                                            sameAsIndex.addList(a.getUri().stringValue(), sameAs_a);
+                                            return sameAs_a.contains(b.getUri().stringValue());
+                                        }
+                                        
+                                        return false;
+                                        
 				} catch (Exception e) {
 					// TODO: throw exception
 					System.out.println("Error:" + e.getMessage());
@@ -260,5 +423,42 @@ public class ResimLdManager extends LdManagerBase {
 		}
 		return super.getSameAsResoures(a).contains(b.getUri().stringValue());
 	}
+        
+        
+        
+        @Override
+         public boolean isDirectlyConnected(URI link, R a, R b) { //sameAs can be replaced with this?
+             
+             if (this.config.getParam("useIndexes").equals(true)) {
+                    
+                    List<String> outgoingTypedEdges_a = outgoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    
+                    if(outgoingTypedEdges_a != null){
+                        
+                        return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+
+                    }
+                    else
+                    {   
+                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
+                        
+                        if(outgoingTypedEdges_a != null){
+                            outgoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
+                            return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+                        }
+                        
+                        return false;
+                        
+                    }                      
+
+                }
+                
+                return super.isDirectlyConnected(link, a, b);
+                
+         }
+         
+         
+        
+    }
        
-}
+
