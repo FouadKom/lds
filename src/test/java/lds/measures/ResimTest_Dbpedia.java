@@ -47,43 +47,27 @@ public class ResimTest_Dbpedia {
     
     public static void main(String args[]) throws SLIB_Ex_Critic {
         LdDataset dataset = Util.getDBpediaDataset();
-        
-
-//        LdManager manager = new LdManagerBase(dataset);
-        
+                
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         resimLdManager = new ResimLdManager(dataset, config);
-        Resim resim = new Resim(resimLdManager);
-        
-//        R a = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Paris").create();
-//        R c = LdResourceFactory.getInstance().baseUri("http://www.wikidata.org/entity/").name("Q90").create();
-        
+        Resim resim = new Resim(resimLdManager);       
         R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
         R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
         
         
 
         Set<URI> edges =  resimLdManager.getEdges(car , automobile);
-        
-//        URIFactory factory = URIFactoryMemory.getSingleton();
-//        URI edge = factory.getURI("http://www.openlinksw.com/schemas/virtrdf#qmfValRange-rvrRestrictions");
-
-//          System.out.println( resim.Csop(edge , car , automobile) );
-//          
-//          System.out.println( manager.countIngoingEdges(edge, car) );
-//           System.out.println( manager.countOutgoingEdges(edge, car) );
-//            System.out.println( manager.countIngoingEdges(edge, automobile) );
-//             System.out.println( manager.countOutgoingEdges(edge, automobile) );
 
             double cii = 0, cio = 0, cii_car = 0, cio_car = 0, cii_automobile = 0, cio_automobile = 0, cii_norm = 0, cio_norm = 0, pptySim = 0,
-				ldsd = 0, ldsdsim = 0, sim = 0 , cd_automobile_norm = 0 , cd_car_norm = 0;
+				ldsd = 0, ldsdsim = 0, sim = 0 , cd_automobile_norm = 0 , cd_car_norm = 0 , csip = 0 , csop = 0;
             
             
             double x = 0, y = 0, ip = 0, op = 0;
+            
 
 		
-
+            int cd = 0;
 		
 
 		for (URI edge : edges) {
@@ -92,7 +76,7 @@ public class ResimTest_Dbpedia {
 			
                         cii_car = cii_car + resim.Cii(edge, car);
                         cio_car = cio_car + resim.Cio(edge, car);
-                        
+                      
 			cii_automobile = cii_automobile + resim.Cii(edge, automobile);
 			cio_automobile = cio_automobile + resim.Cio(edge, automobile);
                         
@@ -101,6 +85,9 @@ public class ResimTest_Dbpedia {
                         
                         cio_norm = cio_norm + resim.Cio_normalized(edge, car, automobile);
 			cii_norm = cii_norm + resim.Cii_normalized(edge, car, automobile);
+
+                        csip = csip + resim.Csip(edge, car, automobile);
+                        csop = csop + resim.Csop(edge, car, automobile);                      
                         
                         x = x + ((double) resim.Csip(edge, car, automobile) / resim.Cd(edge));
 			y = y + ((double) resim.Csop(edge, car, automobile) / resim.Cd(edge));
@@ -108,11 +95,13 @@ public class ResimTest_Dbpedia {
                 }
                 
                 ip = x / (resim.Cip(car) + resim.Cip(automobile));
-		op = y / (resim.Cop(car) + resim.Cop(automobile));
+                op = y / (resim.Cop(car) + resim.Cop(automobile));
                 pptySim = ip + op;
                 
                 ldsd = 1 / (1 + cd_car_norm + cd_automobile_norm + cii_norm + cio_norm);
                 ldsdsim = 1 - ldsd;
+                
+                sim = (pptySim + ldsdsim)/2;
 			
                 System.out.println(cii);
                 System.out.println(cio);
@@ -124,9 +113,16 @@ public class ResimTest_Dbpedia {
                 System.out.println(cii_norm);
                 System.out.println(pptySim);
                 System.out.println(ldsdsim);
+                
+                System.out.println(csip);
+                System.out.println(csop);
+                System.out.println(cd);
+                
+                System.out.println(sim);
+                
 
+                   
 
-//        double sim = 0.0;
 //        
 //        sim = resim.Resim(a , c);
 //        assertEquals(1.0, sim, 0.0);

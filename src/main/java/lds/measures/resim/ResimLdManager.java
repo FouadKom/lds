@@ -130,9 +130,8 @@ public class ResimLdManager extends LdManagerBase {
 
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-		query_cmd.setCommandText("select distinct ?property " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property ?object. "
-//                        + "filter(?subject IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) || ?object IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) ) }");
-                          + "filter( isuri(?object) ) } limit 10");
+		query_cmd.setCommandText("select distinct ?property " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property ?object. } limit 5");
+//                        + "filter(?subject IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) || ?object IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) ) } limit 5");
 
 		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 

@@ -18,6 +18,10 @@ import lds.graph.GraphManager;
 import lds.graph.LdGraphManager;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Resource;
 import sc.research.ldq.LdDataset;
 import slib.graph.model.graph.G;
@@ -82,8 +86,7 @@ public class LdManagerBase implements LdManager {
 		Literal count = null;
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-		query_cmd.setCommandText(
-				"select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject <" + link + "> ?Object. }");
+		query_cmd.setCommandText("select (count(?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> ?object }");
 
 		// logger.info("query = " + query_cmd.toString());
 
@@ -92,11 +95,14 @@ public class LdManagerBase implements LdManager {
 		if (resultSet.hasNext()) {
 			QuerySolution qs = resultSet.nextSolution();
 			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
 		}
                 
                 dataset.close();
-		return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                return 0;
+                
 	}
         
         public List<String> listShareCommonSubject(URI link , R a){
@@ -288,13 +294,16 @@ public class LdManagerBase implements LdManager {
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
-            }
-            
-            dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
         }
         
         @Override
@@ -308,13 +317,16 @@ public class LdManagerBase implements LdManager {
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
-            }
-            
-            dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
             
         }
         
@@ -330,13 +342,16 @@ public class LdManagerBase implements LdManager {
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
-            }
-            
-            dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
             
         }
        
@@ -352,13 +367,16 @@ public class LdManagerBase implements LdManager {
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
-            }
-            
-            dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
         }      
    
 
@@ -373,14 +391,16 @@ public class LdManagerBase implements LdManager {
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
-            }
-            
-            dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+		}
+                
+                dataset.close();
+                return 0;
             
         }
         
@@ -396,15 +416,16 @@ public class LdManagerBase implements LdManager {
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
-            }
-            
-            
-            dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+		}
+                
+                dataset.close();
+                return 0;
         }
         
 

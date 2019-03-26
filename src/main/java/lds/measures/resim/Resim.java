@@ -143,7 +143,7 @@ public class Resim extends LdSimilarityMeasureBase {
 //		if (edgesA.isEmpty() || edgesB.isEmpty())
 //			return 0;
 //		return 1;
-                if (resimLDLoader.countIngoingEdges(l , a) > 0 && resimLDLoader.countIngoingEdges(l , b ) > 0)
+                if ( resimLDLoader.countIngoingEdges(l , a) > 0 && resimLDLoader.countIngoingEdges(l , b ) > 0 )
                     return 1;
                 return 0;
 	}
