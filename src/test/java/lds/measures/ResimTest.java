@@ -38,6 +38,7 @@ public class ResimTest {
 
 	@Test
 	public void isResimWorksCorrectlyOnPaperExample() throws SLIB_Ex_Critic {
+        
                 
 		LdDataset dataSet = null;
                 
@@ -90,9 +91,11 @@ public class ResimTest {
                 assertEquals(0.0, cii_norm, 0.0);
 		assertEquals(1.0, cio_norm, 0.0);
 
-		
 
-		pptySim = resim.PropertySim(r1, r2);
+		sim = resim.compare(r1, r2);
+		assertEquals(0.5388888888888889, sim, 0.0);
+                
+                pptySim = resim.PropertySim(r1, r2);
 		assertEquals(0.11666666666666665, pptySim, 0.0);
 
 		ldsd = resim.LDSD(r1, r2);
@@ -101,11 +104,8 @@ public class ResimTest {
 		ldsdsim = resim.LDSDsim(r1, r2);
 		assertEquals(0.75, ldsdsim, 0.0);
 
-		sim = resim.Resim(r1, r2);// w1 and w2 are both set to value = 1
-		assertEquals(0.43333333333333335, sim, 0.0);
-
-		sim = resim.Resim(r2, r1);// w1 and w2 are both set to value = 1
-		assertEquals(0.43333333333333335, sim, 0.0);
+		sim = resim.compare(r2, r1);
+		assertEquals(0.5388888888888889, sim, 0.0);
 
 		sim = resim.Resim(r1, r1);
 		assertEquals(1.0, sim, 0.0);

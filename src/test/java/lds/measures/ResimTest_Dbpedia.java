@@ -49,11 +49,12 @@ public class ResimTest_Dbpedia {
         LdDataset dataset = Util.getDBpediaDataset();
                 
         Conf config = new Conf();
-        config.addParam("useIndexes", false);
+        config.addParam("useIndexes", true);
         resimLdManager = new ResimLdManager(dataset, config);
         Resim resim = new Resim(resimLdManager);       
-        R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
-        R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
+        R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Computer").create();
+        R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Keyboard").create();
+
         
         
 
@@ -64,33 +65,33 @@ public class ResimTest_Dbpedia {
             
             
             double x = 0, y = 0, ip = 0, op = 0;
-            
-
-		
-            int cd = 0;
+           
 		
 
 		for (URI edge : edges) {
+                        System.out.println("Edge: " + edge);
 			cii = cii + resim.Cii(edge, car, automobile);
 			cio = cio + resim.Cio(edge, car , automobile );
 			
-                        cii_car = cii_car + resim.Cii(edge, car);
-                        cio_car = cio_car + resim.Cio(edge, car);
-                      
-			cii_automobile = cii_automobile + resim.Cii(edge, automobile);
-			cio_automobile = cio_automobile + resim.Cio(edge, automobile);
+//                        cii_car = cii_car + resim.Cii(edge, car);
+//                        cio_car = cio_car + resim.Cio(edge, car);
+//                      
+//			cii_automobile = cii_automobile + resim.Cii(edge, automobile);
+//			cio_automobile = cio_automobile + resim.Cio(edge, automobile);
+//                        
+//                        cd_car_norm = cd_car_norm + resim.Cd_normalized(edge, car, automobile);
+//			cd_automobile_norm = cd_automobile_norm + resim.Cd_normalized(edge, automobile , car);
+//                        
+//                        cio_norm = cio_norm + resim.Cio_normalized(edge, car, automobile);
+//			cii_norm = cii_norm + resim.Cii_normalized(edge, car, automobile);
+//
+//                        csip = csip + resim.Csip(edge, car, automobile);
+//                        csop = csop + resim.Csop(edge, car, automobile);                      
+//                        
+//                        x = x + ( (double) csip / resim.Cd(edge));
+//			y = y + ( (double) csop / resim.Cd(edge));
                         
-                        cd_car_norm = cd_car_norm + resim.Cd_normalized(edge, car, automobile);
-			cd_automobile_norm = cd_automobile_norm + resim.Cd_normalized(edge, automobile , car);
                         
-                        cio_norm = cio_norm + resim.Cio_normalized(edge, car, automobile);
-			cii_norm = cii_norm + resim.Cii_normalized(edge, car, automobile);
-
-                        csip = csip + resim.Csip(edge, car, automobile);
-                        csop = csop + resim.Csop(edge, car, automobile);                      
-                        
-                        x = x + ((double) resim.Csip(edge, car, automobile) / resim.Cd(edge));
-			y = y + ((double) resim.Csop(edge, car, automobile) / resim.Cd(edge));
 
                 }
                 
@@ -101,7 +102,7 @@ public class ResimTest_Dbpedia {
                 ldsd = 1 / (1 + cd_car_norm + cd_automobile_norm + cii_norm + cio_norm);
                 ldsdsim = 1 - ldsd;
                 
-                sim = (pptySim + ldsdsim)/2;
+                sim = (pptySim + (2*ldsdsim) )/3;
 			
                 System.out.println(cii);
                 System.out.println(cio);
@@ -116,11 +117,11 @@ public class ResimTest_Dbpedia {
                 
                 System.out.println(csip);
                 System.out.println(csop);
-                System.out.println(cd);
                 
-                System.out.println(sim);
                 
-
+                System.out.println(resim.compare(car, automobile));
+                
+                resimLdManager.closeIndexes();
                    
 
 //        

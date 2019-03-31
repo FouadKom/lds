@@ -69,12 +69,14 @@ public class ResimLdManager extends LdManagerBase {
 	}
         
         public void closeIndexes(){
+            if (this.config.getParam("useIndexes").equals(true)) {
                 sameAsIndex.close();
                 ingoingEdgesIndex.close();
                 outgoingEdgesIndex.close();
                 ingoingTypedEdgesIndex.close();
                 outgoingTypedEdgesIndex.close();
                 shareCommonObjectsIndex.close();
+            }
              
          }
          
@@ -130,9 +132,24 @@ public class ResimLdManager extends LdManagerBase {
 
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-		query_cmd.setCommandText("select distinct ?property " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property ?object. } limit 5");
-//                        + "filter(?subject IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) || ?object IN (<" + a.getUri() + "> , <" + b.getUri() +"> ) ) } limit 5");
-
+                query_cmd.setCommandText("select distinct ?property \n"
+                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                            + "where { \n"
+                                            + "{ \n"
+                                            + "select distinct ?property \n"
+//                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                            + "where {?subject ?property ?object. \n" 
+                                            + "filter(?subject IN (<" + a.getUri() + "> , <" + b.getUri() +"> )  ) } \n"
+                                            + "} \n"
+                                            + "union \n"
+                                            + "{ \n"
+                                            + "select distinct ?property \n"
+//                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                            + "where {?subject ?property ?object. \n"
+                                            + "filter(?object IN (<" + a.getUri() + "> , <" + b.getUri() +"> )  ) } \n"
+                                            + "} \n"
+                                            + "}");
+                
 		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
 		while (resultSet.hasNext()) {

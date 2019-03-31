@@ -111,7 +111,7 @@ public class LdManagerBase implements LdManager {
 
             query_cmd.setCommandText("select distinct ?object " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> <" + a.getUri() + ">. "
                                                                    + "?subject <" + link + "> ?object ."
-                                                                   + "filter(?object != <" + a.getUri() + ">)}");
+                                                                   + "filter(?object != <" + a.getUri() + "> && isuri(?object))}");
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
@@ -412,7 +412,7 @@ public class LdManagerBase implements LdManager {
 
             query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> <" + a.getUri() + ">. "
                                                                                        + "?subject <" + link + "> ?object."
-                                                                               + "filter(?object != <" + a.getUri() + ">)}");
+                                                                               + "filter(?object != <" + a.getUri() + "> && isuri(?object) ) }");
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 

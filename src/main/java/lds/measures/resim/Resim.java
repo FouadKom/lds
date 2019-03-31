@@ -77,7 +77,7 @@ public class Resim extends LdSimilarityMeasureBase {
 		 * 
 		 * }
 		 */
-		int w1 = 1, w2 = 1;
+		int w1 = 1, w2 = 2;
 		double x = 0, y = 0;
                 
                 this.edges = ResimLdManager.getEdges(a , b);
@@ -188,11 +188,13 @@ public class Resim extends LdSimilarityMeasureBase {
 
 	public double Cd_normalized(URI l, R a, R b) {
 		int cd = Cd(l, a, b);
-		double cd_norm;
+		double cd_norm = 0;
+                
+                if(cd != 0){
+                    double x = 1 + Math.log(Cd(l, a));
 
-		double x = 1 + Math.log(Cd(l, a));
-
-		cd_norm = (double) cd / x;
+                    cd_norm = (double) cd / x;
+                }
 
 		return cd_norm;
 
@@ -235,14 +237,17 @@ public class Resim extends LdSimilarityMeasureBase {
 	public double Cii_normalized(URI l, R a, R b) {
 
 		int ciiA, ciiB, cii;
-		double x, cii_norm;
+		double x, cii_norm = 0;
 
 		cii = Cii(l, a, b);
-		ciiA = Cii(l, a);
-		ciiB = Cii(l, b);
-		x = 1 + Math.log((ciiA + ciiB) / 2);
+                
+                if(cii != 0){
+                    ciiA = Cii(l, a);
+                    ciiB = Cii(l, b);
+                    x = 1 + Math.log((ciiA + ciiB) / 2);
 
-		cii_norm = ((double) cii / x);
+                    cii_norm = ((double) cii / x);
+                }
 
 		return cii_norm;
 
@@ -286,14 +291,19 @@ public class Resim extends LdSimilarityMeasureBase {
 	public double Cio_normalized(URI l, R a, R b) {
 
 		int cioA, cioB, cio;
-		double cio_norm, x;
+		double cio_norm = 0, x;
 
 		cio = Cio(l, a, b);
-		cioA = Cio(l, a);
-		cioB = Cio(l, b);
-		x = 1 + Math.log((cioA + cioB) / 2);
+                
+                if(cio != 0)
+                {
+                    cioA = Cio(l, a);
+                    cioB = Cio(l, b);
+                    x = 1 + Math.log((cioA + cioB) / 2);
 
-		cio_norm = ((double) cio / x);
+                    cio_norm = ((double) cio / x);
+                }
+                
 
 		return cio_norm;
 
