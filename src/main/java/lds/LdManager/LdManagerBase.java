@@ -1,7 +1,10 @@
 package lds.LdManager;
 
+import static java.lang.Double.NaN;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.httpclient.HttpException;
 import org.apache.jena.query.ParameterizedSparqlString;
@@ -15,15 +18,21 @@ import lds.graph.GraphManager;
 import lds.graph.LdGraphManager;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Resource;
 import sc.research.ldq.LdDataset;
 import slib.graph.model.graph.G;
+import slib.graph.model.impl.repo.URIFactoryMemory;
+import slib.graph.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public class LdManagerBase implements LdManager {
 
-	LdDataset dataset;
+	protected static LdDataset dataset;
 	protected Conf config = null;
 
 	public LdManagerBase(LdDataset dataset) {
@@ -33,6 +42,7 @@ public class LdManagerBase implements LdManager {
 	public LdManagerBase(LdDataset dataset, Conf config) {
 		this.dataset = dataset;
 		this.config = config;
+                
 	}
 
 	public G generateGraph(LdDataset dataset, R a, R b, String graphURI) throws HttpException, SLIB_Ex_Critic {
@@ -46,14 +56,16 @@ public class LdManagerBase implements LdManager {
 
 		return graph;
 	}
+        
+
 
 	public List<String> getSameAsResoures(R a) {
 
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-		query_cmd.setCommandText("select ?sameAs  { " + a.getTurtle() + " <" + OWL.sameAs + "> ?sameAs. }");
+		query_cmd.setCommandText("select ?sameAs " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { " + a.getTurtle() + " <" + OWL.sameAs + "> ?sameAs. }");
 
-		System.out.println("query = " + query_cmd.toString());
+//		System.out.println("query = " + query_cmd.toString());
 
 		ResultSet rs = dataset.executeSelectQuery(query_cmd.toString());
 		List<String> sameAsResources = new ArrayList<String>();
@@ -63,17 +75,18 @@ public class LdManagerBase implements LdManager {
 			String sameAsResource = qs.getResource("sameAs").getURI();
 			sameAsResources.add(sameAsResource);
 		}
-
+                
+                
+                dataset.close();
 		return sameAsResources;
 
 	}
 
-	public static int countPropertyOccurrence(URI link, LdDataset dataset) {
+	public static int countPropertyOccurrence(URI link) {
 		Literal count = null;
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-		query_cmd.setCommandText(
-				"select (count(distinct ?subject) as ?count) where {" + "?subject <" + link + "> ?Object. }");
+		query_cmd.setCommandText("select (count(?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> ?object }");
 
 		// logger.info("query = " + query_cmd.toString());
 
@@ -82,126 +95,340 @@ public class LdManagerBase implements LdManager {
 		if (resultSet.hasNext()) {
 			QuerySolution qs = resultSet.nextSolution();
 			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
 		}
-
-		return Integer.parseInt(count.toString().substring(0, 1));
+                
+                dataset.close();
+                return 0;
+                
 	}
         
-        
-        public int countOutgoingEdges(R a , LdDataset dataset){
-            Literal count = null;
-            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+        public List<String> listShareCommonSubject(URI link , R a){
+            List<String> shareSubjectwithA = new ArrayList();
+             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-            query_cmd.setCommandText("select count(distinct ?property) as ?count) where {<" + a.getUri() + "> ?property ?object . }");
-
-            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
-
-            }
-            
-            return Integer.parseInt(count.toString().substring(0, 1));
-        }
-        
-        public int countIngoingEdges(R a , LdDataset dataset){
-            Literal count = null;
-            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-
-            query_cmd.setCommandText("select count(distinct ?property) as ?count) where {?subject ?property <" + a.getUri() + "> .}");
+            query_cmd.setCommandText("select distinct ?object " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> <" + a.getUri() + ">. "
+                                                                   + "?subject <" + link + "> ?object ."
+                                                                   + "filter(?object != <" + a.getUri() + "> && isuri(?object))}");
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
             while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                String resource = qs.getResource("object").getURI();
+                shareSubjectwithA.add(resource);
+            }
+            
+            dataset.close();
+            return shareSubjectwithA;
+        }
+        
+       
+         public List<String> listShareCommonObject(URI link , R a){
+            List<String> shareObjectwithA = new ArrayList();
+             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select distinct ?subject " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object . "
+                                                                               + "?subject <" + link + "> ?object ."
+                                                                               + "filter(?subject != <" + a.getUri() + ">)}");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+                String resource = qs.getResource("subject").getURI();
+                shareObjectwithA.add(resource);
+
+            }
+//            
+//            if(shareObjectwithA == null)
+//                shareObjectwithA.add("Nothing");
+            dataset.close();
+            return shareObjectwithA;
+        }
+         
+        public List<String> getOutgoingEdges(R a){
+            
+            List<String> directlyConnectedObjects = new ArrayList<String>();
+            
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select distinct ?object " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> ?property ?object ."
+                    + " filter(isuri(?object)) }");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+//                count = (Literal) qs.getLiteral("count");
+                directlyConnectedObjects.add(qs.getResource("object").getURI());
 
             }
             
-            return Integer.parseInt(count.toString().substring(0, 1));
+            dataset.close();
+            return directlyConnectedObjects;
         }
+       
+        
+        public List<String> getIngoingEdges(R a){
+            
+            List<String> directlyConnectedSubjects = new ArrayList<>();
+            
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-	public boolean isSameAs(R a, R b) {
+            query_cmd.setCommandText("select distinct ?subject " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property <" + a.getUri() + "> ."
+                    + "filter(isuri(?subject))}");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+                directlyConnectedSubjects.add(qs.getResource("subject").getURI());
+
+            }
+            
+            dataset.close();
+            return directlyConnectedSubjects;
+        }
+               
+
+        public List<String> getIngoingEdges(URI link, R a) {
+            List<String> directlyConnectedSubjects = new ArrayList<>();
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select distinct ?subject " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject <" + link + "> <" + a.getUri() + "> .}");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+//                count = (Literal) qs.getLiteral("count");
+                directlyConnectedSubjects.add(qs.getResource("subject").getURI());
+
+            }
+            
+            dataset.close();
+            return directlyConnectedSubjects;
+        }
+        
+        
+        public List<String> getOutgoingEdges(URI link , R a) {
+            List<String> directlyConnectedObjects = new ArrayList<>();
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select distinct ?object " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object ."
+                    + " filter(isuri(?object)) }");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+//                count = (Literal) qs.getLiteral("count");
+                directlyConnectedObjects.add(qs.getResource("object").getURI());
+
+            }
+            
+            dataset.close();
+            return directlyConnectedObjects;
+        }
+        
+                
+        @Override
+        public boolean isSameAs(R a, R b) {
 		// TODO Auto-generated method stub
 		return false;
 	}
 
-	// get infos of a resource ? simple sparql
-
-	// get outgoing/ingoing resources ?
-
-	// count outgoing/ingoing resources ?
-
-        @Override
-        public int countIngoingEdges(URI link, R a, LdDataset dataset) {
-            Literal count = null;
-            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-
-            query_cmd.setCommandText("select count(distinct ?property) as ?count) where {?subject <" + link + "> <" + a.getUri() + "> .}");
-
-            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
-
-            }
-            
-            return Integer.parseInt(count.toString().substring(0, 1));
-        }
-
-        @Override
-        public int countOutgoingEdges(URI link , R a, LdDataset dataset) {
-            Literal count = null;
-            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-
-            query_cmd.setCommandText("select count(distinct ?property) as ?count) where {<" + a.getUri() + "> <" + link + "> ?object . }");
-
-            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-
-            while (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
-
-            }
-            
-            return Integer.parseInt(count.toString().substring(0, 1));
-        }
+     
 
         @Override
         public boolean isDirectlyConnected(URI link, R a, R b) {
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("ask {<" + a.getUri() + ">  <" + link + "> <" + b.getUri() + "> . }");
-
-            return dataset.executeAskQuery(query_cmd.toString());
+            
+            boolean result = dataset.executeAskQuery(query_cmd.toString());
+            
+            
+            return result;
         }
 
         @Override
         public boolean shareCommonObject(URI link, R a, R b) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("ask {<" + a.getUri() + "> <" + link + "> ?object . "
+                                        + "<" + b.getUri() + "> <" + link + "> ?object }");
+
+            boolean result = dataset.executeAskQuery(query_cmd.toString());
+            
+            dataset.close();
+            return result;
         }
 
         @Override
         public boolean shareCommonSubject(URI link, R a, R b) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("ask {?subject <" + link + "> <" + a.getUri() + "> . "
+                                        + "?subject <" + link + "> <" + b.getUri() + "> }");
+
+            boolean result = dataset.executeAskQuery(query_cmd.toString());
+            
+            dataset.close();
+            return result;
         }
+        
+        
+        @Override
+        public int countIngoingEdges(URI link, R a) {
+            
+            Literal count = null;
+            
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject <" + link + "> <" + a.getUri() + "> ."
+                    + "filter(isuri(?subject))}");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
+        }
+        
+        @Override
+        public int countIngoingEdges(R a){
+            
+            Literal count = null;
+            
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property <" + a.getUri() + ">. }");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
+            
+        }
+        
+        @Override
+       public int countOutgoingEdges(R a){
+            
+            Literal count = null;
+            
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> ?property ?object ."
+                    + " filter(isuri(?object)) }");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
+            
+        }
+       
+       
+        @Override
+      public int countOutgoingEdges(URI link , R a) {
+            Literal count = null;
+            
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object."
+                    + " filter(isuri(?object)) }");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
+        }      
+   
 
         @Override
-        public int countDirectlyConnected(R a, LdDataset dataset) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        public int countShareCommonObjects(URI link, R a) {
+            Literal count = null;
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object . "
+                                                                                       + "?subject <" + link + "> ?object ."
+                                                                                     + "filter(?subject != <" + a.getUri() + ">)}");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
+            
         }
+        
 
         @Override
-        public int countCommonObjects(R a, LdDataset dataset) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
-        }
+        public int countShareCommonSubjects(URI link, R a) {
+            Literal count = null;
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-        @Override
-        public int countCommonSubjects(R a, LdDataset dataset) {
-            throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+            query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> <" + a.getUri() + ">. "
+                                                                                       + "?subject <" + link + "> ?object."
+                                                                               + "filter(?object != <" + a.getUri() + "> && isuri(?object) ) }");
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            if (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			count = (Literal) qs.getLiteral("count");
+                        dataset.close();
+                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+		}
+                
+                dataset.close();
+                return 0;
         }
+        
+
+
 
 }
