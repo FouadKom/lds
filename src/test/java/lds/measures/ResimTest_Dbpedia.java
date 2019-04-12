@@ -52,8 +52,8 @@ public class ResimTest_Dbpedia {
         config.addParam("useIndexes", true);
         resimLdManager = new ResimLdManager(dataset, config);
         Resim resim = new Resim(resimLdManager);       
-        R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Computer").create();
-        R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Keyboard").create();
+        R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
+        R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
 
         
         
@@ -73,23 +73,23 @@ public class ResimTest_Dbpedia {
 			cii = cii + resim.Cii(edge, car, automobile);
 			cio = cio + resim.Cio(edge, car , automobile );
 			
-//                        cii_car = cii_car + resim.Cii(edge, car);
-//                        cio_car = cio_car + resim.Cio(edge, car);
-//                      
-//			cii_automobile = cii_automobile + resim.Cii(edge, automobile);
-//			cio_automobile = cio_automobile + resim.Cio(edge, automobile);
-//                        
-//                        cd_car_norm = cd_car_norm + resim.Cd_normalized(edge, car, automobile);
-//			cd_automobile_norm = cd_automobile_norm + resim.Cd_normalized(edge, automobile , car);
-//                        
-//                        cio_norm = cio_norm + resim.Cio_normalized(edge, car, automobile);
-//			cii_norm = cii_norm + resim.Cii_normalized(edge, car, automobile);
-//
-//                        csip = csip + resim.Csip(edge, car, automobile);
-//                        csop = csop + resim.Csop(edge, car, automobile);                      
-//                        
-//                        x = x + ( (double) csip / resim.Cd(edge));
-//			y = y + ( (double) csop / resim.Cd(edge));
+                        cii_car = cii_car + resim.Cii(edge, car);
+                        cio_car = cio_car + resim.Cio(edge, car);
+                      
+			cii_automobile = cii_automobile + resim.Cii(edge, automobile);
+			cio_automobile = cio_automobile + resim.Cio(edge, automobile);
+                        
+                        cd_car_norm = cd_car_norm + resim.Cd_normalized(edge, car, automobile);
+			cd_automobile_norm = cd_automobile_norm + resim.Cd_normalized(edge, automobile , car);
+                        
+                        cio_norm = cio_norm + resim.Cio_normalized(edge, car, automobile);
+			cii_norm = cii_norm + resim.Cii_normalized(edge, car, automobile);
+
+                        csip = csip + resim.Csip(edge, car, automobile);
+                        csop = csop + resim.Csop(edge, car, automobile);                      
+                        
+                        x = x + ( (double) csip / resim.Cd(edge));
+			y = y + ( (double) csop / resim.Cd(edge));
                         
                         
 
