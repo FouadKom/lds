@@ -46,14 +46,21 @@ public class ResimTest_Dbpedia {
 //    public void isResimWorksCorrectlyOnPaperExample() throws SLIB_Ex_Critic{
     
     public static void main(String args[]) throws SLIB_Ex_Critic {
-        LdDataset dataset = Util.getDBpediaDataset();
+        
+    	LdDataset dataset = Util.getDBpediaDataset();
                 
         Conf config = new Conf();
         config.addParam("useIndexes", true);
         resimLdManager = new ResimLdManager(dataset, config);
         Resim resim = new Resim(resimLdManager);       
+<<<<<<< HEAD
         R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
         R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
+=======
+        
+        R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Computer").create();
+        R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Keyboard").create();
+>>>>>>> upstream/master
 
         
         
