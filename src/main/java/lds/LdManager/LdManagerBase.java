@@ -180,6 +180,8 @@ public class LdManagerBase implements LdManager {
 
             query_cmd.setCommandText("select distinct ?subject " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property <" + a.getUri() + "> ."
                     + "filter(isuri(?subject))}");
+            
+            System.out.println(query_cmd.toString());
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
