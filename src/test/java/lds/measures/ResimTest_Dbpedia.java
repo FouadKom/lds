@@ -54,7 +54,7 @@ public class ResimTest_Dbpedia {
         resimLdManager = new ResimLdManager(dataset, config);
         Resim resim = new Resim(resimLdManager);       
 
- 
+
         R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Computer").create();
         R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Keyboard").create();
         
