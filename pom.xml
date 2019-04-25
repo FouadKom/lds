@@ -38,7 +38,6 @@
 			<artifactId>ldq</artifactId>
 			<version>0.0.1</version>
 			<scope>system</scope>
-<!-- 			<systemPath>C:\Users\LENOVO\Documents\NetBeansProjects\ldq\target\ldq-0.0.1.jar</systemPath> -->
 			<systemPath>${project.basedir}/lib/ldq-0.0.1.jar</systemPath>
 		</dependency>
 

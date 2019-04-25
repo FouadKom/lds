@@ -239,8 +239,14 @@ public class LdManagerBase implements LdManager {
                 
         @Override
         public boolean isSameAs(R a, R b) {
-		// TODO Auto-generated method stub
-		return false;
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("ask {<" + a.getUri() + ">  <" + OWL.sameAs + "> <" + b.getUri() + "> . }");
+            
+            boolean result = dataset.executeAskQuery(query_cmd.toString());
+            
+            
+            return result;
 	}
 
      
@@ -315,7 +321,7 @@ public class LdManagerBase implements LdManager {
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-            query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property <" + a.getUri() + ">. }");
+            query_cmd.setCommandText("select (count(?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {?subject ?property <" + a.getUri() + ">. }");
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
@@ -339,7 +345,7 @@ public class LdManagerBase implements LdManager {
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-            query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> ?property ?object ."
+            query_cmd.setCommandText("select (count(?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> ?property ?object ."
                     + " filter(isuri(?object)) }");
 
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());

@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
+import java.util.concurrent.TimeUnit;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
@@ -14,9 +15,16 @@ public class LdIndexer {
 
 	String indexFilePath = "";
 	DB db = null;
+        TimeUnit indexTimeToLive;
 
 	public LdIndexer(String filePath) {
 		this.indexFilePath = filePath;
+		load(this.indexFilePath);
+	}
+        
+        public LdIndexer(String filePath , TimeUnit ttl) {
+		this.indexFilePath = filePath;
+                this.indexTimeToLive = ttl;
 		load(this.indexFilePath);
 	}
 
@@ -58,14 +66,17 @@ public class LdIndexer {
         
         public String getValue(String key){
             List<String> values = getList(key);
-            return values.get(0);
+            if(values == null)
+                return null;                
+            else
+               return values.get(0); 
         }
         
 
 	public List<String> getList(String key) {
 
 		NavigableSet<Object[]> multimap = db.treeSet("index")
-				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING)).counterEnable()
+				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING)).counterEnable()                                
 				.createOrOpen();
 
 		Set<Object[]> resultSet = multimap.subSet(new Object[] { key }, // lower interval
