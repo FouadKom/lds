@@ -26,6 +26,7 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.Property;
 import org.apache.jena.rdf.model.Resource;
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -36,7 +37,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author LENOVO
+ * @author Fouad Komeiha
  */
 public class ResimTest_Dbpedia {
     public static ResimLdManager resimLdManager;
@@ -53,13 +54,34 @@ public class ResimTest_Dbpedia {
         config.addParam("useIndexes", true);
         resimLdManager = new ResimLdManager(dataset, config);
         Resim resim = new Resim(resimLdManager);       
-        
-        R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Computer").create();
-        R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Keyboard").create();
 
-        
-        
 
+        R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
+        R automobile = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
+        R flight = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Flight").create();
+        R money = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Money").create();
+        R currency = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Currency").create();
+        R business_operations = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Business_operations").create();
+        R cash = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Cash").create();
+        R bank = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Bank").create();
+        R demand_deposit = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Demand_deposit").create();
+        R professor = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Professor").create();
+        R doctor_of_medicine = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Doctor_of_Medicine").create();
+        R cucumber = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Cucumber").create();
+        R nursing = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Nursing").create();
+        R bus_driver = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Bus_driver").create();
+        R ocean = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Ocean").create();
+        R sea = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Sea").create();
+        R continent = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Continent").create();
+        R computer = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Computer").create();
+        R keyboard = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Keyboard").create();
+        R news = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("News").create();
+        R internet = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Internet").create();
+        R software = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Software").create();
+        R laboratory = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Laboratory").create();
+        
+        
+/*
         Set<URI> edges =  resimLdManager.getEdges(car , automobile);
 
             double cii = 0, cio = 0, cii_car = 0, cio_car = 0, cii_automobile = 0, cio_automobile = 0, cii_norm = 0, cio_norm = 0, pptySim = 0,
@@ -71,27 +93,26 @@ public class ResimTest_Dbpedia {
 		
 
 		for (URI edge : edges) {
-                        System.out.println("Edge: " + edge);
 			cii = cii + resim.Cii(edge, car, automobile);
 			cio = cio + resim.Cio(edge, car , automobile );
 			
-//                        cii_car = cii_car + resim.Cii(edge, car);
-//                        cio_car = cio_car + resim.Cio(edge, car);
-//                      
-//			cii_automobile = cii_automobile + resim.Cii(edge, automobile);
-//			cio_automobile = cio_automobile + resim.Cio(edge, automobile);
-//                        
-//                        cd_car_norm = cd_car_norm + resim.Cd_normalized(edge, car, automobile);
-//			cd_automobile_norm = cd_automobile_norm + resim.Cd_normalized(edge, automobile , car);
-//                        
-//                        cio_norm = cio_norm + resim.Cio_normalized(edge, car, automobile);
-//			cii_norm = cii_norm + resim.Cii_normalized(edge, car, automobile);
-//
-//                        csip = csip + resim.Csip(edge, car, automobile);
-//                        csop = csop + resim.Csop(edge, car, automobile);                      
-//                        
-//                        x = x + ( (double) csip / resim.Cd(edge));
-//			y = y + ( (double) csop / resim.Cd(edge));
+                        cii_car = cii_car + resim.Cii(edge, car);
+                        cio_car = cio_car + resim.Cio(edge, car);
+                      
+			cii_automobile = cii_automobile + resim.Cii(edge, automobile);
+			cio_automobile = cio_automobile + resim.Cio(edge, automobile);
+                        
+                        cd_car_norm = cd_car_norm + resim.Cd_normalized(edge, car, automobile);
+			cd_automobile_norm = cd_automobile_norm + resim.Cd_normalized(edge, automobile , car);
+                        
+                        cio_norm = cio_norm + resim.Cio_normalized(edge, car, automobile);
+			cii_norm = cii_norm + resim.Cii_normalized(edge, car, automobile);
+
+                        csip = csip + resim.Csip(edge, car, automobile);
+                        csop = csop + resim.Csop(edge, car, automobile);                      
+                        
+                        x = x + ( (double) csip / resim.Cd(edge));
+			y = y + ( (double) csop / resim.Cd(edge));
                         
                         
 
@@ -120,56 +141,40 @@ public class ResimTest_Dbpedia {
                 System.out.println(csip);
                 System.out.println(csop);
                 
+*/                
+//                assertTrue(resim.compare(car, automobile) > resim.compare(car, flight));
+//                assertTrue(resim.compare(money, currency) > resim.compare(money, business_operations));
+//                assertTrue(resim.compare(money, cash) < resim.compare(money, bank));
+//                assertTrue(resim.compare(money, cash) > resim.compare(money, demand_deposit));
+//                assertTrue(resim.compare(professor, doctor_of_medicine) > resim.compare(professor, cucumber));
+//                assertTrue(resim.compare(doctor_of_medicine, nursing) > resim.compare(doctor_of_medicine, bus_driver));
+//                assertTrue(resim.compare(ocean, sea) > resim.compare(ocean, continent));
+//                assertTrue(resim.compare(computer, keyboard) < resim.compare(computer, news));
+//                assertTrue(resim.compare(computer, internet) > resim.compare(computer, news));
+//                assertTrue(resim.compare(computer, software) > resim.compare(computer, laboratory));
+//                System.out.println(resim.compare(car, automobile));
                 
-                System.out.println(resim.compare(car, automobile));
+                resim.compare(car, automobile);
+//                resim.compare(car, flight);
+//                resim.compare(money, currency);
+//                resim.compare(money, business_operations);
+//                resim.compare(money, cash);
+//                resim.compare(money, bank);
+//                resim.compare(money, demand_deposit);
+//                resim.compare(professor, doctor_of_medicine);
+//                resim.compare(professor, cucumber);
+//                resim.compare(doctor_of_medicine, nursing);
+//                resim.compare(doctor_of_medicine, bus_driver);
+//                resim.compare(ocean, sea);
+//                resim.compare(ocean, continent);
+//                resim.compare(computer, news);
+//                resim.compare(computer, keyboard);
+//                resim.compare(computer, internet);
+//                resim.compare(computer, software);
+//                resim.compare(computer, laboratory);
                 
                 resimLdManager.closeIndexes();
-                   
-
-//        
-//        sim = resim.Resim(a , c);
-//        assertEquals(1.0, sim, 0.0);
-               
-//          System.out.println(resim.Resim(car , automobile));
-//        System.out.println(manager.countIngoingEdges(car));
-//            for (String s: resimLdManager.getIngoingEdges(car) ){
-//                    System.out.println(s + "\n");
-//            }
-
-//            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-//
-//            query_cmd.setCommandText("select distinct ?subject where {?subject ?property <" + car.getUri() + "> .}");
-//
-//            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-//
-//            while (resultSet.hasNext()) {
-//                QuerySolution qs = resultSet.nextSolution();
-//                Resource subject = qs.getResource("subject");
-////                Resource property = qs.getResource("property");
-////                System.out.println(qs.getLiteral("count").toString());
-//                System.out.println(subject.toString().replace("http://dbpedia.org/resource/", "dbr:") );
-//
-//
-//            }
-//            String q= "select (count(distinct ?subject) as ?count) from <http://dbpedia.org> where {?subject ?property <" + car.getUri() + "> .}";
-//            Query query = QueryFactory.create(q);
-//            QueryExecution qexec = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
-//            ResultSet results = qexec.execSelect();
-//            
-//            while (results.hasNext()) {
-//                QuerySolution qs = results.nextSolution();
-////                Resource subject = qs.getResource("subject");
-////                System.out.println(subject.toString().replace("http://dbpedia.org/resource/", "dbr:") );
-//                 System.out.println(qs.getLiteral("count"));
-//
-//
-//            }
-
-            
-            
- 
-
-    }
+  }
     
     
 }

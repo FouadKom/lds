@@ -38,7 +38,7 @@ public class ResimLdManager extends LdManagerBase {
         String outgoingTypedEdgesIndexFile = "resim_outgoingTypedEdges_index.db";
         String shareCommonObjectsIndexFile = "resim_shareCommonObjects_index.db";
         String shareCommonSubjectsIndexFile = "resim_shareCommonSubjects_index.db";
-//        String directlyConnectedIndexFile = "resim_directlyConnected_index.db";
+        String directlyConnectedIndexFile = "resim_directlyConnected_index.db";
         
 	public LdIndexer sameAsIndex;
         public LdIndexer ingoingEdgesIndex;
@@ -47,7 +47,7 @@ public class ResimLdManager extends LdManagerBase {
         public LdIndexer outgoingTypedEdgesIndex;
         public LdIndexer shareCommonObjectsIndex;
         public LdIndexer shareCommonSubjectsIndex;
-//        public LdIndexer directlyConnectedIndex;
+        public LdIndexer directlyConnectedIndex;
         
 
 	public ResimLdManager(LdDataset dataset, Conf config) {
@@ -65,6 +65,7 @@ public class ResimLdManager extends LdManagerBase {
                 outgoingTypedEdgesIndex = new LdIndexer(outgoingTypedEdgesIndexFile);
                 shareCommonObjectsIndex = new LdIndexer(shareCommonObjectsIndexFile);
                 shareCommonSubjectsIndex = new LdIndexer(shareCommonSubjectsIndexFile);
+                directlyConnectedIndex = new LdIndexer(directlyConnectedIndexFile);
                 
 	}
         
@@ -76,6 +77,7 @@ public class ResimLdManager extends LdManagerBase {
                 ingoingTypedEdgesIndex.close();
                 outgoingTypedEdgesIndex.close();
                 shareCommonObjectsIndex.close();
+                directlyConnectedIndex.close();
             }
              
          }
@@ -167,22 +169,48 @@ public class ResimLdManager extends LdManagerBase {
         @Override
         public int countIngoingEdges(URI link , R a) {
 		      
+//                if (this.config.getParam("useIndexes").equals(true)) {
+//                    
+//                    List<String> ingoingTypedEdges_a = ingoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+//                    
+//                    if(ingoingTypedEdges_a != null){
+//                        
+//                        return ingoingTypedEdges_a.size();
+//
+//                    }
+//                    else
+//                    {
+//                        ingoingTypedEdges_a = super.getIngoingEdges(link , a);
+//                        
+//                        if(ingoingTypedEdges_a != null){
+//                            ingoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , ingoingTypedEdges_a);
+//                            return ingoingTypedEdges_a.size();
+//                        }
+//                        
+//                        return 0;
+//                        
+//                    }                      
+//
+//                }
+//                
+//                return super.countIngoingEdges(link , a);
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    List<String> ingoingTypedEdges_a = ingoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    String ingoingTypedEdges_a = ingoingTypedEdgesIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());
                     
                     if(ingoingTypedEdges_a != null){
                         
-                        return ingoingTypedEdges_a.size();
+                        return Integer.parseInt(ingoingTypedEdges_a);
 
                     }
                     else
                     {
-                        ingoingTypedEdges_a = super.getIngoingEdges(link , a);
+                        ingoingTypedEdges_a = Integer.toString(super.countIngoingEdges(link , a));
                         
                         if(ingoingTypedEdges_a != null){
-                            ingoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , ingoingTypedEdges_a);
-                            return ingoingTypedEdges_a.size();
+                            ingoingTypedEdgesIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , ingoingTypedEdges_a);
+                           
+                            return Integer.parseInt(ingoingTypedEdges_a);
                         }
                         
                         return 0;
@@ -194,26 +222,54 @@ public class ResimLdManager extends LdManagerBase {
                 return super.countIngoingEdges(link , a);
 	}
         
+        
         @Override
         public int countIngoingEdges(R a) {
 		      
+//                if (this.config.getParam("useIndexes").equals(true)) {
+//                    
+//                    
+//                    List<String> ingoingEdges_a = ingoingEdgesIndex.getList(a.getUri().stringValue());
+//
+//                    if(ingoingEdges_a != null){
+//                        
+//                        return ingoingEdges_a.size();
+//
+//                    }
+//                    else
+//                    {
+//                        ingoingEdges_a = super.getIngoingEdges(a);
+//                        
+//                        if(ingoingEdges_a != null){
+//                            ingoingEdgesIndex.addList(a.getUri().stringValue(), ingoingEdges_a);
+//                            return ingoingEdges_a.size();
+//                        }
+//                        
+//                        return 0;
+//                        
+//                    }                      
+//
+//                }
+//                
+//               return super.countIngoingEdges(a);
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
+                    String ingoingEdges_a = ingoingEdgesIndex.getValue(a.getUri().stringValue());
                     
-                    List<String> ingoingEdges_a = ingoingEdgesIndex.getList(a.getUri().stringValue());
-
+                    
                     if(ingoingEdges_a != null){
                         
-                        return ingoingEdges_a.size();
+                        return Integer.parseInt(ingoingEdges_a);
 
                     }
                     else
                     {
-                        ingoingEdges_a = super.getIngoingEdges(a);
+                        ingoingEdges_a = Integer.toString(super.countIngoingEdges(a));
                         
                         if(ingoingEdges_a != null){
-                            ingoingEdgesIndex.addList(a.getUri().stringValue(), ingoingEdges_a);
-                            return ingoingEdges_a.size();
+                            ingoingEdgesIndex.addValue(a.getUri().stringValue(), ingoingEdges_a);
+                                                        
+                            return Integer.parseInt(ingoingEdges_a);
                         }
                         
                         return 0;
@@ -230,22 +286,49 @@ public class ResimLdManager extends LdManagerBase {
        @Override
         public int countOutgoingEdges(URI link , R a) {
                 
+//                if (this.config.getParam("useIndexes").equals(true)) {
+//                    
+//                    List<String> outgoingTypedEdges_a = outgoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+//                    
+//                    if(outgoingTypedEdges_a != null){
+//                        
+//                        return outgoingTypedEdges_a.size();
+//
+//                    }
+//                    else
+//                    {
+//                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
+//                        
+//                        if(outgoingTypedEdges_a != null){
+//                            outgoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
+//                            return outgoingTypedEdges_a.size();
+//                        }
+//                        
+//                        return 0;
+//                        
+//                    }                      
+//
+//                }
+//                
+//                return super.countOutgoingEdges(link , a);
+
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    List<String> outgoingTypedEdges_a = outgoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    String outgoingTypedEdges_a = outgoingTypedEdgesIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());                    
                     
                     if(outgoingTypedEdges_a != null){
                         
-                        return outgoingTypedEdges_a.size();
+                        return Integer.parseInt(outgoingTypedEdges_a);
 
                     }
                     else
                     {
-                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
+                        outgoingTypedEdges_a = Integer.toString(super.countOutgoingEdges(link , a));
                         
                         if(outgoingTypedEdges_a != null){
-                            outgoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
-                            return outgoingTypedEdges_a.size();
+                            outgoingTypedEdgesIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
+                                                        
+                            return Integer.parseInt(outgoingTypedEdges_a);
                         }
                         
                         return 0;
@@ -261,23 +344,51 @@ public class ResimLdManager extends LdManagerBase {
         @Override
         public int countOutgoingEdges(R a) {
                 
+//                if (this.config.getParam("useIndexes").equals(true)) {
+//                    
+//                    
+//                    List<String> outgoingEdges_a = outgoingEdgesIndex.getList(a.getUri().stringValue());
+//
+//                    if(outgoingEdges_a != null){
+//                        
+//                        return outgoingEdges_a.size();
+//
+//                    }
+//                    else
+//                    {
+//                        outgoingEdges_a = super.getOutgoingEdges(a);
+//                        
+//                        if(outgoingEdges_a != null){
+//                            outgoingEdgesIndex.addList(a.getUri().stringValue(), outgoingEdges_a);
+//                            return outgoingEdges_a.size();                            
+//                        }
+//                        
+//                        return 0;
+//                        
+//                    }                      
+//
+//                }
+//                
+//               return super.countOutgoingEdges(a);
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
                     
-                    List<String> outgoingEdges_a = outgoingEdgesIndex.getList(a.getUri().stringValue());
+                    String outgoingEdges_a = outgoingEdgesIndex.getValue(a.getUri().stringValue());
+                    
 
                     if(outgoingEdges_a != null){
                         
-                        return outgoingEdges_a.size();
+                        return Integer.parseInt(outgoingEdges_a);
 
                     }
                     else
                     {
-                        outgoingEdges_a = super.getOutgoingEdges(a);
+                        outgoingEdges_a = Integer.toString(super.countOutgoingEdges(a));
                         
                         if(outgoingEdges_a != null){
-                            outgoingEdgesIndex.addList(a.getUri().stringValue(), outgoingEdges_a);
-                            return outgoingEdges_a.size();                            
+                            outgoingEdgesIndex.addValue(a.getUri().stringValue(), outgoingEdges_a);
+                                                       
+                            return Integer.parseInt(outgoingEdges_a);                          
                         }
                         
                         return 0;
@@ -306,6 +417,7 @@ public class ResimLdManager extends LdManagerBase {
                         
                         if(shareCommonObjects_a != null ){
                             shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonObjects_a);
+                                                        
                             return shareCommonObjects_a.size();
                         }
                         
@@ -334,6 +446,7 @@ public class ResimLdManager extends LdManagerBase {
                         
                         if(shareCommonObjects_a != null){
                             shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() ,  shareCommonObjects_a);
+                                                        
                             return shareCommonObjects_a.contains(b.getUri().stringValue());
                         }
                             
@@ -362,6 +475,7 @@ public class ResimLdManager extends LdManagerBase {
                         
                         if(shareCommonSubjects_a != null){
                             shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
+                                                        
                             return shareCommonSubjects_a.size();
                         }
                             
@@ -391,6 +505,7 @@ public class ResimLdManager extends LdManagerBase {
                         
                         if(shareCommonSubjects_a != null){
                             shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
+                                                        
                             return shareCommonSubjects_a.contains(b.getUri().stringValue());
                         }
                         
@@ -406,20 +521,52 @@ public class ResimLdManager extends LdManagerBase {
         @Override
 	public boolean isSameAs(R a, R b) {
 
-		if (this.config.getParam("useIndexes").equals(true)) {
+//		if (this.config.getParam("useIndexes").equals(true)) {
+//
+//			List<String> sameAs_a = sameAsIndex.getList(a.getUri().stringValue());
+//
+//			if (sameAs_a == null) {
+//
+//				// get sameAs from LOD dataset
+//				try {
+//					sameAs_a = super.getSameAsResoures(a);
+//					// index
+//					
+//                                        if(sameAs_a != null){
+//                                            sameAsIndex.addList(a.getUri().stringValue(), sameAs_a);
+//                                                                                        
+//                                            return sameAs_a.contains(b.getUri().stringValue());
+//                                        }
+//                                        
+//                                        return false;
+//                                        
+//				} catch (Exception e) {
+//					// TODO: throw exception
+//					System.out.println("Error:" + e.getMessage());
+//				}
+//
+//			}
+//
+//			else {
+//				return sameAs_a.contains(b.getUri().stringValue());
+//			}
+//		}
+//		return super.isSameAs(a, b);
+                    if (this.config.getParam("useIndexes").equals(true)) {
 
-			List<String> sameAs_a = sameAsIndex.getList(a.getUri().stringValue());
+			String sameAs_a = sameAsIndex.getValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue());
 
 			if (sameAs_a == null) {
 
 				// get sameAs from LOD dataset
 				try {
-					sameAs_a = super.getSameAsResoures(a);
+					sameAs_a = Boolean.toString(super.isSameAs(a, b));
 					// index
 					
                                         if(sameAs_a != null){
-                                            sameAsIndex.addList(a.getUri().stringValue(), sameAs_a);
-                                            return sameAs_a.contains(b.getUri().stringValue());
+                                            sameAsIndex.addValue(a.getUri().stringValue(), sameAs_a);
+                                                                                        
+                                            return Boolean.parseBoolean(sameAs_a);
                                         }
                                         
                                         return false;
@@ -432,35 +579,59 @@ public class ResimLdManager extends LdManagerBase {
 			}
 
 			else {
-				System.out.println("sameAs using index");
-
-				return sameAs_a.contains(b.getUri().stringValue());
+				return Boolean.parseBoolean(sameAs_a);
 			}
 		}
-		return super.getSameAsResoures(a).contains(b.getUri().stringValue());
+		return super.isSameAs(a, b);
 	}
         
         
         
         @Override
          public boolean isDirectlyConnected(URI link, R a, R b) { //sameAs can be replaced with this?
-             
-             if (this.config.getParam("useIndexes").equals(true)) {
+//             
+//             if (this.config.getParam("useIndexes").equals(true)) {
+//                    
+//                    List<String> outgoingTypedEdges_a = directlyConnectedIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+//                    
+//                    if(outgoingTypedEdges_a != null){
+//                        
+//                        return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+//
+//                    }
+//                    else
+//                    {   
+//                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
+//                        
+//                        if(outgoingTypedEdges_a != null){
+//                            directlyConnectedIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
+//                                                        
+//                            return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+//                        }
+//                        
+//                        return false;
+//                        
+//                    }                      
+//
+//                }
+//                
+//                return super.isDirectlyConnected(link, a, b);
+                if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    List<String> outgoingTypedEdges_a = outgoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+                    String directlyConnected  = directlyConnectedIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue());
                     
-                    if(outgoingTypedEdges_a != null){
+                    if(directlyConnected != null){
                         
-                        return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+                        return Boolean.parseBoolean(directlyConnected);
 
                     }
                     else
                     {   
-                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
+                        directlyConnected = Boolean.toString(super.isDirectlyConnected(link, a, b));
                         
-                        if(outgoingTypedEdges_a != null){
-                            outgoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
-                            return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+                        if(directlyConnected != null){
+                            directlyConnectedIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue() , directlyConnected);
+                            return Boolean.parseBoolean(directlyConnected);
                         }
                         
                         return false;
