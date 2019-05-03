@@ -1,6 +1,6 @@
 package lds.LdManager;
 
-import java.util.List;
+import java.util.Set;
 
 import org.apache.commons.httpclient.HttpException;
 
@@ -27,11 +27,23 @@ public interface LdManager {
         
         int countShareCommonSubjects(URI link , R a);
         
-        int countIngoingEdges(R a ) ;
+        int countSubject(R a ) ;
         
-        int countIngoingEdges(URI link , R a );
+        int countSubject(URI link , R a );
 
-        int countOutgoingEdges(R a);
+        int countObject(R a);
 
-        int countOutgoingEdges(URI link , R a);
+        int countObject(URI link , R a);
+        
+        int countPropertyOccurrence(URI link);
+        
+        Set<URI> getIngoingEdges(R a);
+        
+        Set<URI> getOutgoingEdges(R a);
+        
+        Set<URI> getEdges(R a , R b);
+        
+        
+        
+        
 }

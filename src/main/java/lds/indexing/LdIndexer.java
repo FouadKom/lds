@@ -30,7 +30,7 @@ public class LdIndexer {
 
 	public void load(String filePath) {
 		this.indexFilePath = filePath;
-		db = DBMaker.fileDB(this.indexFilePath).make();
+		db = DBMaker.fileDB(this.indexFilePath).fileMmapEnable().make();
 	}
 
 	public void reload() throws Exception {
@@ -76,7 +76,8 @@ public class LdIndexer {
 	public List<String> getList(String key) {
 
 		NavigableSet<Object[]> multimap = db.treeSet("index")
-				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING)).counterEnable()                                
+				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING)).counterEnable()
+                         
 				.createOrOpen();
 
 		Set<Object[]> resultSet = multimap.subSet(new Object[] { key }, // lower interval
