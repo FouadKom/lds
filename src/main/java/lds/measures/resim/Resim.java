@@ -57,6 +57,7 @@ public class Resim extends LdSimilarityMeasureBase {
 //		this.edges = edges;
 //	}
 
+        @Override
 	public double compare(R a, R b) {
 		double sim = 0;
 		try {
@@ -80,7 +81,7 @@ public class Resim extends LdSimilarityMeasureBase {
 		int w1 = 1, w2 = 2;
 		double x = 0, y = 0;
                 
-                this.edges = ResimLdManager.getEdges(a , b);
+                this.edges = resimLDLoader.getEdges(a , b);
 		// TODO: if we're in the same dataset, it's not necessary to check sameAs ?
 		if (a.equals(b) || resimLDLoader.isSameAs(a, b))
 			return 1;
@@ -108,7 +109,7 @@ public class Resim extends LdSimilarityMeasureBase {
 	}
 
 	public double LDSD(R a, R b) {
-		double cdA_norm = 0, cdB_norm = 0, cii_norm = 0, cio_norm = 0;
+                double cdA_norm = 0, cdB_norm = 0, cii_norm = 0, cio_norm = 0;
 
 		for (URI l : edges) {
 			cdA_norm = cdA_norm + Cd_normalized(l, a, b);
@@ -116,7 +117,8 @@ public class Resim extends LdSimilarityMeasureBase {
 			cii_norm = cii_norm + Cii_normalized(l, a , b);
 			cio_norm = cio_norm + Cio_normalized(l, a , b);
 
-		}
+		}       
+		
 
 		return 1 / (1 + cdA_norm + cdB_norm + cii_norm + cio_norm);
 	}
@@ -128,13 +130,13 @@ public class Resim extends LdSimilarityMeasureBase {
 	public int Cip(R a) {
 //		Set<E> ingoing = graph.getE(a.getUri(), Direction.IN); // count of ingoing edges to a
 //		return ingoing.size();
-                return resimLDLoader.countIngoingEdges(a);
+                return resimLDLoader.countSubject(a);
 	}
 
 	public int Cop(R a) {
 //		Set<E> outgoing = graph.getE(a.getUri(), Direction.OUT); // count of outgoing edges frm a 
 //		return outgoing.size();
-                return resimLDLoader.countOutgoingEdges(a);
+                return resimLDLoader.countObject(a);
 	}
 
 	public int Csip(URI l, R a, R b) {
@@ -143,7 +145,7 @@ public class Resim extends LdSimilarityMeasureBase {
 //		if (edgesA.isEmpty() || edgesB.isEmpty())
 //			return 0;
 //		return 1;
-                if ( resimLDLoader.countIngoingEdges(l , a) > 0 && resimLDLoader.countIngoingEdges(l , b ) > 0 )
+                if ( resimLDLoader.countSubject(l , a) > 0 && resimLDLoader.countSubject(l , b ) > 0 )
                     return 1;
                 return 0;
 	}
@@ -154,7 +156,7 @@ public class Resim extends LdSimilarityMeasureBase {
 //		if (edgesA.isEmpty() || edgesB.isEmpty())
 //			return 0;
 //		return 1;
-                 if (resimLDLoader.countOutgoingEdges(l , a) > 0 && resimLDLoader.countOutgoingEdges(l , b ) > 0)
+                 if (resimLDLoader.countObject(l , a) > 0 && resimLDLoader.countObject(l , b ) > 0)
                     return 1;
                 return 0;
 	}
@@ -179,11 +181,11 @@ public class Resim extends LdSimilarityMeasureBase {
 //		Set<E> a_edgeOut = graph.getE(l, a, Direction.OUT);
 //
 //		return a_edgeOut.size();
-                return resimLDLoader.countOutgoingEdges(l , a);
+                return resimLDLoader.countObject(l , a);
 	}
 
 	public int Cd(URI l) {
-		return ResimLdManager.countPropertyOccurrence(l);
+		return resimLDLoader.countPropertyOccurrence(l);
 	}
 
 	public double Cd_normalized(URI l, R a, R b) {

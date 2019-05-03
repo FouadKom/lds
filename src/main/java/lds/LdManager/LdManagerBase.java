@@ -81,33 +81,10 @@ public class LdManagerBase implements LdManager {
 		return sameAsResources;
 
 	}
-
-	public static int countPropertyOccurrence(URI link) {
-		Literal count = null;
-		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-
-		query_cmd.setCommandText("select (count(?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> ?object }");
-
-		// logger.info("query = " + query_cmd.toString());
-
-		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-
-		if (resultSet.hasNext()) {
-			QuerySolution qs = resultSet.nextSolution();
-			count = (Literal) qs.getLiteral("count");
-                        dataset.close();
-                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
-
-		}
-                
-                dataset.close();
-                return 0;
-                
-	}
         
         public List<String> listShareCommonSubject(URI link , R a){
             List<String> shareSubjectwithA = new ArrayList();
-             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select distinct ?object " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> <" + a.getUri() + ">. "
                                                                    + "?subject <" + link + "> ?object ."
@@ -149,7 +126,7 @@ public class LdManagerBase implements LdManager {
             return shareObjectwithA;
         }
          
-        public List<String> getOutgoingEdges(R a){
+        public List<String> getObjects(R a){
             
             List<String> directlyConnectedObjects = new ArrayList<String>();
             
@@ -172,7 +149,7 @@ public class LdManagerBase implements LdManager {
         }
        
         
-        public List<String> getIngoingEdges(R a){
+        public List<String> getSubjects(R a){
             
             List<String> directlyConnectedSubjects = new ArrayList<>();
             
@@ -196,7 +173,7 @@ public class LdManagerBase implements LdManager {
         }
                
 
-        public List<String> getIngoingEdges(URI link, R a) {
+        public List<String> getSubjects(URI link, R a) {
             List<String> directlyConnectedSubjects = new ArrayList<>();
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -216,7 +193,7 @@ public class LdManagerBase implements LdManager {
         }
         
         
-        public List<String> getOutgoingEdges(URI link , R a) {
+        public List<String> getObjects(URI link , R a) {
             List<String> directlyConnectedObjects = new ArrayList<>();
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -234,6 +211,82 @@ public class LdManagerBase implements LdManager {
             
             dataset.close();
             return directlyConnectedObjects;
+        }
+        
+        @Override
+	public int countPropertyOccurrence(URI link) {
+            Literal count = null;
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("select (count(?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> ?object }");
+
+            // logger.info("query = " + query_cmd.toString());
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            if (resultSet.hasNext()) {
+                    QuerySolution qs = resultSet.nextSolution();
+                    count = (Literal) qs.getLiteral("count");
+                    dataset.close();
+                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+            }
+
+            dataset.close();
+            return 0;
+                
+	}
+        
+        @Override
+        public Set<URI> getIngoingEdges(R a){
+            Resource edge = null;
+		Set<URI> edges = new HashSet();
+		URIFactory factory = URIFactoryMemory.getSingleton();
+
+		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+                query_cmd.setCommandText("select distinct ?property \n"
+                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                            + "where {[] ?property <" + a.getUri() + ">  }");
+                                         
+                
+		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+		while (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			edge = (Resource) qs.getResource("property");
+			edges.add(factory.getURI(edge.toString()));
+
+		}
+                
+                dataset.close();
+		return edges;
+        }
+        
+        @Override
+        public Set<URI> getOutgoingEdges(R a){
+            Resource edge = null;
+		Set<URI> edges = new HashSet();
+		URIFactory factory = URIFactoryMemory.getSingleton();
+
+		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+                query_cmd.setCommandText("select distinct ?property \n"
+                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                            + "where {<" + a.getUri() + "> ?property [].}");
+                                            
+                
+		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+		while (resultSet.hasNext()) {
+			QuerySolution qs = resultSet.nextSolution();
+			edge = (Resource) qs.getResource("property");
+			edges.add(factory.getURI(edge.toString()));
+
+		}
+                
+                dataset.close();
+		return edges;
         }
         
                 
@@ -291,7 +344,7 @@ public class LdManagerBase implements LdManager {
         
         
         @Override
-        public int countIngoingEdges(URI link, R a) {
+        public int countSubject(URI link, R a) {
             
             Literal count = null;
             
@@ -315,7 +368,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-        public int countIngoingEdges(R a){
+        public int countSubject(R a){
             
             Literal count = null;
             
@@ -339,7 +392,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-       public int countOutgoingEdges(R a){
+       public int countObject(R a){
             
             Literal count = null;
             
@@ -356,16 +409,16 @@ public class LdManagerBase implements LdManager {
                         dataset.close();
                         return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
-		}
-                
-                dataset.close();
-                return 0;
+            }
+
+            dataset.close();
+            return 0;
             
         }
        
        
         @Override
-      public int countOutgoingEdges(URI link , R a) {
+      public int countObject(URI link , R a) {
             Literal count = null;
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
@@ -381,10 +434,10 @@ public class LdManagerBase implements LdManager {
                         dataset.close();
                         return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
-		}
-                
-                dataset.close();
-                return 0;
+            }
+
+            dataset.close();
+            return 0;
         }      
    
 
@@ -435,6 +488,42 @@ public class LdManagerBase implements LdManager {
                 dataset.close();
                 return 0;
         }
+
+    @Override
+    public Set<URI> getEdges(R a, R b) {
+        Set<URI> edges = new HashSet();
+        Resource edge;
+        URIFactory factory = URIFactoryMemory.getSingleton();
+
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+        query_cmd.setCommandText("select distinct ?property \n"
+                                + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                + "where { \n"
+                                + "{ \n"
+                                + "select distinct ?property \n"
+                                + "where {?subject ?property []. \n" 
+                                + "filter(?subject IN (<" + a.getUri() + "> , <" + b.getUri() +"> )  ) } \n"
+                                + "} \n"
+                                + "union \n"
+                                + "{ \n"
+                                + "select distinct ?property \n"
+                                + "where {[] ?property ?object. \n"
+                                + "filter(?object IN (<" + a.getUri() + "> , <" + b.getUri() +"> )  ) } \n"
+                                + "} \n"
+                                + "}");
+                
+		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+		while (resultSet.hasNext()) {
+                    QuerySolution qs = resultSet.nextSolution();
+                    edge = (Resource) qs.getResource("property");
+                    edges.add(factory.getURI(edge.toString()));
+		}
+                
+              dataset.close();
+              return edges;
+    }
         
 
 

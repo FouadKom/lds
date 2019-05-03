@@ -5,33 +5,12 @@
  */
 package lds.measures;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Set;
-import lds.LdManager.LdManager;
-import lds.LdManager.LdManagerBase;
-import static lds.measures.ResimTest.resimLdManager;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResimLdManager;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Literal;
-import org.apache.jena.rdf.model.Property;
-import org.apache.jena.rdf.model.Resource;
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 import org.junit.Test;
-import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
-import slib.graph.model.impl.repo.URIFactoryMemory;
-import slib.graph.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
@@ -152,29 +131,31 @@ public class ResimTest_Dbpedia {
 //                assertTrue(resim.compare(computer, keyboard) < resim.compare(computer, news));
 //                assertTrue(resim.compare(computer, internet) > resim.compare(computer, news));
 //                assertTrue(resim.compare(computer, software) > resim.compare(computer, laboratory));
-//                System.out.println(resim.compare(car, automobile));
                 
                 resim.compare(car, automobile);
-//                resim.compare(car, flight);
-//                resim.compare(money, currency);
-//                resim.compare(money, business_operations);
-//                resim.compare(money, cash);
-//                resim.compare(money, bank);
-//                resim.compare(money, demand_deposit);
-//                resim.compare(professor, doctor_of_medicine);
-//                resim.compare(professor, cucumber);
-//                resim.compare(doctor_of_medicine, nursing);
-//                resim.compare(doctor_of_medicine, bus_driver);
-//                resim.compare(ocean, sea);
-//                resim.compare(ocean, continent);
-//                resim.compare(computer, news);
-//                resim.compare(computer, keyboard);
-//                resim.compare(computer, internet);
-//                resim.compare(computer, software);
-//                resim.compare(computer, laboratory);
-                
+                resim.compare(car, flight);
+                resim.compare(money, currency);
+                resim.compare(money, business_operations);
+                resim.compare(money, cash);
+                resim.compare(money, bank);
+                resim.compare(money, demand_deposit);
+                resim.compare(professor, doctor_of_medicine);
+                resim.compare(professor, cucumber);
+                resim.compare(doctor_of_medicine, nursing);
+                resim.compare(doctor_of_medicine, bus_driver);
+                resim.compare(ocean, sea);
+                resim.compare(ocean, continent);
+                resim.compare(computer, news);
+                resim.compare(computer, keyboard);
+                resim.compare(computer, internet);
+                resim.compare(computer, software);
+                resim.compare(computer, laboratory);
+
+
+//                URIFactory factory = URIFactoryMemory.getSingleton();
+//                URI link = factory.getURI("http://dbpedia.org/property/wheels");
+////                System.out.println(resim.compare(car , automobile));
                 resimLdManager.closeIndexes();
-  }
-    
+  }    
     
 }

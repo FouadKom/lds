@@ -39,6 +39,7 @@ public class ResimTest {
 	@Test
 	public void isResimWorksCorrectlyOnPaperExample() throws SLIB_Ex_Critic {
 
+
 		LdDataset dataSet = null;
 
 		URIFactory factory = URIFactoryMemory.getSingleton();
@@ -58,7 +59,7 @@ public class ResimTest {
 		config.addParam("useIndexes", true);
 		resimLdManager = new ResimLdManager(dataSet, config);
 		Resim resim = new Resim(resimLdManager);
-		Set<URI> edges = ResimLdManager.getEdges(r1, r2);
+		Set<URI> edges = resimLdManager.getEdges(r1, r2);
 
 		double cii = 0, cio = 0, cii_r1 = 0, cio_r1 = 0, cii_r2 = 0, cio_r2 = 0, cii_norm = 0, cio_norm = 0, pptySim,
 				ldsd, ldsdsim, sim;
@@ -106,7 +107,7 @@ public class ResimTest {
 		sim = resim.Resim(r1, r1);
 		assertEquals(1.0, sim, 0.0);
 
-		// resimLdManager.closeIndexes();
+		resimLdManager.closeIndexes();
 
 	}
 

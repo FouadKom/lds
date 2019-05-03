@@ -34,20 +34,26 @@ public class ResimLdManager extends LdManagerBase {
 	String sameAsIndexFile = "resim_sameAs_index.db";
         String ingoingEdgesIndexFile = "resim_ingoingEdges_index.db";
         String outgoingEdgesIndexFile = "resim_outgoingEdges_index.db";
-        String ingoingTypedEdgesIndexFile = "resim_ingoingTypedEdges_index.db";
-        String outgoingTypedEdgesIndexFile = "resim_outgoingTypedEdges_index.db";
+//        String ingoingTypedEdgesIndexFile = "resim_ingoingTypedEdges_index.db";
+//        String outgoingTypedEdgesIndexFile = "resim_outgoingTypedEdges_index.db";
+        String subjectsIndexFile = "resim_subjects_index.db";
+        String objectsIndexFile = "resim_objects_index.db";
         String shareCommonObjectsIndexFile = "resim_shareCommonObjects_index.db";
         String shareCommonSubjectsIndexFile = "resim_shareCommonSubjects_index.db";
         String directlyConnectedIndexFile = "resim_directlyConnected_index.db";
+        String propertyOccurrenceIndexFile = "resim_propertyOccurence_index.db";
         
 	public LdIndexer sameAsIndex;
         public LdIndexer ingoingEdgesIndex;
         public LdIndexer outgoingEdgesIndex;
-        public LdIndexer ingoingTypedEdgesIndex;
-        public LdIndexer outgoingTypedEdgesIndex;
+//        public LdIndexer ingoingTypedEdgesIndex;
+//        public LdIndexer outgoingTypedEdgesIndex;
+        public LdIndexer subjectsIndex;
+        public LdIndexer objectsIndex;
         public LdIndexer shareCommonObjectsIndex;
         public LdIndexer shareCommonSubjectsIndex;
         public LdIndexer directlyConnectedIndex;
+        public LdIndexer propertyOccurrenceIndex;
         
 
 	public ResimLdManager(LdDataset dataset, Conf config) {
@@ -61,11 +67,14 @@ public class ResimLdManager extends LdManagerBase {
 		sameAsIndex = new LdIndexer(sameAsIndexFile);
                 ingoingEdgesIndex = new LdIndexer(ingoingEdgesIndexFile);
                 outgoingEdgesIndex = new LdIndexer(outgoingEdgesIndexFile);
-                ingoingTypedEdgesIndex = new LdIndexer(ingoingTypedEdgesIndexFile);
-                outgoingTypedEdgesIndex = new LdIndexer(outgoingTypedEdgesIndexFile);
+//                ingoingTypedEdgesIndex = new LdIndexer(ingoingTypedEdgesIndexFile);
+//                outgoingTypedEdgesIndex = new LdIndexer(outgoingTypedEdgesIndexFile);
+                subjectsIndex = new LdIndexer(subjectsIndexFile);
+                objectsIndex = new LdIndexer(objectsIndexFile);
                 shareCommonObjectsIndex = new LdIndexer(shareCommonObjectsIndexFile);
                 shareCommonSubjectsIndex = new LdIndexer(shareCommonSubjectsIndexFile);
                 directlyConnectedIndex = new LdIndexer(directlyConnectedIndexFile);
+                propertyOccurrenceIndex = new LdIndexer(propertyOccurrenceIndexFile);
                 
 	}
         
@@ -74,353 +83,340 @@ public class ResimLdManager extends LdManagerBase {
                 sameAsIndex.close();
                 ingoingEdgesIndex.close();
                 outgoingEdgesIndex.close();
-                ingoingTypedEdgesIndex.close();
-                outgoingTypedEdgesIndex.close();
+//                ingoingTypedEdgesIndex.close();
+//                outgoingTypedEdgesIndex.close();
+                subjectsIndex.close();
+                objectsIndex.close();
                 shareCommonObjectsIndex.close();
                 directlyConnectedIndex.close();
             }
              
          }
          
-
-	// public static int getCountOutgoing(URI a , LdDataset dataset){
-	// Literal count = null;
-	// ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-	//
-	// query_cmd.setCommandText("select (count(distinct ?property) as ?count) where
-	// {"
-	// + "<"+ a.toString() + "> ?property ?Object. }");
-	//
-	//
-	// logger.info("query = " + query_cmd.toString());
-	//
-	// ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-	//
-	// if(resultSet.hasNext()) {
-	// QuerySolution qs = resultSet.nextSolution();
-	// count = (Literal) qs.getLiteral("count") ;
-	// }
-	//
-	// return Integer.parseInt(count.toString());
-	// }
-	//
-	// public static int getCountIngoing(URI a , LdDataset dataset){
-	// Literal count = null;
-	// ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-	//
-	// query_cmd.setCommandText("select (count(distinct ?property) as ?count) where
-	// {"
-	// + "?Object ?property <"+ a.toString() + ">. }");
-	//
-	//
-	// logger.info("query = " + query_cmd.toString());
-	//
-	// ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-	//
-	// if(resultSet.hasNext()) {
-	// QuerySolution qs = resultSet.nextSolution();
-	// count = (Literal) qs.getLiteral("count") ;
-	// }
-	//
-	// return Integer.parseInt(count.toString());
-	// }
-        
-        
-        // TOFIX: Cannot get all edges of a dataset
-	public static Set<URI> getEdges(R a , R b) {
-		Resource edge = null;
-		Set<URI> edges = new HashSet();
-		URIFactory factory = URIFactoryMemory.getSingleton();
-
-		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-
-                query_cmd.setCommandText("select distinct ?property \n"
-                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                            + "where { \n"
-                                            + "{ \n"
-                                            + "select distinct ?property \n"
-//                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                            + "where {?subject ?property ?object. \n" 
-                                            + "filter(?subject IN (<" + a.getUri() + "> , <" + b.getUri() +"> )  ) } \n"
-                                            + "} \n"
-                                            + "union \n"
-                                            + "{ \n"
-                                            + "select distinct ?property \n"
-//                                            + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                            + "where {?subject ?property ?object. \n"
-                                            + "filter(?object IN (<" + a.getUri() + "> , <" + b.getUri() +"> )  ) } \n"
-                                            + "} \n"
-                                            + "}");
+     
+        @Override
+	public Set<URI> getEdges(R a , R b) {
+//                long startTime = System.nanoTime();
+//                Resource edge = null;
+//                long startTime = System.nanoTime();
+                                
+		Set<URI> Ingoingedges_a = new HashSet();
+                Set<URI> Ingoingedges_b = new HashSet();
+                Set<URI> Outgoingedges_a = new HashSet();
+                Set<URI> Outgoingedges_b = new HashSet();
                 
-		ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-
-		while (resultSet.hasNext()) {
-			QuerySolution qs = resultSet.nextSolution();
-			edge = (Resource) qs.getResource("property");
-			edges.add(factory.getURI(edge.toString()));
-
-		}
+                Set<URI> edges = new HashSet();
                 
-                dataset.close();
+                Ingoingedges_a = getIngoingEdges(a);
+                Ingoingedges_b = getIngoingEdges(b);
+                Outgoingedges_a = getOutgoingEdges(a);
+                Outgoingedges_b = getOutgoingEdges(b);
+                
+                edges.addAll(Ingoingedges_a);
+                edges.addAll(Ingoingedges_b);
+                edges.addAll(Outgoingedges_a);
+                edges.addAll(Outgoingedges_b);
+                
+//                if(edges == null || edges.isEmpty()){
+//                    
+////                    long endTime = System.nanoTime();
+////
+////                    long duration = (endTime - startTime);
+////                    System.out.println("getEdges Method took: " + (duration/(double)1000000)  + " ms --");
+//                    return super.getEdges(a , b);
+//                }
+                
+//                long endTime = System.nanoTime();
+//
+//                long duration = (endTime - startTime);
+//                System.out.println("getEdges Method took: " + (duration/(double)1000000)  + " ms");
 		return edges;
 
+                
 	}
         
+        
         @Override
-        public int countIngoingEdges(URI link , R a) {
-		      
-//                if (this.config.getParam("useIndexes").equals(true)) {
-//                    
-//                    List<String> ingoingTypedEdges_a = ingoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
-//                    
-//                    if(ingoingTypedEdges_a != null){
-//                        
-//                        return ingoingTypedEdges_a.size();
-//
-//                    }
-//                    else
-//                    {
-//                        ingoingTypedEdges_a = super.getIngoingEdges(link , a);
-//                        
-//                        if(ingoingTypedEdges_a != null){
-//                            ingoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , ingoingTypedEdges_a);
-//                            return ingoingTypedEdges_a.size();
-//                        }
-//                        
-//                        return 0;
-//                        
-//                    }                      
-//
-//                }
-//                
-//                return super.countIngoingEdges(link , a);
+        public Set<URI> getIngoingEdges(R a) {
+//            long startTime = System.nanoTime();
+            if (this.config.getParam("useIndexes").equals(true)) {
+                Set<URI> ingoingEdges_a = toURI(ingoingEdgesIndex.getList(a.getUri().stringValue()));
+                
+                if(ingoingEdges_a != null){
+//                    long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("getIngoingEdges(" + a.getUri().toString() + ") Method took: " + (duration/(double)1000000)  + " ms");
+                    return ingoingEdges_a;
+                }
+                else{
+                    ingoingEdges_a = super.getIngoingEdges(a);
+                    
+                    if(ingoingEdges_a != null ){
+                        ingoingEdgesIndex.addList(a.getUri().stringValue() , toList(ingoingEdges_a));
+                        return ingoingEdges_a;
+                    }
+                    
+                    else
+                        return null;
+                    
+                }
+            }
+            
+            return super.getIngoingEdges(a);
+//              return null;            
+        }
+        
+        
+        @Override
+        public Set<URI> getOutgoingEdges(R a){
+//           long startTime = System.nanoTime();
+           if (this.config.getParam("useIndexes").equals(true)) {
+                Set<URI> outgoingEdges_a = toURI(outgoingEdgesIndex.getList(a.getUri().stringValue()));
+                
+                if(outgoingEdges_a != null){
+//                    long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("getOutgoingEdges Method took: " + (duration/(double)1000000)  + " ms");
+                    return outgoingEdges_a;
+                }
+                    
+                
+                else{
+                    outgoingEdges_a = super.getOutgoingEdges(a);
+                    
+                    if(outgoingEdges_a != null ){
+                        outgoingEdgesIndex.addList(a.getUri().stringValue() , toList(outgoingEdges_a));
+                        return outgoingEdges_a;
+                    }
+                    else
+                        return null;
+                }
+            }            
+            return super.getOutgoingEdges(a); 
+//              return null;
+        }
+        
+        
+        public static Set<URI> toURI(List<String> list){
+            Set<URI> listURI = new HashSet();
+            URIFactory factory = URIFactoryMemory.getSingleton();
+            if(list != null){
+                for(String value:list){
+                    listURI.add(factory.getURI(value));
+                }
+                
+                return listURI;
+            }
+            return null;
+            
+        }
+        
+        public static List<String> toList(Set<URI> list){
+            List<String> listString = new ArrayList<>();
+            if(list != null){
+                for(URI value:list){
+                    listString.add(value.stringValue());
+                }
+                
+                return listString;
+            }
+            return null;            
+        }
+        
+        
+        @Override
+        public int countSubject(URI link , R a) {
+//                long startTime = System.nanoTime();
+                
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    String ingoingTypedEdges_a = ingoingTypedEdgesIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());
+                    String subjects_a = subjectsIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());
                     
-                    if(ingoingTypedEdges_a != null){
-                        
-                        return Integer.parseInt(ingoingTypedEdges_a);
+                    if(subjects_a != null && ! subjects_a.equals("-1")){
+//                        long endTime = System.nanoTime();
+//                        long duration = (endTime - startTime);
+//                        System.out.println("countSubject Method took: " + (duration/(double)1000000)  + " ms");
+                        return Integer.parseInt(subjects_a);
 
+                    }
+                    else if(subjects_a != null && subjects_a.equals("-1")){
+                        return 0;
                     }
                     else
                     {
-                        ingoingTypedEdges_a = Integer.toString(super.countIngoingEdges(link , a));
+                        subjects_a = Integer.toString(super.countSubject(link , a));
                         
-                        if(ingoingTypedEdges_a != null){
-                            ingoingTypedEdgesIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , ingoingTypedEdges_a);
+                        if(subjects_a != null){
+                            subjectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , subjects_a);
                            
-                            return Integer.parseInt(ingoingTypedEdges_a);
+                            return Integer.parseInt(subjects_a);
                         }
                         
+                        subjectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , "-1");
+                           
                         return 0;
                         
                     }                      
 
                 }
                 
-                return super.countIngoingEdges(link , a);
+                return super.countSubject(link , a);
 	}
         
         
         @Override
-        public int countIngoingEdges(R a) {
-		      
-//                if (this.config.getParam("useIndexes").equals(true)) {
-//                    
-//                    
-//                    List<String> ingoingEdges_a = ingoingEdgesIndex.getList(a.getUri().stringValue());
-//
-//                    if(ingoingEdges_a != null){
-//                        
-//                        return ingoingEdges_a.size();
-//
-//                    }
-//                    else
-//                    {
-//                        ingoingEdges_a = super.getIngoingEdges(a);
-//                        
-//                        if(ingoingEdges_a != null){
-//                            ingoingEdgesIndex.addList(a.getUri().stringValue(), ingoingEdges_a);
-//                            return ingoingEdges_a.size();
-//                        }
-//                        
-//                        return 0;
-//                        
-//                    }                      
-//
-//                }
-//                
-//               return super.countIngoingEdges(a);
+        public int countSubject(R a) {
+//                long startTime = System.nanoTime();
+                
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    String ingoingEdges_a = ingoingEdgesIndex.getValue(a.getUri().stringValue());
+                    String subjects_a = subjectsIndex.getValue(a.getUri().stringValue());
                     
                     
-                    if(ingoingEdges_a != null){
-                        
-                        return Integer.parseInt(ingoingEdges_a);
+                    if(subjects_a != null && ! subjects_a.equals("-1")){
+//                        long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("countSubject_ Method took: " + (duration/(double)1000000)  + " ms");
+                        return Integer.parseInt(subjects_a);
 
+                    }
+                    else if(subjects_a != null && subjects_a.equals("-1")){
+                        
+                        return 0;
                     }
                     else
                     {
-                        ingoingEdges_a = Integer.toString(super.countIngoingEdges(a));
+                        subjects_a = Integer.toString(super.countSubject(a));
                         
-                        if(ingoingEdges_a != null){
-                            ingoingEdgesIndex.addValue(a.getUri().stringValue(), ingoingEdges_a);
+                        if(subjects_a != null){
+                            subjectsIndex.addValue(a.getUri().stringValue(), subjects_a);
                                                         
-                            return Integer.parseInt(ingoingEdges_a);
+                            return Integer.parseInt(subjects_a);
                         }
                         
+                        subjectsIndex.addValue(a.getUri().stringValue(), "-1");
                         return 0;
-                        
                     }                      
 
                 }
                 
-               return super.countIngoingEdges(a);
+               return super.countSubject(a);
                
 	}
         
         
        @Override
-        public int countOutgoingEdges(URI link , R a) {
+        public int countObject(URI link , R a) {
+//                long startTime = System.nanoTime();
                 
-//                if (this.config.getParam("useIndexes").equals(true)) {
-//                    
-//                    List<String> outgoingTypedEdges_a = outgoingTypedEdgesIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
-//                    
-//                    if(outgoingTypedEdges_a != null){
-//                        
-//                        return outgoingTypedEdges_a.size();
-//
-//                    }
-//                    else
-//                    {
-//                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
-//                        
-//                        if(outgoingTypedEdges_a != null){
-//                            outgoingTypedEdgesIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
-//                            return outgoingTypedEdges_a.size();
-//                        }
-//                        
-//                        return 0;
-//                        
-//                    }                      
-//
-//                }
-//                
-//                return super.countOutgoingEdges(link , a);
-
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
-                    String outgoingTypedEdges_a = outgoingTypedEdgesIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());                    
+                    String objects_a = objectsIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());                    
                     
-                    if(outgoingTypedEdges_a != null){
-                        
-                        return Integer.parseInt(outgoingTypedEdges_a);
+                    if(objects_a != null && !objects_a.equals("-1")){
+//                        long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("countObject("+ link + ", " + a.toString() + ") Method took: " + (duration/(double)1000000)  + " ms");
+                        return Integer.parseInt(objects_a);
 
                     }
+                    
+                    else if (objects_a != null && objects_a.equals("-1")){
+                        return 0;
+                    }
+                    
                     else
                     {
-                        outgoingTypedEdges_a = Integer.toString(super.countOutgoingEdges(link , a));
+                        objects_a = Integer.toString(super.countObject(link , a));
                         
-                        if(outgoingTypedEdges_a != null){
-                            outgoingTypedEdgesIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
+                        if(objects_a != null){
+                            objectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , objects_a);
                                                         
-                            return Integer.parseInt(outgoingTypedEdges_a);
+                            return Integer.parseInt(objects_a);
                         }
-                        
+                        objectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , "-1");
                         return 0;
                         
                     }                      
 
                 }
                 
-                return super.countOutgoingEdges(link , a);
+                return super.countObject(link , a);
 	}
         
         
         @Override
-        public int countOutgoingEdges(R a) {
+        public int countObject(R a) {
+//                long startTime = System.nanoTime();
                 
-//                if (this.config.getParam("useIndexes").equals(true)) {
-//                    
-//                    
-//                    List<String> outgoingEdges_a = outgoingEdgesIndex.getList(a.getUri().stringValue());
-//
-//                    if(outgoingEdges_a != null){
-//                        
-//                        return outgoingEdges_a.size();
-//
-//                    }
-//                    else
-//                    {
-//                        outgoingEdges_a = super.getOutgoingEdges(a);
-//                        
-//                        if(outgoingEdges_a != null){
-//                            outgoingEdgesIndex.addList(a.getUri().stringValue(), outgoingEdges_a);
-//                            return outgoingEdges_a.size();                            
-//                        }
-//                        
-//                        return 0;
-//                        
-//                    }                      
-//
-//                }
-//                
-//               return super.countOutgoingEdges(a);
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
                     
-                    String outgoingEdges_a = outgoingEdgesIndex.getValue(a.getUri().stringValue());
+                    String objects_a = objectsIndex.getValue(a.getUri().stringValue());
                     
 
-                    if(outgoingEdges_a != null){
-                        
-                        return Integer.parseInt(outgoingEdges_a);
+                    if(objects_a != null && !objects_a.equals("-1")){
+//                        long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("countObject_ Method took: " + (duration/(double)1000000)  + " ms");
+                        return Integer.parseInt(objects_a);
 
                     }
+                    else if(objects_a != null && objects_a.equals("-1")){
+                        
+                        return 0;
+                    }    
                     else
                     {
-                        outgoingEdges_a = Integer.toString(super.countOutgoingEdges(a));
+                        objects_a = Integer.toString(super.countObject(a));
                         
-                        if(outgoingEdges_a != null){
-                            outgoingEdgesIndex.addValue(a.getUri().stringValue(), outgoingEdges_a);
+                        if(objects_a != null){
+                            objectsIndex.addValue(a.getUri().stringValue(), objects_a);
                                                        
-                            return Integer.parseInt(outgoingEdges_a);                          
+                            return Integer.parseInt(objects_a);                          
                         }
                         
+                        objectsIndex.addValue(a.getUri().stringValue(), "-1");
                         return 0;
                         
                     }                      
 
                 }
                 
-               return super.countOutgoingEdges(a);
+               return super.countObject(a);
 	}
         
         @Override
         public int countShareCommonObjects(URI link, R a ) {
+            
+//            long startTime = System.nanoTime();
+                
             if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
-                    if(shareCommonObjects_a != null){
-                        
+                    if(shareCommonObjects_a != null && ! shareCommonObjects_a.contains("-1")){
+//                        long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("countShareCommonObjects Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonObjects_a.size();
 
+                    }
+                    else if(shareCommonObjects_a != null && shareCommonObjects_a.contains("-1")){
+                        return 0;
                     }
                     else
                     {                     
                         shareCommonObjects_a = super.listShareCommonObject(link, a) ;
                         
-                        if(shareCommonObjects_a != null ){
+                        if(shareCommonObjects_a != null && !shareCommonObjects_a.isEmpty() ){
                             shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonObjects_a);
                                                         
                             return shareCommonObjects_a.size();
                         }
                         
+                        shareCommonObjects_a.add("-1");
+                        shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonObjects_a);
                         return 0;
                     }                      
 
@@ -431,25 +427,33 @@ public class ResimLdManager extends LdManagerBase {
         
          @Override
          public boolean shareCommonObject(URI link , R a, R b){
+//             long startTime = System.nanoTime();
               if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
-                    if(shareCommonObjects_a != null){
-                        
+                    if(shareCommonObjects_a != null && !shareCommonObjects_a.contains("-1")){
+//                        long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("shareCommonObject("+ link + ", " + a.getUri().toString() + ", " + b.getUri().toString() +") Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonObjects_a.contains(b.getUri().stringValue());
 
+                    }
+                    else if(shareCommonObjects_a != null && shareCommonObjects_a.contains("-1")){
+                        return false;
                     }
                     else
                     {                     
                         shareCommonObjects_a = super.listShareCommonObject(link, a);
                         
-                        if(shareCommonObjects_a != null){
+                        if(shareCommonObjects_a != null && !shareCommonObjects_a.isEmpty() ){
                             shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() ,  shareCommonObjects_a);
                                                         
                             return shareCommonObjects_a.contains(b.getUri().stringValue());
                         }
-                            
+                        
+                        shareCommonObjects_a.add("-1");
+                        shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() ,  shareCommonObjects_a);
                         return false;
                     }                      
 
@@ -460,26 +464,33 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
         public int countShareCommonSubjects(URI link, R a ) {
+//            long startTime = System.nanoTime();
              if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
-                    if(shareCommonSubjects_a != null){
-                        
+                    if(shareCommonSubjects_a != null && !shareCommonSubjects_a.contains("-1")){
+//                        long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("countShareCommonSubjects Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonSubjects_a.size();
 
+                    }
+                    else if(shareCommonSubjects_a != null && shareCommonSubjects_a.contains("-1")){
+                        return 0;
                     }
                     else
                     {   
                         shareCommonSubjects_a = super.listShareCommonSubject(link, a);                        
                         
-                        if(shareCommonSubjects_a != null){
+                        if(shareCommonSubjects_a != null && !shareCommonSubjects_a.isEmpty() ){
                             shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
                                                         
                             return shareCommonSubjects_a.size();
                         }
-                            
                         
+                        shareCommonSubjects_a.add("-1");
+                        shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a);
                         return 0;
                     }                      
 
@@ -490,25 +501,33 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
          public boolean shareCommonSubject(URI link , R a, R b){
+//             long startTime = System.nanoTime();
              if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
-                    if(shareCommonSubjects_a != null){
-                        
+                    if(shareCommonSubjects_a != null && !shareCommonSubjects_a.contains("-1")){
+//                        long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("shareCommonSubject Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonSubjects_a.contains(b.getUri().stringValue());
 
+                    }
+                    else if(shareCommonSubjects_a != null && shareCommonSubjects_a.contains("-1")){
+                        return false;
                     }
                     else
                     {   
                         shareCommonSubjects_a = super.listShareCommonSubject(link, a);
                         
-                        if(shareCommonSubjects_a != null){
+                        if(shareCommonSubjects_a != null && !shareCommonSubjects_a.isEmpty()){
                             shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
                                                         
                             return shareCommonSubjects_a.contains(b.getUri().stringValue());
                         }
                         
+                        shareCommonSubjects_a.add("-1");
+                        shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
                         return false;
                     }                      
 
@@ -520,38 +539,7 @@ public class ResimLdManager extends LdManagerBase {
        
         @Override
 	public boolean isSameAs(R a, R b) {
-
-//		if (this.config.getParam("useIndexes").equals(true)) {
-//
-//			List<String> sameAs_a = sameAsIndex.getList(a.getUri().stringValue());
-//
-//			if (sameAs_a == null) {
-//
-//				// get sameAs from LOD dataset
-//				try {
-//					sameAs_a = super.getSameAsResoures(a);
-//					// index
-//					
-//                                        if(sameAs_a != null){
-//                                            sameAsIndex.addList(a.getUri().stringValue(), sameAs_a);
-//                                                                                        
-//                                            return sameAs_a.contains(b.getUri().stringValue());
-//                                        }
-//                                        
-//                                        return false;
-//                                        
-//				} catch (Exception e) {
-//					// TODO: throw exception
-//					System.out.println("Error:" + e.getMessage());
-//				}
-//
-//			}
-//
-//			else {
-//				return sameAs_a.contains(b.getUri().stringValue());
-//			}
-//		}
-//		return super.isSameAs(a, b);
+//            long startTime = System.nanoTime();
                     if (this.config.getParam("useIndexes").equals(true)) {
 
 			String sameAs_a = sameAsIndex.getValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue());
@@ -564,11 +552,12 @@ public class ResimLdManager extends LdManagerBase {
 					// index
 					
                                         if(sameAs_a != null){
-                                            sameAsIndex.addValue(a.getUri().stringValue(), sameAs_a);
+                                            sameAsIndex.addValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue() , sameAs_a);
                                                                                         
                                             return Boolean.parseBoolean(sameAs_a);
                                         }
                                         
+                                        sameAsIndex.addValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue() , "-1");
                                         return false;
                                         
 				} catch (Exception e) {
@@ -577,9 +566,15 @@ public class ResimLdManager extends LdManagerBase {
 				}
 
 			}
+                        else if(sameAs_a.equals("-1")){
+                            return false;
+                        }
 
 			else {
-				return Boolean.parseBoolean(sameAs_a);
+//                            long endTime = System.nanoTime();
+//                            long duration = (endTime - startTime);
+//                            System.out.println("isSameAs Method took: " + (duration/(double)1000000)  + " ms");
+                            return Boolean.parseBoolean(sameAs_a);
 			}
 		}
 		return super.isSameAs(a, b);
@@ -592,21 +587,21 @@ public class ResimLdManager extends LdManagerBase {
 //             
 //             if (this.config.getParam("useIndexes").equals(true)) {
 //                    
-//                    List<String> outgoingTypedEdges_a = directlyConnectedIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
+//                    List<String> objects_a = directlyConnectedIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
 //                    
-//                    if(outgoingTypedEdges_a != null){
+//                    if(objects_a != null){
 //                        
-//                        return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+//                        return objects_a.contains(b.getUri().stringValue());
 //
 //                    }
 //                    else
 //                    {   
-//                        outgoingTypedEdges_a = super.getOutgoingEdges(link , a);
+//                        objects_a = super.getOutgoingEdges(link , a);
 //                        
-//                        if(outgoingTypedEdges_a != null){
-//                            directlyConnectedIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , outgoingTypedEdges_a);
+//                        if(objects_a != null){
+//                            directlyConnectedIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , objects_a);
 //                                                        
-//                            return outgoingTypedEdges_a.contains(b.getUri().stringValue());
+//                            return objects_a.contains(b.getUri().stringValue());
 //                        }
 //                        
 //                        return false;
@@ -616,15 +611,24 @@ public class ResimLdManager extends LdManagerBase {
 //                }
 //                
 //                return super.isDirectlyConnected(link, a, b);
+
+//long startTime = System.nanoTime();
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
                     String directlyConnected  = directlyConnectedIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue());
                     
-                    if(directlyConnected != null){
-                        
+                    if(directlyConnected != null && !directlyConnected.equals("-1")){
+//                        long endTime = System.nanoTime();
+//                        long duration = (endTime - startTime);
+//                        System.out.println("isDirectlyConnected Method took: " + (duration/(double)1000000)  + " ms");
                         return Boolean.parseBoolean(directlyConnected);
 
                     }
+                    
+                    else if(directlyConnected != null && directlyConnected.equals("-1")){
+                        return false;
+                    }
+                    
                     else
                     {   
                         directlyConnected = Boolean.toString(super.isDirectlyConnected(link, a, b));
@@ -634,6 +638,8 @@ public class ResimLdManager extends LdManagerBase {
                             return Boolean.parseBoolean(directlyConnected);
                         }
                         
+                        
+                        directlyConnectedIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue() , "-1");
                         return false;
                         
                     }                      
@@ -644,6 +650,43 @@ public class ResimLdManager extends LdManagerBase {
                 
          }
          
+         
+        @Override
+         public int countPropertyOccurrence(URI link){
+//             long startTime = System.nanoTime();
+             if (this.config.getParam("useIndexes").equals(true)) {
+                 
+                 String countOccurence = propertyOccurrenceIndex.getValue(link.stringValue());
+                 
+                 if(countOccurence != null && ! countOccurence.equals("-1")){
+//                     long endTime = System.nanoTime();
+//                    long duration = (endTime - startTime);
+//                    System.out.println("countPropertyOccurrence Method took: " + ( duration/ (double)1000000)  + " ms");
+                     return Integer.parseInt(countOccurence);
+                 }
+                 
+                 else if(countOccurence != null && countOccurence.equals("-1"))
+                     return 0;
+                 
+                 else{
+                     
+                     countOccurence = Integer.toString(super.countPropertyOccurrence(link));
+                     
+                     if(countOccurence != null){
+                         propertyOccurrenceIndex.addValue(link.stringValue() , countOccurence);
+                         return Integer.parseInt(countOccurence);
+                     }
+                     
+                     propertyOccurrenceIndex.addValue(link.stringValue() , "-1");
+                     return 0;
+                     
+                 }           
+                 
+             }
+             
+             return super.countPropertyOccurrence(link);
+             
+         }      
          
         
     }
