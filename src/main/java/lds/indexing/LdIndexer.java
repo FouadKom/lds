@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
+import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
 import org.mapdb.serializer.SerializerArrayTuple;
 
@@ -30,7 +31,9 @@ public class LdIndexer {
 
 	public void load(String filePath) {
 		this.indexFilePath = filePath;
-		db = DBMaker.fileDB(this.indexFilePath).fileMmapEnable().make();
+		db = DBMaker.fileDB(this.indexFilePath)
+                            .fileChannelEnable()
+                            .make();
 	}
 
 	public void reload() throws Exception {
@@ -43,7 +46,8 @@ public class LdIndexer {
 	public void addList(String key, List<String> values) {
 
 		NavigableSet<Object[]> multimap = db.treeSet("index")
-				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING)).counterEnable()
+				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING))
+                                .counterEnable()
 				.createOrOpen();
 
 		for (int i = 0; i < values.size(); i++) {
@@ -58,26 +62,38 @@ public class LdIndexer {
 	// add one value, get by list
 	public void addValue(String key, String value) {
 
-		List<String> values = new ArrayList();
-		values.add(value);
-
-		addList(key, values);
+//		List<String> values = new ArrayList();
+//		values.add(value);
+//
+//		addList(key, values);
+                
+                HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
+                .counterEnable()
+                .createOrOpen();
+                
+                map.put(key , value);
 	}
         
         public String getValue(String key){
-            List<String> values = getList(key);
-            if(values == null)
-                return null;                
-            else
-               return values.get(0); 
+//            List<String> values = getList(key);
+//            if(values == null)
+//                return null;                
+//            else
+//               return values.get(0); 
+
+              HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
+                .counterEnable()
+                .createOrOpen();
+              
+              return map.get(key);
         }
         
 
 	public List<String> getList(String key) {
 
 		NavigableSet<Object[]> multimap = db.treeSet("index")
-				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING)).counterEnable()
-                         
+				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING))
+                                .counterEnable()                         
 				.createOrOpen();
 
 		Set<Object[]> resultSet = multimap.subSet(new Object[] { key }, // lower interval

@@ -1,1 +1,4 @@
 /target/
+
+# ignore all index files
+*.db
