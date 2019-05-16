@@ -31,23 +31,19 @@ import slib.utils.i.Conf;
 public class ResimLdManager extends LdManagerBase {
     	
 	// TODO: specify an index directory
-	String sameAsIndexFile = "resim_sameAs_index.db";
-        String ingoingEdgesIndexFile = "resim_ingoingEdges_index.db";
-        String outgoingEdgesIndexFile = "resim_outgoingEdges_index.db";
-//        String ingoingTypedEdgesIndexFile = "resim_ingoingTypedEdges_index.db";
-//        String outgoingTypedEdgesIndexFile = "resim_outgoingTypedEdges_index.db";
-        String subjectsIndexFile = "resim_subjects_index.db";
-        String objectsIndexFile = "resim_objects_index.db";
-        String shareCommonObjectsIndexFile = "resim_shareCommonObjects_index.db";
-        String shareCommonSubjectsIndexFile = "resim_shareCommonSubjects_index.db";
-        String directlyConnectedIndexFile = "resim_directlyConnected_index.db";
-        String propertyOccurrenceIndexFile = "resim_propertyOccurence_index.db";
+	String sameAsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_sameAs_index.db";
+        String ingoingEdgesIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_ingoingEdges_index.db";
+        String outgoingEdgesIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_outgoingEdges_index.db";
+        String subjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_subjects_index.db";
+        String objectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_objects_index.db";
+        String shareCommonObjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_shareCommonObjects_index.db";
+        String shareCommonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_shareCommonSubjects_index.db";
+        String directlyConnectedIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_directlyConnected_index.db";
+        String propertyOccurrenceIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_propertyOccurence_index.db";
         
 	public LdIndexer sameAsIndex;
         public LdIndexer ingoingEdgesIndex;
         public LdIndexer outgoingEdgesIndex;
-//        public LdIndexer ingoingTypedEdgesIndex;
-//        public LdIndexer outgoingTypedEdgesIndex;
         public LdIndexer subjectsIndex;
         public LdIndexer objectsIndex;
         public LdIndexer shareCommonObjectsIndex;
@@ -67,8 +63,6 @@ public class ResimLdManager extends LdManagerBase {
 		sameAsIndex = new LdIndexer(sameAsIndexFile);
                 ingoingEdgesIndex = new LdIndexer(ingoingEdgesIndexFile);
                 outgoingEdgesIndex = new LdIndexer(outgoingEdgesIndexFile);
-//                ingoingTypedEdgesIndex = new LdIndexer(ingoingTypedEdgesIndexFile);
-//                outgoingTypedEdgesIndex = new LdIndexer(outgoingTypedEdgesIndexFile);
                 subjectsIndex = new LdIndexer(subjectsIndexFile);
                 objectsIndex = new LdIndexer(objectsIndexFile);
                 shareCommonObjectsIndex = new LdIndexer(shareCommonObjectsIndexFile);
@@ -83,23 +77,19 @@ public class ResimLdManager extends LdManagerBase {
                 sameAsIndex.close();
                 ingoingEdgesIndex.close();
                 outgoingEdgesIndex.close();
-//                ingoingTypedEdgesIndex.close();
-//                outgoingTypedEdgesIndex.close();
                 subjectsIndex.close();
                 objectsIndex.close();
                 shareCommonObjectsIndex.close();
+                shareCommonSubjectsIndex.close();
                 directlyConnectedIndex.close();
+                propertyOccurrenceIndex.close();
             }
              
          }
          
      
         @Override
-	public Set<URI> getEdges(R a , R b) {
-//                long startTime = System.nanoTime();
-//                Resource edge = null;
-//                long startTime = System.nanoTime();
-                                
+	public Set<URI> getEdges(R a , R b) {                                
 		Set<URI> Ingoingedges_a = new HashSet();
                 Set<URI> Ingoingedges_b = new HashSet();
                 Set<URI> Outgoingedges_a = new HashSet();
@@ -118,18 +108,9 @@ public class ResimLdManager extends LdManagerBase {
                 edges.addAll(Outgoingedges_b);
                 
 //                if(edges == null || edges.isEmpty()){
-//                    
-////                    long endTime = System.nanoTime();
-////
-////                    long duration = (endTime - startTime);
-////                    System.out.println("getEdges Method took: " + (duration/(double)1000000)  + " ms --");
 //                    return super.getEdges(a , b);
 //                }
                 
-//                long endTime = System.nanoTime();
-//
-//                long duration = (endTime - startTime);
-//                System.out.println("getEdges Method took: " + (duration/(double)1000000)  + " ms");
 		return edges;
 
                 
@@ -138,21 +119,17 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
         public Set<URI> getIngoingEdges(R a) {
-//            long startTime = System.nanoTime();
             if (this.config.getParam("useIndexes").equals(true)) {
-                Set<URI> ingoingEdges_a = toURI(ingoingEdgesIndex.getList(a.getUri().stringValue()));
+                Set<URI> ingoingEdges_a = Utility.toURI(ingoingEdgesIndex.getList(a.getUri().stringValue()));
                 
                 if(ingoingEdges_a != null){
-//                    long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("getIngoingEdges(" + a.getUri().toString() + ") Method took: " + (duration/(double)1000000)  + " ms");
                     return ingoingEdges_a;
                 }
                 else{
                     ingoingEdges_a = super.getIngoingEdges(a);
                     
                     if(ingoingEdges_a != null ){
-                        ingoingEdgesIndex.addList(a.getUri().stringValue() , toList(ingoingEdges_a));
+                        ingoingEdgesIndex.addList(a.getUri().stringValue() , Utility.toList(ingoingEdges_a));
                         return ingoingEdges_a;
                     }
                     
@@ -162,21 +139,16 @@ public class ResimLdManager extends LdManagerBase {
                 }
             }
             
-            return super.getIngoingEdges(a);
-//              return null;            
+            return super.getIngoingEdges(a);          
         }
         
         
         @Override
         public Set<URI> getOutgoingEdges(R a){
-//           long startTime = System.nanoTime();
            if (this.config.getParam("useIndexes").equals(true)) {
-                Set<URI> outgoingEdges_a = toURI(outgoingEdgesIndex.getList(a.getUri().stringValue()));
+                Set<URI> outgoingEdges_a = Utility.toURI(outgoingEdgesIndex.getList(a.getUri().stringValue()));
                 
                 if(outgoingEdges_a != null){
-//                    long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("getOutgoingEdges Method took: " + (duration/(double)1000000)  + " ms");
                     return outgoingEdges_a;
                 }
                     
@@ -185,7 +157,7 @@ public class ResimLdManager extends LdManagerBase {
                     outgoingEdges_a = super.getOutgoingEdges(a);
                     
                     if(outgoingEdges_a != null ){
-                        outgoingEdgesIndex.addList(a.getUri().stringValue() , toList(outgoingEdges_a));
+                        outgoingEdgesIndex.addList(a.getUri().stringValue() , Utility.toList(outgoingEdges_a));
                         return outgoingEdges_a;
                     }
                     else
@@ -193,49 +165,17 @@ public class ResimLdManager extends LdManagerBase {
                 }
             }            
             return super.getOutgoingEdges(a); 
-//              return null;
-        }
-        
-        
-        public static Set<URI> toURI(List<String> list){
-            Set<URI> listURI = new HashSet();
-            URIFactory factory = URIFactoryMemory.getSingleton();
-            if(list != null){
-                for(String value:list){
-                    listURI.add(factory.getURI(value));
-                }
-                
-                return listURI;
-            }
-            return null;
-            
-        }
-        
-        public static List<String> toList(Set<URI> list){
-            List<String> listString = new ArrayList<>();
-            if(list != null){
-                for(URI value:list){
-                    listString.add(value.stringValue());
-                }
-                
-                return listString;
-            }
-            return null;            
-        }
-        
+        }     
         
         @Override
         public int countSubject(URI link , R a) {
-//                long startTime = System.nanoTime();
                 
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
                     String subjects_a = subjectsIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());
                     
                     if(subjects_a != null && ! subjects_a.equals("-1")){
-//                        long endTime = System.nanoTime();
-//                        long duration = (endTime - startTime);
-//                        System.out.println("countSubject Method took: " + (duration/(double)1000000)  + " ms");
+
                         return Integer.parseInt(subjects_a);
 
                     }
@@ -266,7 +206,6 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
         public int countSubject(R a) {
-//                long startTime = System.nanoTime();
                 
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
@@ -274,9 +213,6 @@ public class ResimLdManager extends LdManagerBase {
                     
                     
                     if(subjects_a != null && ! subjects_a.equals("-1")){
-//                        long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("countSubject_ Method took: " + (duration/(double)1000000)  + " ms");
                         return Integer.parseInt(subjects_a);
 
                     }
@@ -307,16 +243,12 @@ public class ResimLdManager extends LdManagerBase {
         
        @Override
         public int countObject(URI link , R a) {
-//                long startTime = System.nanoTime();
                 
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
                     String objects_a = objectsIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());                    
                     
                     if(objects_a != null && !objects_a.equals("-1")){
-//                        long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("countObject("+ link + ", " + a.toString() + ") Method took: " + (duration/(double)1000000)  + " ms");
                         return Integer.parseInt(objects_a);
 
                     }
@@ -347,7 +279,6 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
         public int countObject(R a) {
-//                long startTime = System.nanoTime();
                 
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
@@ -356,9 +287,6 @@ public class ResimLdManager extends LdManagerBase {
                     
 
                     if(objects_a != null && !objects_a.equals("-1")){
-//                        long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("countObject_ Method took: " + (duration/(double)1000000)  + " ms");
                         return Integer.parseInt(objects_a);
 
                     }
@@ -388,17 +316,12 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
         public int countShareCommonObjects(URI link, R a ) {
-            
-//            long startTime = System.nanoTime();
-                
+                          
             if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
                     if(shareCommonObjects_a != null && ! shareCommonObjects_a.contains("-1")){
-//                        long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("countShareCommonObjects Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonObjects_a.size();
 
                     }
@@ -427,15 +350,11 @@ public class ResimLdManager extends LdManagerBase {
         
          @Override
          public boolean shareCommonObject(URI link , R a, R b){
-//             long startTime = System.nanoTime();
               if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
                     if(shareCommonObjects_a != null && !shareCommonObjects_a.contains("-1")){
-//                        long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("shareCommonObject("+ link + ", " + a.getUri().toString() + ", " + b.getUri().toString() +") Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonObjects_a.contains(b.getUri().stringValue());
 
                     }
@@ -464,15 +383,11 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
         public int countShareCommonSubjects(URI link, R a ) {
-//            long startTime = System.nanoTime();
              if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
                     if(shareCommonSubjects_a != null && !shareCommonSubjects_a.contains("-1")){
-//                        long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("countShareCommonSubjects Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonSubjects_a.size();
 
                     }
@@ -501,15 +416,11 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
          public boolean shareCommonSubject(URI link , R a, R b){
-//             long startTime = System.nanoTime();
              if (this.config.getParam("useIndexes").equals(true)) {
                     
                     List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
                     
                     if(shareCommonSubjects_a != null && !shareCommonSubjects_a.contains("-1")){
-//                        long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("shareCommonSubject Method took: " + (duration/(double)1000000)  + " ms");
                         return shareCommonSubjects_a.contains(b.getUri().stringValue());
 
                     }
@@ -539,7 +450,6 @@ public class ResimLdManager extends LdManagerBase {
        
         @Override
 	public boolean isSameAs(R a, R b) {
-//            long startTime = System.nanoTime();
                     if (this.config.getParam("useIndexes").equals(true)) {
 
 			String sameAs_a = sameAsIndex.getValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue());
@@ -571,9 +481,6 @@ public class ResimLdManager extends LdManagerBase {
                         }
 
 			else {
-//                            long endTime = System.nanoTime();
-//                            long duration = (endTime - startTime);
-//                            System.out.println("isSameAs Method took: " + (duration/(double)1000000)  + " ms");
                             return Boolean.parseBoolean(sameAs_a);
 			}
 		}
@@ -612,15 +519,11 @@ public class ResimLdManager extends LdManagerBase {
 //                
 //                return super.isDirectlyConnected(link, a, b);
 
-//long startTime = System.nanoTime();
                 if (this.config.getParam("useIndexes").equals(true)) {
                     
                     String directlyConnected  = directlyConnectedIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue());
                     
                     if(directlyConnected != null && !directlyConnected.equals("-1")){
-//                        long endTime = System.nanoTime();
-//                        long duration = (endTime - startTime);
-//                        System.out.println("isDirectlyConnected Method took: " + (duration/(double)1000000)  + " ms");
                         return Boolean.parseBoolean(directlyConnected);
 
                     }
@@ -653,15 +556,11 @@ public class ResimLdManager extends LdManagerBase {
          
         @Override
          public int countPropertyOccurrence(URI link){
-//             long startTime = System.nanoTime();
              if (this.config.getParam("useIndexes").equals(true)) {
                  
                  String countOccurence = propertyOccurrenceIndex.getValue(link.stringValue());
                  
                  if(countOccurence != null && ! countOccurence.equals("-1")){
-//                     long endTime = System.nanoTime();
-//                    long duration = (endTime - startTime);
-//                    System.out.println("countPropertyOccurrence Method took: " + ( duration/ (double)1000000)  + " ms");
                      return Integer.parseInt(countOccurence);
                  }
                  
