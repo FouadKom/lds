@@ -6,16 +6,10 @@
 package lds.measures;
 
 import java.util.Set;
-import lds.LdManager.LdManager;
 import lds.graph.GraphManager;
-import lds.graph.LdResources;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResimLdManager;
 import lds.resource.R;
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Literal;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
@@ -23,8 +17,6 @@ import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.graph.model.graph.G;
-import slib.graph.model.impl.repo.URIFactoryMemory;
-import slib.graph.model.repo.URIFactory;
 import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
@@ -41,8 +33,6 @@ public class ResimTest {
 
 
 		LdDataset dataSet = null;
-
-		URIFactory factory = URIFactoryMemory.getSingleton();
 
 		R r1 = new R("http://www.example.org#Fish");
 		R r2 = new R("http://www.example.org#Whale");

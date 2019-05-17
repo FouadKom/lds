@@ -1,11 +1,10 @@
 package lds.LdManager;
 
-import static java.lang.Double.NaN;
+
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.httpclient.HttpException;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
@@ -13,15 +12,9 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.vocabulary.OWL;
 import org.openrdf.model.URI;
-
 import lds.graph.GraphManager;
 import lds.graph.LdGraphManager;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import org.apache.jena.query.Query;
-import org.apache.jena.query.QueryExecution;
-import org.apache.jena.query.QueryExecutionFactory;
-import org.apache.jena.query.QueryFactory;
 import org.apache.jena.rdf.model.Resource;
 import sc.research.ldq.LdDataset;
 import slib.graph.model.graph.G;
@@ -44,6 +37,11 @@ public class LdManagerBase implements LdManager {
 		this.config = config;
                 
 	}
+        
+        public LdManagerBase() {
+            //used for reflection purposes
+                
+	}
 
 	public G generateGraph(LdDataset dataset, R a, R b, String graphURI) throws HttpException, SLIB_Ex_Critic {
 
@@ -64,8 +62,6 @@ public class LdManagerBase implements LdManager {
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
 		query_cmd.setCommandText("select ?sameAs " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { " + a.getTurtle() + " <" + OWL.sameAs + "> ?sameAs. }");
-
-//		System.out.println("query = " + query_cmd.toString());
 
 		ResultSet rs = dataset.executeSelectQuery(query_cmd.toString());
 		List<String> sameAsResources = new ArrayList<String>();
@@ -99,7 +95,11 @@ public class LdManagerBase implements LdManager {
             }
             
             dataset.close();
-            return shareSubjectwithA;
+            
+            if(! shareSubjectwithA.isEmpty())
+                return shareSubjectwithA;
+            else
+                return null;
         }
         
        
@@ -119,16 +119,18 @@ public class LdManagerBase implements LdManager {
                 shareObjectwithA.add(resource);
 
             }
-//            
-//            if(shareObjectwithA == null)
-//                shareObjectwithA.add("Nothing");
+
             dataset.close();
-            return shareObjectwithA;
+            
+            if(! shareObjectwithA.isEmpty())
+                return shareObjectwithA;
+            else
+                return null;
         }
          
         public List<String> getObjects(R a){
             
-            List<String> directlyConnectedObjects = new ArrayList<String>();
+            List<String> directlyConnectedObjects = new ArrayList<>();
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -139,13 +141,17 @@ public class LdManagerBase implements LdManager {
 
             while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-//                count = (Literal) qs.getLiteral("count");
                 directlyConnectedObjects.add(qs.getResource("object").getURI());
 
             }
             
             dataset.close();
-            return directlyConnectedObjects;
+            
+            if(! directlyConnectedObjects.isEmpty())
+                return directlyConnectedObjects;
+            else
+                return null;
+            
         }
        
         
@@ -169,7 +175,12 @@ public class LdManagerBase implements LdManager {
             }
             
             dataset.close();
-            return directlyConnectedSubjects;
+            
+            if(! directlyConnectedSubjects.isEmpty())
+                return directlyConnectedSubjects;
+            else
+                return null;
+            
         }
                
 
@@ -183,13 +194,16 @@ public class LdManagerBase implements LdManager {
 
             while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-//                count = (Literal) qs.getLiteral("count");
                 directlyConnectedSubjects.add(qs.getResource("subject").getURI());
 
             }
             
             dataset.close();
-            return directlyConnectedSubjects;
+            
+            if(! directlyConnectedSubjects.isEmpty())
+                return directlyConnectedSubjects;
+            else
+                return null;
         }
         
         
@@ -204,13 +218,17 @@ public class LdManagerBase implements LdManager {
 
             while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-//                count = (Literal) qs.getLiteral("count");
                 directlyConnectedObjects.add(qs.getResource("object").getURI());
 
             }
             
             dataset.close();
-            return directlyConnectedObjects;
+            
+            if(! directlyConnectedObjects.isEmpty())
+                return directlyConnectedObjects;
+            else
+                return null;
+            
         }
         
         @Override
@@ -219,9 +237,6 @@ public class LdManagerBase implements LdManager {
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> ?object }");
-
-            // logger.info("query = " + query_cmd.toString());
-
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
             if (resultSet.hasNext()) {
@@ -238,10 +253,9 @@ public class LdManagerBase implements LdManager {
 	}
         
         @Override
-        public Set<URI> getIngoingEdges(R a){
+        public List<String> getIngoingEdges(R a){
             Resource edge = null;
-		Set<URI> edges = new HashSet();
-		URIFactory factory = URIFactoryMemory.getSingleton();
+		List<String> edges = new ArrayList<>();
 
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -255,19 +269,23 @@ public class LdManagerBase implements LdManager {
 		while (resultSet.hasNext()) {
 			QuerySolution qs = resultSet.nextSolution();
 			edge = (Resource) qs.getResource("property");
-			edges.add(factory.getURI(edge.toString()));
+			edges.add(edge.toString());
 
 		}
                 
                 dataset.close();
-		return edges;
+                
+                if(! edges.isEmpty())
+                    return edges;
+                else
+                    return null;
+		
         }
         
         @Override
-        public Set<URI> getOutgoingEdges(R a){
+        public List<String> getOutgoingEdges(R a){
             Resource edge = null;
-		Set<URI> edges = new HashSet();
-		URIFactory factory = URIFactoryMemory.getSingleton();
+		List<String> edges = new ArrayList<>();
 
 		ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -281,12 +299,16 @@ public class LdManagerBase implements LdManager {
 		while (resultSet.hasNext()) {
 			QuerySolution qs = resultSet.nextSolution();
 			edge = (Resource) qs.getResource("property");
-			edges.add(factory.getURI(edge.toString()));
+			edges.add(edge.toString());
 
 		}
                 
                 dataset.close();
-		return edges;
+		
+                if(! edges.isEmpty())
+                    return edges;
+                else
+                    return null;
         }
         
                 
@@ -417,7 +439,7 @@ public class LdManagerBase implements LdManager {
         }
        
        
-        @Override
+      @Override
       public int countObject(URI link , R a) {
             Literal count = null;
             
@@ -522,9 +544,12 @@ public class LdManagerBase implements LdManager {
 		}
                 
               dataset.close();
-              return edges;
-    }
-        
+              
+              if(! edges.isEmpty())
+                    return edges;
+                else
+                    return null;
+    }       
 
 
 

@@ -1,5 +1,6 @@
 package lds.LdManager;
 
+import java.util.List;
 import java.util.Set;
 
 import org.apache.commons.httpclient.HttpException;
@@ -37,9 +38,9 @@ public interface LdManager {
         
         int countPropertyOccurrence(URI link);
         
-        Set<URI> getIngoingEdges(R a);
+        List<String> getIngoingEdges(R a);
         
-        Set<URI> getOutgoingEdges(R a);
+        List<String> getOutgoingEdges(R a);
         
         Set<URI> getEdges(R a , R b);
         
