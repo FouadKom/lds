@@ -13,15 +13,8 @@ import java.util.Set;
 import lds.LdManager.LdManagerBase;
 import lds.indexing.LdIndexer;
 import lds.resource.R;
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Resource;
-
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
-import slib.graph.model.impl.repo.URIFactoryMemory;
-import slib.graph.model.repo.URIFactory;
 import slib.utils.i.Conf;
 
 /**
@@ -90,10 +83,10 @@ public class ResimLdManager extends LdManagerBase {
      
         @Override
 	public Set<URI> getEdges(R a , R b) {                                
-		Set<URI> Ingoingedges_a = new HashSet();
-                Set<URI> Ingoingedges_b = new HashSet();
-                Set<URI> Outgoingedges_a = new HashSet();
-                Set<URI> Outgoingedges_b = new HashSet();
+		List<String> Ingoingedges_a = new ArrayList<>();
+                List<String> Ingoingedges_b = new ArrayList<>();
+                List<String> Outgoingedges_a = new ArrayList<>();
+                List<String> Outgoingedges_b = new ArrayList<>();
                 
                 Set<URI> edges = new HashSet();
                 
@@ -102,10 +95,10 @@ public class ResimLdManager extends LdManagerBase {
                 Outgoingedges_a = getOutgoingEdges(a);
                 Outgoingedges_b = getOutgoingEdges(b);
                 
-                edges.addAll(Ingoingedges_a);
-                edges.addAll(Ingoingedges_b);
-                edges.addAll(Outgoingedges_a);
-                edges.addAll(Outgoingedges_b);
+                edges.addAll(Utility.toURI(Ingoingedges_a));
+                edges.addAll(Utility.toURI(Ingoingedges_b));
+                edges.addAll(Utility.toURI(Outgoingedges_a));
+                edges.addAll(Utility.toURI(Outgoingedges_b));
                 
 //                if(edges == null || edges.isEmpty()){
 //                    return super.getEdges(a , b);
@@ -118,473 +111,215 @@ public class ResimLdManager extends LdManagerBase {
         
         
         @Override
-        public Set<URI> getIngoingEdges(R a) {
+        public List<String> getIngoingEdges(R a) {
+
             if (this.config.getParam("useIndexes").equals(true)) {
-                Set<URI> ingoingEdges_a = Utility.toURI(ingoingEdgesIndex.getList(a.getUri().stringValue()));
-                
-                if(ingoingEdges_a != null){
-                    return ingoingEdges_a;
-                }
-                else{
-                    ingoingEdges_a = super.getIngoingEdges(a);
-                    
-                    if(ingoingEdges_a != null ){
-                        ingoingEdgesIndex.addList(a.getUri().stringValue() , Utility.toList(ingoingEdges_a));
-                        return ingoingEdges_a;
-                    }
-                    
-                    else
-                        return null;
-                    
-                }
+                Object[] args = new Object[1];
+                args[0] = a;
+                return Utility.getListFromIndex(ingoingEdgesIndex , a.getUri().stringValue(), "getIngoingEdges" ,  args);
             }
-            
-            return super.getIngoingEdges(a);          
+            return super.getIngoingEdges(a);
         }
         
         
         @Override
-        public Set<URI> getOutgoingEdges(R a){
-           if (this.config.getParam("useIndexes").equals(true)) {
-                Set<URI> outgoingEdges_a = Utility.toURI(outgoingEdgesIndex.getList(a.getUri().stringValue()));
-                
-                if(outgoingEdges_a != null){
-                    return outgoingEdges_a;
-                }
-                    
-                
-                else{
-                    outgoingEdges_a = super.getOutgoingEdges(a);
-                    
-                    if(outgoingEdges_a != null ){
-                        outgoingEdgesIndex.addList(a.getUri().stringValue() , Utility.toList(outgoingEdges_a));
-                        return outgoingEdges_a;
-                    }
-                    else
-                        return null;
-                }
-            }            
-            return super.getOutgoingEdges(a); 
+        public List<String> getOutgoingEdges(R a){
+
+            if(this.config.getParam("useIndexes").equals(true)){
+                Object[] args = new Object[1];
+                args[0] = a;
+                return Utility.getListFromIndex(outgoingEdgesIndex , a.getUri().stringValue(), "getOutgoingEdges" , args);
+            }
+            
+            return super.getOutgoingEdges(a);
         }     
         
         @Override
         public int countSubject(URI link , R a) {
                 
-                if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    String subjects_a = subjectsIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());
-                    
-                    if(subjects_a != null && ! subjects_a.equals("-1")){
+           if (this.config.getParam("useIndexes").equals(true)) {
+             Object[] args = new Object[2];
+             args[0] = link;
+             args[1] = a;
+             return Utility.getIntegerFromIndex(subjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "countSubject" , args);
 
-                        return Integer.parseInt(subjects_a);
-
-                    }
-                    else if(subjects_a != null && subjects_a.equals("-1")){
-                        return 0;
-                    }
-                    else
-                    {
-                        subjects_a = Integer.toString(super.countSubject(link , a));
-                        
-                        if(subjects_a != null){
-                            subjectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , subjects_a);
-                           
-                            return Integer.parseInt(subjects_a);
-                        }
-                        
-                        subjectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , "-1");
-                           
-                        return 0;
-                        
-                    }                      
-
-                }
-                
-                return super.countSubject(link , a);
+           }
+           return super.countSubject(link , a);
 	}
         
         
         @Override
         public int countSubject(R a) {
-                
-                if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    String subjects_a = subjectsIndex.getValue(a.getUri().stringValue());
-                    
-                    
-                    if(subjects_a != null && ! subjects_a.equals("-1")){
-                        return Integer.parseInt(subjects_a);
 
-                    }
-                    else if(subjects_a != null && subjects_a.equals("-1")){
-                        
-                        return 0;
-                    }
-                    else
-                    {
-                        subjects_a = Integer.toString(super.countSubject(a));
-                        
-                        if(subjects_a != null){
-                            subjectsIndex.addValue(a.getUri().stringValue(), subjects_a);
-                                                        
-                            return Integer.parseInt(subjects_a);
-                        }
-                        
-                        subjectsIndex.addValue(a.getUri().stringValue(), "-1");
-                        return 0;
-                    }                      
+            if (this.config.getParam("useIndexes").equals(true)) {
+             Object[] args = new Object[1];
+             args[0] = a;
+             return Utility.getIntegerFromIndex(subjectsIndex , a.getUri().stringValue(), "countSubject" , args);
 
-                }
-                
-               return super.countSubject(a);
+           }
+           return super.countSubject(a);
                
 	}
         
         
        @Override
         public int countObject(URI link , R a) {
-                
-                if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    String objects_a = objectsIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue());                    
-                    
-                    if(objects_a != null && !objects_a.equals("-1")){
-                        return Integer.parseInt(objects_a);
 
-                    }
-                    
-                    else if (objects_a != null && objects_a.equals("-1")){
-                        return 0;
-                    }
-                    
-                    else
-                    {
-                        objects_a = Integer.toString(super.countObject(link , a));
-                        
-                        if(objects_a != null){
-                            objectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , objects_a);
-                                                        
-                            return Integer.parseInt(objects_a);
-                        }
-                        objectsIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() , "-1");
-                        return 0;
-                        
-                    }                      
+            if (this.config.getParam("useIndexes").equals(true)) {
+                 Object[] args = new Object[2];
+                 args[0] = link;
+                 args[1] = a;
+                 return Utility.getIntegerFromIndex(objectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() , "countObject" , args);
 
-                }
+           }
+           return super.countObject(a);
+        }
                 
-                return super.countObject(link , a);
-	}
+
         
         
         @Override
         public int countObject(R a) {
+                                
+           if (this.config.getParam("useIndexes").equals(true)) {
+                 Object[] args = new Object[1];
+                 args[0] = a;
+                 return Utility.getIntegerFromIndex(objectsIndex , a.getUri().stringValue(), "countObject" , args);
+
+           }
+           return super.countObject(a);
                 
-                if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    
-                    String objects_a = objectsIndex.getValue(a.getUri().stringValue());
-                    
-
-                    if(objects_a != null && !objects_a.equals("-1")){
-                        return Integer.parseInt(objects_a);
-
-                    }
-                    else if(objects_a != null && objects_a.equals("-1")){
-                        
-                        return 0;
-                    }    
-                    else
-                    {
-                        objects_a = Integer.toString(super.countObject(a));
-                        
-                        if(objects_a != null){
-                            objectsIndex.addValue(a.getUri().stringValue(), objects_a);
-                                                       
-                            return Integer.parseInt(objects_a);                          
-                        }
-                        
-                        objectsIndex.addValue(a.getUri().stringValue(), "-1");
-                        return 0;
-                        
-                    }                      
-
-                }
-                
-               return super.countObject(a);
 	}
         
         @Override
         public int countShareCommonObjects(URI link, R a ) {
-                          
-            if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
-                    
-                    if(shareCommonObjects_a != null && ! shareCommonObjects_a.contains("-1")){
-                        return shareCommonObjects_a.size();
+            
+              if (this.config.getParam("useIndexes").equals(true)) {
+                 Object[] args = new Object[2];
+                 args[0] = link;
+                 args[1] = a;
+
+                 List<String> list = Utility.getListFromIndex(shareCommonObjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "listShareCommonObject" , args);
+                 if(list != null && ! list.contains("-1")){
+                        return list.size();
 
                     }
-                    else if(shareCommonObjects_a != null && shareCommonObjects_a.contains("-1")){
+                    else if(list != null && list.contains("-1")){
                         return 0;
-                    }
-                    else
-                    {                     
-                        shareCommonObjects_a = super.listShareCommonObject(link, a) ;
-                        
-                        if(shareCommonObjects_a != null && !shareCommonObjects_a.isEmpty() ){
-                            shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonObjects_a);
-                                                        
-                            return shareCommonObjects_a.size();
-                        }
-                        
-                        shareCommonObjects_a.add("-1");
-                        shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonObjects_a);
-                        return 0;
-                    }                      
 
-                }
-                
-                return super.countShareCommonObjects(link , a);
-        }
+                    }
+              }
+              return super.countShareCommonObjects(link , a);
+
+              
+             }
         
          @Override
          public boolean shareCommonObject(URI link , R a, R b){
-              if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    List<String> shareCommonObjects_a = shareCommonObjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
-                    
-                    if(shareCommonObjects_a != null && !shareCommonObjects_a.contains("-1")){
-                        return shareCommonObjects_a.contains(b.getUri().stringValue());
 
-                    }
-                    else if(shareCommonObjects_a != null && shareCommonObjects_a.contains("-1")){
-                        return false;
-                    }
-                    else
-                    {                     
-                        shareCommonObjects_a = super.listShareCommonObject(link, a);
-                        
-                        if(shareCommonObjects_a != null && !shareCommonObjects_a.isEmpty() ){
-                            shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() ,  shareCommonObjects_a);
-                                                        
-                            return shareCommonObjects_a.contains(b.getUri().stringValue());
-                        }
-                        
-                        shareCommonObjects_a.add("-1");
-                        shareCommonObjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() ,  shareCommonObjects_a);
-                        return false;
-                    }                      
+            if (this.config.getParam("useIndexes").equals(true)) {
+                Object[] args = new Object[2];
+                args[0] = link;
+                args[1] = a;
+
+                List<String> list = Utility.getListFromIndex(shareCommonObjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "listShareCommonObject" , args);
+                if(list != null && !list.contains("-1")){
+                    return list.contains(b.getUri().stringValue());
 
                 }
-                
-                return super.shareCommonObject(link , a , b);
+                else if(list != null && list.contains("-1")){
+                    return false;
+                }
+            }
+            return super.shareCommonObject(link , a , b);
         }
         
         @Override
         public int countShareCommonSubjects(URI link, R a ) {
-             if (this.config.getParam("useIndexes").equals(true)) {
+    
+                if (this.config.getParam("useIndexes").equals(true)) {
+                    Object[] args = new Object[2];
+                    args[0] = link;
+                    args[1] = a;
                     
-                    List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
-                    
-                    if(shareCommonSubjects_a != null && !shareCommonSubjects_a.contains("-1")){
-                        return shareCommonSubjects_a.size();
+                    List<String> list = Utility.getListFromIndex(shareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "listShareCommonSubject" , args);
+                    if(list != null && !list.contains("-1")){
+                        return list.size();
 
                     }
-                    else if(shareCommonSubjects_a != null && shareCommonSubjects_a.contains("-1")){
+                    else if(list != null && list.contains("-1")){
                         return 0;
                     }
-                    else
-                    {   
-                        shareCommonSubjects_a = super.listShareCommonSubject(link, a);                        
-                        
-                        if(shareCommonSubjects_a != null && !shareCommonSubjects_a.isEmpty() ){
-                            shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
-                                                        
-                            return shareCommonSubjects_a.size();
-                        }
-                        
-                        shareCommonSubjects_a.add("-1");
-                        shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a);
-                        return 0;
-                    }                      
-
                 }
-                
                 return super.countShareCommonSubjects(link , a);
         }
         
         @Override
          public boolean shareCommonSubject(URI link , R a, R b){
-             if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    List<String> shareCommonSubjects_a = shareCommonSubjectsIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
-                    
-                    if(shareCommonSubjects_a != null && !shareCommonSubjects_a.contains("-1")){
-                        return shareCommonSubjects_a.contains(b.getUri().stringValue());
+                  
+          if (this.config.getParam("useIndexes").equals(true)) {
+            Object[] args = new Object[2];
+            args[0] = link;
+            args[1] = a;
 
-                    }
-                    else if(shareCommonSubjects_a != null && shareCommonSubjects_a.contains("-1")){
-                        return false;
-                    }
-                    else
-                    {   
-                        shareCommonSubjects_a = super.listShareCommonSubject(link, a);
-                        
-                        if(shareCommonSubjects_a != null && !shareCommonSubjects_a.isEmpty()){
-                            shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
-                                                        
-                            return shareCommonSubjects_a.contains(b.getUri().stringValue());
-                        }
-                        
-                        shareCommonSubjects_a.add("-1");
-                        shareCommonSubjectsIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , shareCommonSubjects_a );
-                        return false;
-                    }                      
+            List<String> list = Utility.getListFromIndex(shareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "listShareCommonSubject" , args);
+            if(list != null && !list.contains("-1")){
+                return list.contains(b.getUri().stringValue());
 
-                }
-                
-                return super.shareCommonSubject(link , a , b);
+            }
+            else if(list != null && list.contains("-1")){
+                return false;
+            }
+
+          }
+          return super.shareCommonSubject(link , a , b);
+
         }
 
        
         @Override
 	public boolean isSameAs(R a, R b) {
-                    if (this.config.getParam("useIndexes").equals(true)) {
 
-			String sameAs_a = sameAsIndex.getValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue());
+            if (this.config.getParam("useIndexes").equals(true)) {
+                Object[] args = new Object[2];
+                args[0] = a;
+                args[1] = b;
 
-			if (sameAs_a == null) {
+                return Utility.getBooleanFromIndex(sameAsIndex, a.getUri().stringValue()+ ":" + b.getUri().stringValue() , "isSameAs", args);
 
-				// get sameAs from LOD dataset
-				try {
-					sameAs_a = Boolean.toString(super.isSameAs(a, b));
-					// index
-					
-                                        if(sameAs_a != null){
-                                            sameAsIndex.addValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue() , sameAs_a);
-                                                                                        
-                                            return Boolean.parseBoolean(sameAs_a);
-                                        }
-                                        
-                                        sameAsIndex.addValue(a.getUri().stringValue()+ ":" + b.getUri().stringValue() , "-1");
-                                        return false;
-                                        
-				} catch (Exception e) {
-					// TODO: throw exception
-					System.out.println("Error:" + e.getMessage());
-				}
-
-			}
-                        else if(sameAs_a.equals("-1")){
-                            return false;
-                        }
-
-			else {
-                            return Boolean.parseBoolean(sameAs_a);
-			}
-		}
-		return super.isSameAs(a, b);
+            }
+            return super.isSameAs(a, b);
+                
 	}
         
         
         
         @Override
          public boolean isDirectlyConnected(URI link, R a, R b) { //sameAs can be replaced with this?
-//             
-//             if (this.config.getParam("useIndexes").equals(true)) {
-//                    
-//                    List<String> objects_a = directlyConnectedIndex.getList(a.getUri().stringValue()+ ":" + link.stringValue());
-//                    
-//                    if(objects_a != null){
-//                        
-//                        return objects_a.contains(b.getUri().stringValue());
-//
-//                    }
-//                    else
-//                    {   
-//                        objects_a = super.getOutgoingEdges(link , a);
-//                        
-//                        if(objects_a != null){
-//                            directlyConnectedIndex.addList(a.getUri().stringValue()+ ":" + link.stringValue() , objects_a);
-//                                                        
-//                            return objects_a.contains(b.getUri().stringValue());
-//                        }
-//                        
-//                        return false;
-//                        
-//                    }                      
-//
-//                }
-//                
-//                return super.isDirectlyConnected(link, a, b);
+                  
+              if (this.config.getParam("useIndexes").equals(true)) {
+                  Object[] args = new Object[3];
+                  args[0] = link;
+                  args[1] = a;
+                  args[2] = b;
 
-                if (this.config.getParam("useIndexes").equals(true)) {
-                    
-                    String directlyConnected  = directlyConnectedIndex.getValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue());
-                    
-                    if(directlyConnected != null && !directlyConnected.equals("-1")){
-                        return Boolean.parseBoolean(directlyConnected);
-
-                    }
-                    
-                    else if(directlyConnected != null && directlyConnected.equals("-1")){
-                        return false;
-                    }
-                    
-                    else
-                    {   
-                        directlyConnected = Boolean.toString(super.isDirectlyConnected(link, a, b));
-                        
-                        if(directlyConnected != null){
-                            directlyConnectedIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue() , directlyConnected);
-                            return Boolean.parseBoolean(directlyConnected);
-                        }
-                        
-                        
-                        directlyConnectedIndex.addValue(a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue() , "-1");
-                        return false;
-                        
-                    }                      
-
-                }
-                
-                return super.isDirectlyConnected(link, a, b);
+                  return Utility.getBooleanFromIndex(directlyConnectedIndex, a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), "isDirectlyConnected" , args);
+              }
+              return super.isDirectlyConnected(link, a, b);
                 
          }
          
          
         @Override
          public int countPropertyOccurrence(URI link){
+
              if (this.config.getParam("useIndexes").equals(true)) {
-                 
-                 String countOccurence = propertyOccurrenceIndex.getValue(link.stringValue());
-                 
-                 if(countOccurence != null && ! countOccurence.equals("-1")){
-                     return Integer.parseInt(countOccurence);
-                 }
-                 
-                 else if(countOccurence != null && countOccurence.equals("-1"))
-                     return 0;
-                 
-                 else{
-                     
-                     countOccurence = Integer.toString(super.countPropertyOccurrence(link));
-                     
-                     if(countOccurence != null){
-                         propertyOccurrenceIndex.addValue(link.stringValue() , countOccurence);
-                         return Integer.parseInt(countOccurence);
-                     }
-                     
-                     propertyOccurrenceIndex.addValue(link.stringValue() , "-1");
-                     return 0;
-                     
-                 }           
-                 
-             }
-             
-             return super.countPropertyOccurrence(link);
-             
+                   Object[] args = new Object[1];
+                   args[0] = link;
+
+                   return Utility.getIntegerFromIndex(propertyOccurrenceIndex, link.stringValue() , "countPropertyOccurrence", args);
+               }
+               return super.countPropertyOccurrence(link);
          }      
          
         

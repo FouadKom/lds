@@ -4,8 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
@@ -16,16 +14,9 @@ public class LdIndexer {
 
 	String indexFilePath = "";
 	DB db = null;
-        TimeUnit indexTimeToLive;
 
 	public LdIndexer(String filePath) {
 		this.indexFilePath = filePath;
-		load(this.indexFilePath);
-	}
-        
-        public LdIndexer(String filePath , TimeUnit ttl) {
-		this.indexFilePath = filePath;
-                this.indexTimeToLive = ttl;
 		load(this.indexFilePath);
 	}
 
@@ -58,33 +49,21 @@ public class LdIndexer {
 
 	}
              
-
-	// add one value, get by list
+        
 	public void addValue(String key, String value) {
 
-//		List<String> values = new ArrayList();
-//		values.add(value);
-//
-//		addList(key, values);
-                
-                HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
-                .counterEnable()
-                .createOrOpen();
-                
-                map.put(key , value);
+            HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
+            .counterEnable()
+            .createOrOpen();
+
+            map.put(key , value);
 	}
         
         public String getValue(String key){
-//            List<String> values = getList(key);
-//            if(values == null)
-//                return null;                
-//            else
-//               return values.get(0); 
-
               HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
                 .counterEnable()
                 .createOrOpen();
-              
+
               return map.get(key);
         }
         
