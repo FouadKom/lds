@@ -2,9 +2,7 @@ package lds.LdManager;
 
 import java.util.List;
 import java.util.Set;
-
 import org.apache.commons.httpclient.HttpException;
-
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -23,6 +21,9 @@ public interface LdManager {
         
         boolean shareCommonSubject(URI link , R a, R b);
         
+//        boolean shareTyplessCommonObject(URI li , URI lj , R k, R a, R b);
+     
+//        boolean shareTyplessCommonSubject(URI li , URI lj , R k, R a, R b);        
 
         int countShareCommonObjects(URI link , R a);
         
@@ -43,6 +44,8 @@ public interface LdManager {
         List<String> getOutgoingEdges(R a);
         
         Set<URI> getEdges(R a , R b);
+
+    
         
         
         

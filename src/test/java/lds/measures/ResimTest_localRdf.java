@@ -6,7 +6,6 @@
 package lds.measures;
 
 import java.util.Set;
-import lds.graph.GraphManager;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResimLdManager;
 import lds.resource.R;
@@ -16,20 +15,18 @@ import org.junit.Test;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
-import slib.graph.model.graph.G;
-import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class ResimTest {
+public class ResimTest_localRdf {
 	public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
 	public static ResimLdManager resimLdManager;
 
 	@Test
-	public void isResimWorksCorrectlyOnPaperExample() throws SLIB_Ex_Critic {
+	public void isResimWorksCorrectlyOnPaperExample(){
 
 
 		LdDataset dataSet = null;

@@ -8,6 +8,7 @@ package lds.measures.resim;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import lds.LdManager.LdManagerBase;
@@ -31,6 +32,8 @@ public class ResimLdManager extends LdManagerBase {
         String objectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_objects_index.db";
         String shareCommonObjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_shareCommonObjects_index.db";
         String shareCommonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_shareCommonSubjects_index.db";
+        String countShareCommonObjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_countShareCommonObjects_index.db";
+        String countShareCommonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_countShareCommonSubjects_index.db";
         String directlyConnectedIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_directlyConnected_index.db";
         String propertyOccurrenceIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_propertyOccurence_index.db";
         
@@ -41,18 +44,23 @@ public class ResimLdManager extends LdManagerBase {
         public LdIndexer objectsIndex;
         public LdIndexer shareCommonObjectsIndex;
         public LdIndexer shareCommonSubjectsIndex;
+        public LdIndexer countShareCommonObjectsIndex;
+        public LdIndexer countShareCommonSubjectsIndex;
         public LdIndexer directlyConnectedIndex;
         public LdIndexer propertyOccurrenceIndex;
         
 
 	public ResimLdManager(LdDataset dataset, Conf config) {
 		super(dataset, config);
-
 		if (config.getParam("useIndexes").equals(true))
 			loadIndexes();
 	}
 
 	private void loadIndexes() {
+//                double startTime , endTime , duration;
+//                
+//                startTime = System.nanoTime();
+                
 		sameAsIndex = new LdIndexer(sameAsIndexFile);
                 ingoingEdgesIndex = new LdIndexer(ingoingEdgesIndexFile);
                 outgoingEdgesIndex = new LdIndexer(outgoingEdgesIndexFile);
@@ -60,13 +68,24 @@ public class ResimLdManager extends LdManagerBase {
                 objectsIndex = new LdIndexer(objectsIndexFile);
                 shareCommonObjectsIndex = new LdIndexer(shareCommonObjectsIndexFile);
                 shareCommonSubjectsIndex = new LdIndexer(shareCommonSubjectsIndexFile);
+                countShareCommonObjectsIndex = new LdIndexer(countShareCommonObjectsIndexFile);
+                countShareCommonSubjectsIndex = new LdIndexer(countShareCommonSubjectsIndexFile);
                 directlyConnectedIndex = new LdIndexer(directlyConnectedIndexFile);
                 propertyOccurrenceIndex = new LdIndexer(propertyOccurrenceIndexFile);
+                
+//                endTime = System.nanoTime();
+//                duration = (endTime - startTime) / 1000000000  ;
+//                System.out.println("Loading Resim Indexes took " + duration + " second(s)");
                 
 	}
         
         public void closeIndexes(){
             if (this.config.getParam("useIndexes").equals(true)) {
+                
+//                double startTime , endTime , duration;
+//                
+//                startTime = System.nanoTime();
+                
                 sameAsIndex.close();
                 ingoingEdgesIndex.close();
                 outgoingEdgesIndex.close();
@@ -74,8 +93,14 @@ public class ResimLdManager extends LdManagerBase {
                 objectsIndex.close();
                 shareCommonObjectsIndex.close();
                 shareCommonSubjectsIndex.close();
+                countShareCommonObjectsIndex.close();
+                countShareCommonSubjectsIndex.close();
                 directlyConnectedIndex.close();
                 propertyOccurrenceIndex.close();
+                
+//                endTime = System.nanoTime();
+//                duration = (endTime - startTime) / 1000000000  ;
+//                System.out.println("Closing Resim Indexes took " + duration + " second(s)");
             }
              
          }
@@ -93,20 +118,18 @@ public class ResimLdManager extends LdManagerBase {
                 Ingoingedges_a = getIngoingEdges(a);
                 Ingoingedges_b = getIngoingEdges(b);
                 Outgoingedges_a = getOutgoingEdges(a);
-                Outgoingedges_b = getOutgoingEdges(b);
-                
-                edges.addAll(Utility.toURI(Ingoingedges_a));
-                edges.addAll(Utility.toURI(Ingoingedges_b));
-                edges.addAll(Utility.toURI(Outgoingedges_a));
-                edges.addAll(Utility.toURI(Outgoingedges_b));
+                Outgoingedges_b = getOutgoingEdges(b);             
+               
+                Optional.ofNullable(Utility.toURI(Ingoingedges_a)).ifPresent(edges::addAll);
+                Optional.ofNullable(Utility.toURI(Ingoingedges_b)).ifPresent(edges::addAll);
+                Optional.ofNullable(Utility.toURI(Outgoingedges_a)).ifPresent(edges::addAll);
+                Optional.ofNullable(Utility.toURI(Outgoingedges_b)).ifPresent(edges::addAll);                
                 
 //                if(edges == null || edges.isEmpty()){
 //                    return super.getEdges(a , b);
 //                }
                 
-		return edges;
-
-                
+		return edges;                
 	}
         
         
@@ -114,9 +137,7 @@ public class ResimLdManager extends LdManagerBase {
         public List<String> getIngoingEdges(R a) {
 
             if (this.config.getParam("useIndexes").equals(true)) {
-                Object[] args = new Object[1];
-                args[0] = a;
-                return Utility.getListFromIndex(ingoingEdgesIndex , a.getUri().stringValue(), "getIngoingEdges" ,  args);
+                return LdIndexer.getListFromIndex(ingoingEdgesIndex , a.getUri().stringValue(), "getIngoingEdges" ,  a);
             }
             return super.getIngoingEdges(a);
         }
@@ -126,9 +147,7 @@ public class ResimLdManager extends LdManagerBase {
         public List<String> getOutgoingEdges(R a){
 
             if(this.config.getParam("useIndexes").equals(true)){
-                Object[] args = new Object[1];
-                args[0] = a;
-                return Utility.getListFromIndex(outgoingEdgesIndex , a.getUri().stringValue(), "getOutgoingEdges" , args);
+                return LdIndexer.getListFromIndex(outgoingEdgesIndex , a.getUri().stringValue(), "getOutgoingEdges" , a);
             }
             
             return super.getOutgoingEdges(a);
@@ -138,10 +157,7 @@ public class ResimLdManager extends LdManagerBase {
         public int countSubject(URI link , R a) {
                 
            if (this.config.getParam("useIndexes").equals(true)) {
-             Object[] args = new Object[2];
-             args[0] = link;
-             args[1] = a;
-             return Utility.getIntegerFromIndex(subjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "countSubject" , args);
+             return LdIndexer.getIntegerFromIndex(subjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "countSubject" , link , a);
 
            }
            return super.countSubject(link , a);
@@ -152,9 +168,7 @@ public class ResimLdManager extends LdManagerBase {
         public int countSubject(R a) {
 
             if (this.config.getParam("useIndexes").equals(true)) {
-             Object[] args = new Object[1];
-             args[0] = a;
-             return Utility.getIntegerFromIndex(subjectsIndex , a.getUri().stringValue(), "countSubject" , args);
+             return LdIndexer.getIntegerFromIndex(subjectsIndex , a.getUri().stringValue(), "countSubject" , a);
 
            }
            return super.countSubject(a);
@@ -166,13 +180,10 @@ public class ResimLdManager extends LdManagerBase {
         public int countObject(URI link , R a) {
 
             if (this.config.getParam("useIndexes").equals(true)) {
-                 Object[] args = new Object[2];
-                 args[0] = link;
-                 args[1] = a;
-                 return Utility.getIntegerFromIndex(objectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() , "countObject" , args);
+                 return LdIndexer.getIntegerFromIndex(objectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() , "countObject" , link , a);
 
            }
-           return super.countObject(a);
+           return super.countObject(link , a);
         }
                 
 
@@ -182,9 +193,7 @@ public class ResimLdManager extends LdManagerBase {
         public int countObject(R a) {
                                 
            if (this.config.getParam("useIndexes").equals(true)) {
-                 Object[] args = new Object[1];
-                 args[0] = a;
-                 return Utility.getIntegerFromIndex(objectsIndex , a.getUri().stringValue(), "countObject" , args);
+                 return LdIndexer.getIntegerFromIndex(objectsIndex , a.getUri().stringValue(), "countObject" , a);
 
            }
            return super.countObject(a);
@@ -193,30 +202,71 @@ public class ResimLdManager extends LdManagerBase {
         
         @Override
         public int countShareCommonObjects(URI link, R a ) {
-            
-              if (this.config.getParam("useIndexes").equals(true)) {
-                 Object[] args = new Object[2];
-                 args[0] = link;
-                 args[1] = a;
 
-                 List<String> list = Utility.getListFromIndex(shareCommonObjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "listShareCommonObject" , args);
-                 if(list != null && ! list.contains("-1")){
-                        return list.size();
-
-                    }
-                    else if(list != null && list.contains("-1")){
-                        return 0;
-
-                    }
+               if (this.config.getParam("useIndexes").equals(true)) {
+                return LdIndexer.getIntegerFromIndex(countShareCommonObjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "countShareCommonObjects" , link , a);
+                  
               }
               return super.countShareCommonObjects(link , a);
-
-              
-             }
+        }
         
          @Override
          public boolean shareCommonObject(URI link , R a, R b){
+            
+            if (this.config.getParam("useIndexes").equals(true)) {
+                return LdIndexer.getBooleanFromIndex(shareCommonObjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), "shareCommonObject" , link , a , b);
+                
+            }
+            return super.shareCommonObject(link , a , b);
+        }
+        
+        @Override
+        public int countShareCommonSubjects(URI link, R a ) {
+    
+            if (this.config.getParam("useIndexes").equals(true)) {
+                 return LdIndexer.getIntegerFromIndex(countShareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "countShareCommonSubjects" , link , a);
+                 
+              }
+             return super.countShareCommonSubjects(link , a);
+        }
+        
+        @Override
+         public boolean shareCommonSubject(URI link , R a, R b){
+                  
+            if (this.config.getParam("useIndexes").equals(true)) {
+                return LdIndexer.getBooleanFromIndex(shareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue() , "shareCommonSubject" , link , a , b);
+            
 
+          }
+          return super.shareCommonSubject(link , a , b);
+
+        }
+         
+/*        @Override
+        public boolean shareTyplessCommonSubject(URI li, URI lj, R k, R a, R b){
+            if (this.config.getParam("useIndexes").equals(true)) {
+            Object[] args = new Object[2];
+            args[0] = li;
+            args[1] = lj;
+            args[2] = k;
+            args[3] = a;
+            args[4] = b;
+
+            List<String> list = Utility.getListFromIndex(shareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + li.stringValue()+ ":" + lj.stringValue() + ":" + b.getUri().stringValue() , "listShareCommonSubject" , args);
+            if(list != null && !list.contains("-1")){
+                return list.contains(b.getUri().stringValue());
+
+            }
+            else if(list != null && list.contains("-1")){
+                return false;
+            }
+
+          }
+          return super.shareCommonSubject(link , a , b);
+             
+        }
+         
+        public boolean shareTyplessCommonObject(URI li, URI lj, R k, R a, R b){
             if (this.config.getParam("useIndexes").equals(true)) {
                 Object[] args = new Object[2];
                 args[0] = link;
@@ -232,60 +282,14 @@ public class ResimLdManager extends LdManagerBase {
                 }
             }
             return super.shareCommonObject(link , a , b);
-        }
-        
-        @Override
-        public int countShareCommonSubjects(URI link, R a ) {
-    
-                if (this.config.getParam("useIndexes").equals(true)) {
-                    Object[] args = new Object[2];
-                    args[0] = link;
-                    args[1] = a;
-                    
-                    List<String> list = Utility.getListFromIndex(shareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "listShareCommonSubject" , args);
-                    if(list != null && !list.contains("-1")){
-                        return list.size();
 
-                    }
-                    else if(list != null && list.contains("-1")){
-                        return 0;
-                    }
-                }
-                return super.countShareCommonSubjects(link , a);
-        }
-        
-        @Override
-         public boolean shareCommonSubject(URI link , R a, R b){
-                  
-          if (this.config.getParam("useIndexes").equals(true)) {
-            Object[] args = new Object[2];
-            args[0] = link;
-            args[1] = a;
-
-            List<String> list = Utility.getListFromIndex(shareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), "listShareCommonSubject" , args);
-            if(list != null && !list.contains("-1")){
-                return list.contains(b.getUri().stringValue());
-
-            }
-            else if(list != null && list.contains("-1")){
-                return false;
-            }
-
-          }
-          return super.shareCommonSubject(link , a , b);
-
-        }
-
+        }*/
        
         @Override
 	public boolean isSameAs(R a, R b) {
 
             if (this.config.getParam("useIndexes").equals(true)) {
-                Object[] args = new Object[2];
-                args[0] = a;
-                args[1] = b;
-
-                return Utility.getBooleanFromIndex(sameAsIndex, a.getUri().stringValue()+ ":" + b.getUri().stringValue() , "isSameAs", args);
+                return LdIndexer.getBooleanFromIndex(sameAsIndex, a.getUri().stringValue()+ ":" + b.getUri().stringValue() , "isSameAs", a , b);
 
             }
             return super.isSameAs(a, b);
@@ -295,15 +299,10 @@ public class ResimLdManager extends LdManagerBase {
         
         
         @Override
-         public boolean isDirectlyConnected(URI link, R a, R b) { //sameAs can be replaced with this?
+         public boolean isDirectlyConnected(URI link, R a, R b) {
                   
               if (this.config.getParam("useIndexes").equals(true)) {
-                  Object[] args = new Object[3];
-                  args[0] = link;
-                  args[1] = a;
-                  args[2] = b;
-
-                  return Utility.getBooleanFromIndex(directlyConnectedIndex, a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), "isDirectlyConnected" , args);
+                  return LdIndexer.getBooleanFromIndex(directlyConnectedIndex, a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), "isDirectlyConnected" , link , a , b);
               }
               return super.isDirectlyConnected(link, a, b);
                 
@@ -314,13 +313,12 @@ public class ResimLdManager extends LdManagerBase {
          public int countPropertyOccurrence(URI link){
 
              if (this.config.getParam("useIndexes").equals(true)) {
-                   Object[] args = new Object[1];
-                   args[0] = link;
-
-                   return Utility.getIntegerFromIndex(propertyOccurrenceIndex, link.stringValue() , "countPropertyOccurrence", args);
+                   return LdIndexer.getIntegerFromIndex(propertyOccurrenceIndex, link.stringValue() , "countPropertyOccurrence", link);
                }
                return super.countPropertyOccurrence(link);
-         }      
+         }
+         
+         
          
         
     }

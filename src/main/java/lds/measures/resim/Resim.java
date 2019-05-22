@@ -13,7 +13,6 @@ import lds.LdManager.LdManager;
 import lds.measures.LdSimilarityMeasureBase;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.ex.SLIB_Ex_Critic;
 
 /**
  *
@@ -40,13 +39,13 @@ public class Resim extends LdSimilarityMeasureBase {
                         
 			sim = Resim(a, b);
 
-		} catch (SLIB_Ex_Critic ex) {
+		} catch (Exception ex) {
 			Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
 		}
 		return sim;
 	}
 
-	public double Resim(R a, R b) throws SLIB_Ex_Critic {
+	public double Resim(R a, R b) {
 		
 		int w1 = 1, w2 = 2;
 		double x = 0, y = 0;
