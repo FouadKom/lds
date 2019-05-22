@@ -19,12 +19,12 @@ import slib.utils.i.Conf;
  *
  * @author Fouad Komeiha
  */
-public class ResimTest_Dbpedia {
+public class ResimTest_paperEvaluation_Test {
     public static ResimLdManager resimLdManager;
     
     
     @Test
-    public void isResimWorksCorrectlyOnPaperExample() throws SLIB_Ex_Critic{
+    public void isResimWorksCorrectlyOnPaperExample() {
         
     	LdDataset dataset = Util.getDBpediaDataset();
                 
