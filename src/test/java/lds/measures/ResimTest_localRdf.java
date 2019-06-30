@@ -8,6 +8,7 @@ package lds.measures;
 import java.util.Set;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResimLdManager;
+import lds.measures.resim.ResourceSimilarity;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -26,7 +27,7 @@ public class ResimTest_localRdf {
 	public static ResimLdManager resimLdManager;
 
 	@Test
-	public void isResimWorksCorrectlyOnPaperExample(){
+	public void isResimWorksCorrectlyOnPaperExample() throws Exception{
 
 
 		LdDataset dataSet = null;
@@ -44,25 +45,29 @@ public class ResimTest_localRdf {
 
 		Conf config = new Conf();
 		config.addParam("useIndexes", true);
-		resimLdManager = new ResimLdManager(dataSet, config);
-		Resim resim = new Resim(resimLdManager);
-		Set<URI> edges = resimLdManager.getEdges(r1, r2);
+                config.addParam("LdDatasetMain" , dataSet);
 
-		double cii = 0, cio = 0, cii_r1 = 0, cio_r1 = 0, cii_r2 = 0, cio_r2 = 0, cii_norm = 0, cio_norm = 0, pptySim,
+		ResourceSimilarity resim = new Resim(config);
+                
+                resim.loadIndexes();
+                
+                double cii = 0, cio = 0, cii_r1 = 0, cio_r1 = 0, cii_r2 = 0, cio_r2 = 0, cii_norm = 0, cio_norm = 0, pptySim,
 				ldsd, ldsdsim, sim;
+                
+		/*Set<URI> edges = resimLdManager.getEdges(r1, r2);
+
+		
 
 		for (URI edge : edges) {
 			cii = cii + resim.Cii(edge, r1, r2);
-			cio = cio + resim.Cio(edge, r1, r2);
+                        cio = cio + resim.Cio(edge, r1, r2);
+                        cii_r1 = cii_r1 + resim.Cii(edge, r1);
+                        cio_r1 = cio_r1 + resim.Cio(edge, r1);
+                        cii_r2 = cii_r2 + resim.Cii(edge, r2);
+                        cio_r2 = cio_r2 + resim.Cio(edge, r2);
+                        cio_norm = cio_norm + resim.Cio_normalized(edge, r1, r2);
+                        cii_norm = cii_norm + resim.Cii_normalized(edge, r1, r2);
 
-			cii_r1 = cii_r1 + resim.Cii(edge, r1);
-			cio_r1 = cio_r1 + resim.Cio(edge, r1);
-
-			cii_r2 = cii_r2 + resim.Cii(edge, r2);
-			cio_r2 = cio_r2 + resim.Cio(edge, r2);
-
-			cio_norm = cio_norm + resim.Cio_normalized(edge, r1, r2);
-			cii_norm = cii_norm + resim.Cii_normalized(edge, r1, r2);
 
 		}
 
@@ -74,27 +79,25 @@ public class ResimTest_localRdf {
 		assertEquals(0.0, cii_r2, 0.0);
 		assertEquals(3.0, cio_r2, 0.0);
 		assertEquals(0.0, cii_norm, 0.0);
-		assertEquals(1.0, cio_norm, 0.0);
+		assertEquals(1.0, cio_norm, 0.0);*/
 
-		sim = resim.compare(r1, r2);
+		sim = resim.compare(r1, r2 , 1, 2);
 		assertEquals(0.5388888888888889, sim, 0.0);
 
 		pptySim = resim.PropertySim(r1, r2);
 		assertEquals(0.11666666666666665, pptySim, 0.0);
 
-		ldsd = resim.LDSD(r1, r2);
-		assertEquals(0.25, ldsd, 0.0);
 
-		ldsdsim = resim.LDSDsim(r1, r2);
+                ldsdsim = resim.LDSDsim(r1, r2);
 		assertEquals(0.75, ldsdsim, 0.0);
 
-		sim = resim.compare(r2, r1);
+		sim = resim.compare(r2, r1 , 1 , 2);
 		assertEquals(0.5388888888888889, sim, 0.0);
 
-		sim = resim.Resim(r1, r1);
+		sim = resim.compare(r1, r1);
 		assertEquals(1.0, sim, 0.0);
 
-		resimLdManager.closeIndexes();
+		resim.closeIndexes();
 
 	}
 

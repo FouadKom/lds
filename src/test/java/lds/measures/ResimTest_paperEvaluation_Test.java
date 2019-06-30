@@ -7,12 +7,12 @@ package lds.measures;
 
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResimLdManager;
+import lds.measures.resim.ResourceSimilarity;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.assertTrue;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 /**
@@ -20,18 +20,18 @@ import slib.utils.i.Conf;
  * @author Fouad Komeiha
  */
 public class ResimTest_paperEvaluation_Test {
-    public static ResimLdManager resimLdManager;
     
     
     @Test
-    public void isResimWorksCorrectlyOnPaperExample() {
+    public void isResimWorksCorrectlyOnPaperExample() throws Exception {
         
     	LdDataset dataset = Util.getDBpediaDataset();
                 
         Conf config = new Conf();
         config.addParam("useIndexes", true);
-        resimLdManager = new ResimLdManager(dataset, config);
-        Resim resim = new Resim(resimLdManager);       
+        config.addParam("LdDatasetMain" , dataset);
+        
+        ResourceSimilarity resim = new Resim(config);       
 
 
         R car = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
@@ -57,7 +57,9 @@ public class ResimTest_paperEvaluation_Test {
         R internet = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Internet").create();
         R software = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Software").create();
         R laboratory = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Laboratory").create();
-                      
+                
+        resim.loadIndexes();
+        
         assertTrue(resim.compare(car, automobile) > resim.compare(car, flight));
         assertTrue(resim.compare(money, currency) > resim.compare(money, business_operations));
         assertTrue(resim.compare(money, cash) < resim.compare(money, bank));
@@ -69,7 +71,8 @@ public class ResimTest_paperEvaluation_Test {
         assertTrue(resim.compare(computer, internet) > resim.compare(computer, news));
         assertTrue(resim.compare(computer, software) > resim.compare(computer, laboratory));
 
-        resimLdManager.closeIndexes();
+
+        resim.closeIndexes();
   }    
     
 }

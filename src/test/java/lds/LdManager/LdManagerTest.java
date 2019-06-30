@@ -32,14 +32,11 @@ public class LdManagerTest {
 	ResimLdManager resimLdManager;
 
 	@Test
-	public void sameAsTest() {
+	public void sameAsTest() throws Exception {
 
 		LdDataset dataset = Util.getDBpediaDataset();
 
-		Conf config = new Conf();
-		config.addParam("useIndexes", true);
-
-		resimLdManager = new ResimLdManager(dataset, config);
+		resimLdManager = new ResimLdManager(dataset, true);
 
 		R a = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Paris").create();
 

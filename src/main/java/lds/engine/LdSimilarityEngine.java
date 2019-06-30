@@ -2,57 +2,47 @@ package lds.engine;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
+import lds.LdManager.LdManager;
+import lds.indexing.LdIndexer;
 
 import org.openrdf.model.URI;
 
 import lds.measures.LdSimilarityMeasure;
+import lds.measures.resim.ResimLdManager;
+import lds.measures.resim.Weight;
+import lds.measures.resim.WeightMethod;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 import slib.graph.model.graph.G;
 import slib.sml.sm.core.utils.SMconf;
 import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.i.Conf;
 
-public class LdSimilarityEngine extends slib.sml.sm.core.engine.SM_Engine {
+//public class LdSimilarityEngine extends slib.sml.sm.core.engine.SM_Engine {
+public class LdSimilarityEngine {
+        private LdSimilarityMeasure measure;
 
-	public static String LD_MEASURES_NS = "lds.measures.";
+	/*public static String LD_MEASURES_NS = "lds.measures.";
 
 	LdDataset dataset;
 
-	/**
-	 * constructor for measure that needs only a graph (sub-ld graph that eventually
-	 * connect compared resource)
-	 * 
-	 * @param g
-	 * @throws SLIB_Ex_Critic
-	 */
 	public LdSimilarityEngine(G g) throws SLIB_Ex_Critic {
 		super(g);
 	}
 
-	/**
-	 * constructor for measure that needs LD dataset + graph (sub-ld graph that
-	 * eventually connect compared resource)
-	 * 
-	 * @param d
-	 * @param g
-	 * @throws SLIB_Ex_Critic
-	 */
 	public LdSimilarityEngine(LdDataset d, G g) throws SLIB_Ex_Critic {
 		super(g);
 		this.dataset = d;
 	}
 
-	/**
-	 * constructor for measure that needs only LD dataset
-	 * 
-	 * @param d
-	 * @throws SLIB_Ex_Critic
-	 */
-
 	public LdSimilarityEngine(LdDataset d) throws SLIB_Ex_Critic {
 		super(null);
 		this.dataset = d;
 	}
+        
+        public LdSimilarityEngine() throws SLIB_Ex_Critic {
+		super(null);
+	}*/
 	//
 	// public SM_LD_Engine(G g) {
 	// this.graph = g;
@@ -70,12 +60,47 @@ public class LdSimilarityEngine extends slib.sml.sm.core.engine.SM_Engine {
 	// // TODO Auto-generated constructor stub
 	// }
 
-	@Override
+	/*@Override
 	public double compare(SMconf pairwiseConf, URI a, URI b) throws SLIB_Ex_Critic {
 		// load intended measure generically
 		return 0;
 
-	}
+	}*/
+        
+        
+        
+        public void load(Measure measureName, Conf config){
+            Class<?> measureClass;
+            LdSimilarityMeasure ldMeasure = null;
+            try {
+                    measureClass = Class.forName(Measure.getPath(measureName));
+                    Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
+                    ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
+                    this.measure = ldMeasure;
+                    
+                    ldMeasure.loadIndexes();
+
+
+            } // catch (ClassNotFoundException | IllegalAccessException |
+                    // IllegalArgumentException | InstantiationException | NoSuchMethodException |
+                    // SecurityException | InvocationTargetException e) {
+            catch (Exception e) {
+                    e.printStackTrace();
+            }
+
+        }
+        
+        public double similarity(R a, R b){
+            double score = 0;
+            score = measure.compare(a, b);
+            return score;
+        }
+        
+        public void close(){
+            measure.closeIndexes();
+           
+        }
+        
 
 	// TODO: transform engine to a factory that inits contructor...
 
@@ -83,26 +108,28 @@ public class LdSimilarityEngine extends slib.sml.sm.core.engine.SM_Engine {
 	// keep all that on ldq ?
 	// store data locally ?
 	// associate a local cache to online dataset on ldq ?&
+    
+        /*public double similarity(Measure measureName, R a, R b , Conf config){
+            Class<?> measureClass;
+            double score = 0;
+            LdSimilarityMeasure ldMeasure = null;
+            try {
+                    measureClass = Class.forName(Measure.getPath(measureName));
+                    Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
+                    ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
 
-	public double similarity(String measureName, R a, R b) throws SLIB_Ex_Critic {
 
-		Class<?> measureClass;
-		double score = 0;
-		LdSimilarityMeasure ldMeasure = null;
-		try {
-			measureClass = Class.forName(LD_MEASURES_NS + measureName);
-			Constructor<?> measureConstructor = measureClass.getConstructor();
+            } // catch (ClassNotFoundException | IllegalAccessException |
+                    // IllegalArgumentException | InstantiationException | NoSuchMethodException |
+                    // SecurityException | InvocationTargetException e) {
+            catch (Exception e) {
+                    e.printStackTrace();
+            }
 
-			ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance();
-		} // catch (ClassNotFoundException | IllegalAccessException |
-			// IllegalArgumentException | InstantiationException | NoSuchMethodException |
-			// SecurityException | InvocationTargetException e) {
-		catch (Exception e) {
-			e.printStackTrace();
-		}
+            score = ldMeasure.compare(a, b);
+            return score;
+        }*/
 
-		score = ldMeasure.compare(a, b, this.getGraph());
-		return score;
-
-	}
+        
+        
 }
