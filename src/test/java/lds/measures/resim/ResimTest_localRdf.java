@@ -3,17 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures;
+package lds.measures.resim;
 
-import java.util.Set;
 import lds.measures.resim.Resim;
-import lds.measures.resim.ResimLdManager;
+import lds.LdManager.ResimLdManager;
 import lds.measures.resim.ResourceSimilarity;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
@@ -44,7 +42,7 @@ public class ResimTest_localRdf {
 		}
 
 		Conf config = new Conf();
-		config.addParam("useIndexes", true);
+		config.addParam("useIndexes", false);
                 config.addParam("LdDatasetMain" , dataSet);
 
 		ResourceSimilarity resim = new Resim(config);

@@ -3,15 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures;
+package lds.measures.resim;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import lds.measures.Util.SplitedList;
+import lds.LdManager.ResimLdManager;
+import lds.measures.picss.Util;
+import lds.measures.picss.Util.SplitedList;
 import lds.measures.resim.Resim;
-import lds.measures.resim.ResimLdManager;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;

@@ -1,5 +1,6 @@
-package lds.measures;
+package lds.measures.ldsd;
 
+import lds.measures.picss.*;
 import org.openrdf.model.URI;
 
 import slib.graph.model.graph.G;

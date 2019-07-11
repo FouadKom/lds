@@ -7,7 +7,6 @@ package lds.indexing;
 
 import java.io.File;
 import java.lang.reflect.Constructor;
-import java.lang.reflect.Field;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.logging.Level;
@@ -18,7 +17,7 @@ import sc.research.ldq.LdDataset;
 
 /**
  *
- * @author LENOVO
+ * @author Fouad komeiha
  */
 public class Utility {
     
@@ -59,6 +58,8 @@ public class Utility {
                         params[i] = R.class;
                     } else if (args[i] instanceof URI) {
                         params[i] = URI.class;
+                    } else if (args[i] instanceof String) {
+                        params[i] = String.class;
                     }
                 }
                 
@@ -86,7 +87,7 @@ public class Utility {
 
                 if (! file.exists()){
                     File dir = new File(file.getPath());
-                    return dir.mkdir();
+                    return dir.mkdirs();
 
                 }
             }

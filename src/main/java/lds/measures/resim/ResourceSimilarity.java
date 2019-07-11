@@ -5,9 +5,12 @@
  */
 package lds.measures.resim;
 
+import lds.measures.weight.WeightMethod;
+import lds.measures.weight.Weight;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lds.LdManager.ResimLdManager;
 import lds.measures.LdSimilarityMeasureBase;
 import lds.resource.R;
 import org.openrdf.model.URI;
@@ -142,15 +145,33 @@ public abstract class ResourceSimilarity extends LdSimilarityMeasureBase {
     }
 
     public double PropertySim(R a, R b) {
-            double x = 0, y = 0, ip = 0, op = 0, ppty = 0;
+            double x = 0, y = 0, cip = 0 , cop = 0 ,ip = 0, op = 0, ppty = 0;
 
             for (URI e : edges) {
                     x = x + ((double) Csip(e, a, b) / Cd(e));
                     y = y + ((double) Csop(e, a, b) / Cd(e));
             }
-
-            ip = x / (Cip(a) + Cip(b));
-            op = y / (Cop(a) + Cop(b));
+            
+            if (x !=0)
+                cip = Cip(a) + Cip(b);
+            else 
+                ip = 0;
+            
+            if(y != 0)
+                 cop = Cop(a) + Cop(b);
+            else
+                op = 0;
+            
+            if(cip != 0)
+                    ip = x / cip;
+            else
+                ip = 0;
+            
+            if(cop != 0 )
+                op = y / cop;
+            
+            else
+                op = 0;
 
             ppty = ip + op;
 

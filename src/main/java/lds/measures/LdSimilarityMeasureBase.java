@@ -6,17 +6,17 @@ import lds.resource.R;
 
 public class LdSimilarityMeasureBase implements LdSimilarityMeasure {
 
-        @Override
-	public double compare(R a, R b) {
-		// TODO Auto-generated method stub
-		return 0;
-	}
-
-        @Override
-        public double compare(R a, R b, int w1 , int w2) {
+    @Override
+    public double compare(R a, R b) {
             // TODO Auto-generated method stub
-                    return 0;
-        }
+            return 0;
+    }
+
+    @Override
+    public double compare(R a, R b, int w1 , int w2) {
+        // TODO Auto-generated method stub
+                return 0;
+    }
 
     @Override
     public void closeIndexes() {

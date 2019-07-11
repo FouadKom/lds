@@ -22,12 +22,13 @@ public class LdManagerBase implements LdManager {
 
 	protected LdDataset dataset;
 	protected Conf config = null;
+        protected String baseClassPath = "lds.LdManager.LdManagerBase.";
 
-	public LdManagerBase(LdDataset dataset) {
+	public  LdManagerBase(LdDataset dataset) {
 		this.dataset = dataset;
 	}
 
-	public List<String> getSameAsResoures(R a) {
+	public synchronized List<String> getSameAsResoures(R a) {
 
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -48,7 +49,7 @@ public class LdManagerBase implements LdManager {
 
 	}
         
-        public List<String> listShareCommonSubject(URI link , R a){
+        public synchronized List<String> listShareCommonSubject(URI link , R a){
             List<String> shareSubjectwithA = new ArrayList();
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -73,7 +74,7 @@ public class LdManagerBase implements LdManager {
         }
         
        
-         public List<String> listShareCommonObject(URI link , R a){
+         public synchronized List<String> listShareCommonObject(URI link , R a){
             List<String> shareObjectwithA = new ArrayList();
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -99,7 +100,7 @@ public class LdManagerBase implements LdManager {
         }
         
          
-        public List<String> getObjects(R a){
+        public synchronized List<String> getObjects(R a){
             
             List<String> directlyConnectedObjects = new ArrayList<>();
             
@@ -126,7 +127,7 @@ public class LdManagerBase implements LdManager {
         }
        
         
-        public List<String> getSubjects(R a){
+        public synchronized List<String> getSubjects(R a){
             
             List<String> directlyConnectedSubjects = new ArrayList<>();
             
@@ -155,7 +156,7 @@ public class LdManagerBase implements LdManager {
         }
                
 
-        public List<String> getSubjects(URI link, R a) {
+        public synchronized List<String> getSubjects(URI link, R a) {
             List<String> directlyConnectedSubjects = new ArrayList<>();
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -178,7 +179,7 @@ public class LdManagerBase implements LdManager {
         }
         
         
-        public List<String> getObjects(URI link , R a) {
+        public synchronized List<String> getObjects(URI link , R a) {
             List<String> directlyConnectedObjects = new ArrayList<>();
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -203,7 +204,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-	public int countPropertyOccurrence(URI link) {
+	public synchronized int countPropertyOccurrence(URI link) {
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -224,7 +225,7 @@ public class LdManagerBase implements LdManager {
 	}
         
         @Override
-        public List<String> getIngoingEdges(R a){
+        public synchronized List<String> getIngoingEdges(R a){
             Resource edge = null;
 		List<String> edges = new ArrayList<>();
 
@@ -254,7 +255,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-        public List<String> getOutgoingEdges(R a){
+        public synchronized List<String> getOutgoingEdges(R a){
             Resource edge = null;
 		List<String> edges = new ArrayList<>();
 
@@ -285,7 +286,7 @@ public class LdManagerBase implements LdManager {
         
                 
         @Override
-        public boolean isSameAs(R a, R b) {
+        public synchronized boolean isSameAs(R a, R b) {
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("ask {<" + a.getUri() + ">  <" + OWL.sameAs + "> <" + b.getUri() + "> . }");
@@ -299,7 +300,7 @@ public class LdManagerBase implements LdManager {
      
 
         @Override
-        public boolean isDirectlyConnected(URI link, R a, R b) {
+        public synchronized boolean isDirectlyConnected(URI link, R a, R b) {
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("ask {<" + a.getUri() + ">  <" + link + "> <" + b.getUri() + "> . }");
@@ -312,7 +313,7 @@ public class LdManagerBase implements LdManager {
         
         
         @Override
-        public int countSubject(URI link, R a) {
+        public synchronized int countSubject(URI link, R a) {
             
             Literal count = null;
             
@@ -336,7 +337,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-        public int countSubject(R a){
+        public synchronized int countSubject(R a){
             
             Literal count = null;
             
@@ -360,7 +361,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-       public int countObject(R a){
+       public synchronized int countObject(R a){
             
             Literal count = null;
             
@@ -386,7 +387,7 @@ public class LdManagerBase implements LdManager {
        
        
       @Override
-      public int countObject(URI link , R a) {
+      public synchronized int countObject(URI link , R a) {
             Literal count = null;
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
@@ -457,7 +458,7 @@ public class LdManagerBase implements LdManager {
    
 
         @Override
-        public int countShareCommonObjects(URI link, R a) {
+        public synchronized int countShareCommonObjects(URI link, R a) {
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -482,7 +483,7 @@ public class LdManagerBase implements LdManager {
         
 
         @Override
-        public int countShareCommonSubjects(URI link, R a) {
+        public synchronized int countShareCommonSubjects(URI link, R a) {
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -505,7 +506,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-        public int countShareCommonObjects(URI link, R a , R b){
+        public synchronized int countShareCommonObjects(URI link, R a , R b){
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -530,7 +531,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-        public int countShareCommonSubjects(URI link , R a , R b){
+        public synchronized int countShareCommonSubjects(URI link , R a , R b){
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -556,7 +557,7 @@ public class LdManagerBase implements LdManager {
         }
         
         @Override
-        public int countShareTyplessCommonObjects(URI link1 , URI link2 , R a) {
+        public synchronized int countShareTyplessCommonObjects(URI link1 , URI link2 , R a) {
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -583,7 +584,7 @@ public class LdManagerBase implements LdManager {
         }
 
         @Override
-        public int countShareTyplessCommonSubjects(URI link1 , URI link2 , R a) {
+        public synchronized int countShareTyplessCommonSubjects(URI link1 , URI link2 , R a) {
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -608,7 +609,7 @@ public class LdManagerBase implements LdManager {
         }
 
         @Override
-        public int countShareTyplessCommonObjects(URI link1 , URI link2 , R a , R b) {
+        public synchronized int countShareTyplessCommonObjects(URI link1 , URI link2 , R a , R b) {
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -632,7 +633,7 @@ public class LdManagerBase implements LdManager {
         }
 
         @Override
-        public int countShareTyplessCommonSubjects(URI link1 , URI link2 , R a , R b) {
+        public synchronized int countShareTyplessCommonSubjects(URI link1 , URI link2 , R a , R b) {
             Literal count = null;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -656,7 +657,7 @@ public class LdManagerBase implements LdManager {
         }
 
         @Override
-        public Set<URI> getEdges(R a, R b) {
+        public synchronized Set<URI> getEdges(R a, R b) {
             Set<URI> edges = new HashSet();
             Resource edge;
             URIFactory factory = URIFactoryMemory.getSingleton();
@@ -696,7 +697,7 @@ public class LdManagerBase implements LdManager {
         }       
 
     @Override
-    public int countResource() {
+    public synchronized int countResource() {
         Literal count = null;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -722,7 +723,7 @@ public class LdManagerBase implements LdManager {
     }
     
     @Override
-    public List<String> getTyplessCommonObjects(R a , R b){
+    public synchronized List<String> getTyplessCommonObjects(R a , R b){
         List<String> commonObjects = new ArrayList();
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -748,7 +749,7 @@ public class LdManagerBase implements LdManager {
     }
         
     @Override
-    public List<String> getTyplessCommonSubjects(R a , R b){
+    public synchronized List<String> getTyplessCommonSubjects(R a , R b){
         List<String> commonSubjects = new ArrayList();
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -774,7 +775,7 @@ public class LdManagerBase implements LdManager {
     }
         
     @Override
-    public List<String> getCommonSubjects(R a , R b){
+    public synchronized List<String> getCommonSubjects(R a , R b){
         List<String> commonSubjects = new ArrayList();
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -801,7 +802,7 @@ public class LdManagerBase implements LdManager {
     }
     
     @Override
-    public List<String> getCommonObjects(R a , R b){
+    public synchronized List<String> getCommonObjects(R a , R b){
         List<String> commonObjects = new ArrayList();
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 

@@ -1,9 +1,7 @@
 package lds.indexing;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -38,7 +36,7 @@ public class LdIndexer {
                         .make();
             }
             else
-               throw new Exception("Invalid filepath specified");
+               throw new Exception("Invalid Index filepath specified");
  
         }
         
@@ -50,7 +48,7 @@ public class LdIndexer {
 	}           
        
 
-	public void addList(String key, List<String> values) {
+	public  void addList(String key, List<String> values) {
 
             NavigableSet<Object[]> multimap = db.treeSet("index")
                             .serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING))
@@ -66,7 +64,7 @@ public class LdIndexer {
 	}
              
         
-	public void addValue(String key, String value) {
+	public  void addValue(String key, String value) {
             
             HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
             .counterEnable()
@@ -75,7 +73,7 @@ public class LdIndexer {
             map.put(key , value);
 	}
         
-        public String getValue(String key){
+        public  String getValue(String key){
               HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
                 .counterEnable()
                 .createOrOpen();
@@ -84,7 +82,7 @@ public class LdIndexer {
         }
         
 
-	public List<String> getList(String key) {
+	public  List<String> getList(String key) {
 
 		NavigableSet<Object[]> multimap = db.treeSet("index")
 				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING))
@@ -125,6 +123,7 @@ public class LdIndexer {
             }
            
         }
+        
         
         
         public static int getIntegerFromIndex(LdDataset dataset , LdIndexer indexName , String key , String methodPath , Object... args) {
@@ -194,8 +193,8 @@ public class LdIndexer {
 
         }
         
-        public static void updateIndexSet(LdDataset dataset , LdIndexer indexName, String key , String methodPath , Object... args){
- 
+        public static synchronized void updateIndexSet(LdDataset dataset , LdIndexer indexName, String key , String methodPath , Object... args){
+
             String classPath = Utility.getClassPath(methodPath);
             String methodName = Utility.getMethodName(methodPath);
             Object returnedItem = Utility.executeMethod(dataset , classPath , methodName , args);
@@ -220,7 +219,7 @@ public class LdIndexer {
                           
         }
 
-        public static void updateIndexTree(LdDataset dataset , LdIndexer indexName, String key, String methodPath , Object... args) {      
+        public static synchronized void updateIndexTree(LdDataset dataset , LdIndexer indexName, String key, String methodPath , Object... args) {      
 
             String classPath = Utility.getClassPath(methodPath);
             String methodName = Utility.getMethodName(methodPath);
@@ -263,13 +262,12 @@ public class LdIndexer {
         
         
         //Used only for Weight class
-        public static void updateIndexTree(LdIndexer indexName, String key, String methodPath , Object... args) {      
+        public static synchronized void updateIndexTree(LdIndexer indexName, String key, String methodPath , Object... args) {      
             String classPath = Utility.getClassPath(methodPath);
             String methodName = Utility.getMethodName(methodPath);
             Utility.executeMethod(classPath , methodName , args);
             
-        }
-        
+        }       
         
 
 }

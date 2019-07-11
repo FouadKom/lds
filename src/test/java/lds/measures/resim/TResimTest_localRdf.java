@@ -3,10 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures;
+package lds.measures.resim;
 
 import java.util.Set;
-import lds.measures.resim.ResimLdManager;
+import lds.LdManager.ResimLdManager;
 import lds.measures.resim.ResourceSimilarity;
 import lds.measures.resim.TResim;
 import lds.resource.R;

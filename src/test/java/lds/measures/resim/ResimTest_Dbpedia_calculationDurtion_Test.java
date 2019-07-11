@@ -3,16 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures;
+package lds.measures.resim;
 
 import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.engine.LdSimilarityEngine;
-import lds.engine.Measure;
+import lds.measures.Measure;
+import lds.measures.picss.Util;
 import lds.measures.resim.Resim;
-import lds.measures.resim.ResimLdManager;
 import lds.measures.resim.ResourceSimilarity;
 import lds.resource.R;
 import org.junit.Test;

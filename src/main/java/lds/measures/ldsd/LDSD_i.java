@@ -20,6 +20,7 @@ public class LDSD_i extends LDSD{
 
     @Override
     public double compare(R a, R b) {
+        edges = LDSDLDLoader.getEdges(a, b);
         return LDSD_i(a , b);
     }
     

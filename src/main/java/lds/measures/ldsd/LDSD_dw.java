@@ -21,6 +21,7 @@ public class LDSD_dw extends LDSD{
 
     @Override
     public double compare(R a, R b) {
+        edges = LDSDLDLoader.getEdges(a, b);
         return LDSD_dw(a, b);
     }
     
@@ -36,56 +37,5 @@ public class LDSD_dw extends LDSD{
 
             return 1 / (1 + cdA_norm + cdB_norm );
     }
-    
-    /**
-	 * Nbr of nodes from a ---- l ---> count(x)
-	 * 
-	 * @param a
-	 * @param l
-	 * @param g
-	 * @return
-	 */
-        
-        //similar to Resim
-	public int Cd(URI l, R a) {
-            return LDSDLDLoader.countObject(l , a);
-        }
-
-	/**
-	 * returns 1 if a ----- count(l) ----> b
-	 * 
-	 * @param a
-	 * @param b
-	 * @param l
-	 * @param g
-	 * @return
-	 */
-        
-        //similar to Resim
-	public int Cd(URI l, R a, R b) {
-            if(LDSDLDLoader.isDirectlyConnected(l, a, b))
-                return 1;
-            else
-                return 0;
-        }
-        
-        
-        //similar to Resim
-	public double Cd_normalized(URI l, R a, R b) {
-		int cd = Cd(l, a, b) , cd_l = 0;
-		double cd_norm = 0;
-                
-                if(cd != 0){
-                    cd_l = Cd(l, a);
-                    if(cd_l != 0){
-                        double x = 1 + Math.log10(cd_l);
-                        cd_norm = (double) cd / x;
-                    }
-                    else
-                      cd_norm = (double) cd;  
-                }
-
-		return cd_norm;
-	}
     
 }

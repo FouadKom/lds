@@ -16,10 +16,12 @@ public class LDSD_d extends LDSD{
 
     public LDSD_d(Conf config) throws Exception {
         super(config);
+        
     }
 
     @Override
     public double compare(R a, R b) {
+       edges = LDSDLDLoader.getEdges(a, b);
        return LDSD_d(a , b);
     }
     

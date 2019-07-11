@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures;
+package lds.measures.ldsd;
 
+import lds.measures.picss.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
