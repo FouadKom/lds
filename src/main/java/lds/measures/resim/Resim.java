@@ -5,78 +5,23 @@
  */
 package lds.measures.resim;
 
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-
-import lds.LdManager.LdManager;
-import lds.measures.LdSimilarityMeasureBase;
 import lds.resource.R;
 import org.openrdf.model.URI;
+import slib.utils.i.Conf;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class Resim extends LdSimilarityMeasureBase {
-	public Set<URI> edges;
 
-	public LdManager resimLDLoader;
+  public class Resim extends ResourceSimilarity {  
 
-	public Resim() {
-
+	public Resim(Conf configuration) throws Exception {
+            super(configuration);               
 	}
 
-	public Resim(LdManager resimLDLoader) {
-		this.resimLDLoader = resimLDLoader;
-	}
-        
-        
+
         @Override
-	public double compare(R a, R b) {
-		double sim = 0;
-		try {
-                        
-			sim = Resim(a, b);
-
-		} catch (Exception ex) {
-			Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
-		}
-		return sim;
-	}
-
-	public double Resim(R a, R b) {
-		
-		int w1 = 1, w2 = 2;
-		double x = 0, y = 0;
-                
-                this.edges = resimLDLoader.getEdges(a , b);
-		// TODO: if we're in the same dataset, it's not necessary to check sameAs ?
-		if (a.equals(b) || resimLDLoader.isSameAs(a, b))
-			return 1;
-                        
-		x = w1 * PropertySim(a, b);
-		y = w2 * LDSDsim(a, b);
-		return (x + y) / (w1 + w2);
-
-	}
-
-	public double PropertySim(R a, R b) {
-		double x = 0, y = 0, ip = 0, op = 0, ppty = 0;
-
-		for (URI e : edges) {
-			x = x + ((double) Csip(e, a, b) / Cd(e));
-			y = y + ((double) Csop(e, a, b) / Cd(e));
-		}
-
-		ip = x / (Cip(a) + Cip(b));
-		op = y / (Cop(a) + Cop(b));
-
-		ppty = ip + op;
-
-		return ppty;
-	}
-
 	public double LDSD(R a, R b) {
                 double cdA_norm = 0, cdB_norm = 0, cii_norm = 0, cio_norm = 0;
 
@@ -92,69 +37,27 @@ public class Resim extends LdSimilarityMeasureBase {
 		return 1 / (1 + cdA_norm + cdB_norm + cii_norm + cio_norm);
 	}
 
-	public double LDSDsim(R a, R b) {
-		return 1 - LDSD(a, b);
-	}
 
-	public int Cip(R a) {
-            return resimLDLoader.countSubject(a);
-	}
-
-	public int Cop(R a) {
-            return resimLDLoader.countObject(a);
-	}
-
-	public int Csip(URI l, R a, R b) {
-            if ( resimLDLoader.countSubject(l , a) > 0 && resimLDLoader.countSubject(l , b ) > 0 )
-                return 1;
-            return 0;
-	}
-
-	public int Csop(URI l, R a, R b) {
-            if (resimLDLoader.countObject(l , a) > 0 && resimLDLoader.countObject(l , b ) > 0)
-                return 1;
-            return 0;
-	}
-
-	public int Cd(URI l, R a, R b) {
-            if(resimLDLoader.isDirectlyConnected(l, a, b))
-                return 1;
-            else
-                return 0;
-	}
-
-	public int Cd(URI l, R a) {
-            return resimLDLoader.countObject(l , a);
-	}
-
-	public int Cd(URI l) {
-            return resimLDLoader.countPropertyOccurrence(l);
-	}
-
+        @Override
 	public double Cd_normalized(URI l, R a, R b) {
-		int cd = Cd(l, a, b);
+		int cd = Cd(l, a, b) , cd_l = 0;
 		double cd_norm = 0;
                 
                 if(cd != 0){
-                    double x = 1 + Math.log(Cd(l, a));
-
-                    cd_norm = (double) cd / x;
+                    cd_l = Cd(l, a);
+                    if(cd_l != 0){
+                        double x = 1 + Math.log10(cd_l);
+                        cd_norm = (double) cd / x;
+                    }
+                    else
+                      cd_norm = (double) cd;  
                 }
 
 		return cd_norm;
 
 	}
 
-	public int Cii(URI l, R a, R b) {
-            if (resimLDLoader.shareCommonSubject(l, a , b))
-                return 1;
-            return 0;
-	}
-
-	public int Cii(URI l, R a) {
-            return resimLDLoader.countShareCommonSubjects(l, a);
-	}
-
+        @Override
 	public double Cii_normalized(URI l, R a, R b) {
 
 		int ciiA, ciiB, cii;
@@ -165,26 +68,20 @@ public class Resim extends LdSimilarityMeasureBase {
                 if(cii != 0){
                     ciiA = Cii(l, a);
                     ciiB = Cii(l, b);
-                    x = 1 + Math.log((ciiA + ciiB) / 2);
-
-                    cii_norm = ((double) cii / x);
+                    
+                    if( (ciiA + ciiB) != 0){
+                        x = 1 + Math.log10( (ciiA + ciiB) / 2 );
+                        cii_norm = ((double) cii ) / x;
+                    }
+                    else
+                        cii_norm = (double) cii;
                 }
 
 		return cii_norm;
 
 	}
 
-	public int Cio(URI l, R a, R b) {
-
-            if(resimLDLoader.shareCommonObject(l, a , b))
-                return 1;
-            return 0;
-	}
-
-	public int Cio(URI l, R a) {
-            return resimLDLoader.countShareCommonObjects(l, a);
-	}
-
+        @Override
 	public double Cio_normalized(URI l, R a, R b) {
             int cioA, cioB, cio;
             double cio_norm = 0, x;
@@ -195,13 +92,48 @@ public class Resim extends LdSimilarityMeasureBase {
             {
                 cioA = Cio(l, a);
                 cioB = Cio(l, b);
-                x = 1 + Math.log((cioA + cioB) / 2);
+                
+                if((cioA + cioB) != 0 ){
+                    x = 1 + Math.log10( (cioA + cioB) / 2 );
 
-                cio_norm = ((double) cio / x);
+                    cio_norm = ((double) cio ) / x;
+                }
+                else
+                    cio_norm = (double) cio ;
             }  
 
             return cio_norm;
 
 	}
+
+    @Override
+    public int Cii(URI li, URI lj, R a, R b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int Cii(URI li, URI lj , R k) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double Cii_normalized(URI li, URI lj, R a, R b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int Cio(URI li, URI lj, R a, R b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int Cio(URI li, URI lj , R k) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public double Cio_normalized(URI li, URI lj, R a, R b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
 }

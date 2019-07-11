@@ -6,74 +6,118 @@
 package lds.measures.picss;
 
 
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import java.util.List;
+import lds.LdManager.PicssLdManager;
 import lds.measures.LdSimilarityMeasureBase;
 import lds.resource.R;
-import org.apache.commons.httpclient.HttpException;
-import org.openrdf.model.URI;
 import sc.research.ldq.*;
-import slib.utils.ex.SLIB_Ex_Critic;
+import slib.utils.i.Conf;
 
 /**
  *
  * @author Fouad Komeiha
  */
 public class PICSS extends LdSimilarityMeasureBase{
-    private LdDataset dataset;
+    private PicssLdManager ldManager;
+    private boolean useIndeses;
     
-    public PICSS(LdDataset dataset){
-        this.dataset = dataset;
-    }    
+    public PICSS(Conf config) throws Exception{
+        this.ldManager = new PicssLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
+        this.useIndeses = (Boolean) config.getParam("useIndexes");
+    }
+
+    
+    @Override
+    public void closeIndexes(){
+        if(useIndeses){
+            ldManager.closeIndexes();
+        }
+        
+    }
+    
+    
+    @Override
+    public void loadIndexes() throws Exception{
+        if(useIndeses){
+            ldManager.loadIndexes();
+        }
+    }
     
     
     @Override
     public double compare(R a, R b) {
 	double sim = 0;
-        try {
-            sim= PICSS(a.getUri() , b.getUri());
-        } catch (SLIB_Ex_Critic ex) {
-            Logger.getLogger(PICSS.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (HttpException ex) {
-            Logger.getLogger(PICSS.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    return sim;
 
-    }    
-    
-    public double PIC(Set<String> Fa){
+        sim= PICSS(a , b);
+
+
+        return sim;
+
+    }
+
+    private double PICSS(R a , R b) {
+
+        List<String> features_a = ldManager.getFeatures(a);
+        List<String> features_b = ldManager.getFeatures(b);
+
+	List<String> unique_features_a = Utility.uniqueFeatures(features_a , features_b);
+	List<String> unique_features_b = Utility.uniqueFeatures(features_b, features_a);
+
+	List<String> common_features = Utility.commonFeatures(features_a, features_b);
+
+	double x = PIC(common_features);
+	double y = PIC(unique_features_a);
+	double z = PIC(unique_features_b);
+
+	if ((x + y + z) == 0)
+            return 0;
         
-        double pic = 0.0;
-        double ic = 0.0;
-        int N = Utility.getResourcesNum(dataset);
-        for(String s : Fa){
+	return (x / (x + y + z));
+    }
+    
+    
+    private double PIC(List<String> F) {
+	double s = 0.0;
+//        int N = ldManager.countResource();
+//        int N = 9;
+        int N = 2350906;
+        
+	for (String f : F) {
             
-            int featureFrequency = Utility.getFeatureFrequency(dataset, s);
-            ic = (double)featureFrequency/N;
-            pic = pic - Utility.logb(ic , 2);
-                
-        }
-        return pic;
+            double phi_ = phi(f);
+            if (phi_ != 0) {
+                double x = Math.log10(phi_ / N);
+                double log = -x;
+                s = s + log;
+            }
+            
+	}
+        
+	return s;
     }
     
-    public double PICSS(URI a, URI b) throws SLIB_Ex_Critic, HttpException{
-        Set<String> Fa ,Fb;
-        Fa = Utility.getFeaturesSet(a , dataset);
-        Fb = Utility.getFeaturesSet(b , dataset);
+ 
+    
+    private double phi(String feature) {
+
+	int count = 0;
         
-        Set<String> interSection = Utility.intersection(Fa , Fb);
-        Set<String> diffFa = Utility.difference(Fa , Fb);
-        Set<String> diffFb = Utility.difference(Fb , Fa);
+        String direction = Utility.getDirection(feature);
+        String property = Utility.getLink(feature);
+        String resource = Utility.getVertex(feature);
         
-        double picINT = PIC(interSection);
-        double picDiffFa = PIC(diffFa);
-        double picDiffFb = PIC(diffFb);
+        if(direction.equals("In")){
+            count = ldManager.getIngoingFeatureFrequency(property , resource);
+        }
         
-        
-        return (picINT/(picINT + picDiffFa + picDiffFb));
-        
+        if(direction.equals("Out")){
+            count = ldManager.getOutgoingFeatureFrequency(property , resource);
+        }
+
+	return count;
+
     }
+    
     
     
     

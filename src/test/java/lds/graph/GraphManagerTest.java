@@ -85,13 +85,13 @@ public class GraphManagerTest {
 		
 		
 		
-		LdSimilarityEngine engine = new LdSimilarityEngine(graph);
+//		LdSimilarityEngine engine = new LdSimilarityEngine(graph);
 		
 		Utility.showVerticesAndEdges(graph);
 		
-		double score = engine.similarity("resim.Resim", r1, r2);
+//		double score = engine.similarity("resim.Resim", r1, r2);
 		
-		System.out.println("score = " + score);
+//		System.out.println("score = " + score);
 		System.out.println("getNumberVertices -> " + graph.getNumberVertices());
 		
 		t.stop();

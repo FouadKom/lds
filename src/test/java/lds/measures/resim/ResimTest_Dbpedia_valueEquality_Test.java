@@ -3,14 +3,16 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures;
+package lds.measures.resim;
 
 import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import lds.LdManager.ResimLdManager;
+import lds.measures.picss.Util;
+import lds.measures.picss.Util.SplitedList;
 import lds.measures.resim.Resim;
-import lds.measures.resim.ResimLdManager;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
@@ -24,16 +26,15 @@ import slib.utils.i.Conf;
  */
 public class ResimTest_Dbpedia_valueEquality_Test {
     
-    public static ResimLdManager resimLdManager;    
+    public static ResimLdManager resimLdManager;
 
-    @Test
-    public void isResimWorksCorrectlyOnPaperExample() throws FileNotFoundException {
-                
-        int MaxSize = 4;
-                
+    public static void Resim_valueEquality_Test(int pairNumbers) throws Exception{
+        
+        SplitedList sp = Util.splitList(Util.getDbpediaResources(pairNumbers * 2));
+
         //get two list of Dbpedia resources
-        List<R> listOfResources1 = Util.getDbpediaResources(MaxSize);
-        List<R> listOfResources2 = Util.getDbpediaResources(MaxSize);
+        List<R> listOfResources1 = sp.getFirstList();
+        List<R> listOfResources2 = sp.getSecondList();
         
         //create a map to hold the compared resources as a key and their similarity as a value
         Map<String, Double> list = new HashMap<>();
@@ -43,10 +44,13 @@ public class ResimTest_Dbpedia_valueEquality_Test {
         
         //Checking similarity using Dbpedia       
         config.addParam("useIndexes", false);
-        resimLdManager = new ResimLdManager(dataset, config);        
-        Resim resim = new Resim(resimLdManager);
+        config.addParam("LdDatasetMain" , dataset);
         
-        for (int i = 0; i < MaxSize; i++) {
+        Resim resim = new Resim(config);
+        
+        resim.loadIndexes();
+        
+        for (int i = 0; i < pairNumbers; i++) {
             
             R r1 = listOfResources1.get(i);
             R r2 = listOfResources2.get(i);
@@ -57,12 +61,15 @@ public class ResimTest_Dbpedia_valueEquality_Test {
           
         }              
         
+        resim.closeIndexes();
         
         //Checking similarity using Indexes
         config.removeParam("useIndexes");
         config.addParam("useIndexes", true);
-        resimLdManager = new ResimLdManager(dataset, config);
-        resim = new Resim(resimLdManager);
+        config.addParam("LdDatasetMain" , dataset);
+        resim = new Resim(config);
+        
+        resim.loadIndexes();
         
         for (Map.Entry<String, Double> entry : list.entrySet()) {
             String[] resourcePair = entry.getKey().split(",");
@@ -79,14 +86,30 @@ public class ResimTest_Dbpedia_valueEquality_Test {
             }
             catch(Exception e){
                System.out.println("Exception: " + e + " when comparing pairs " + entry.getKey());
-               resimLdManager.closeIndexes();
+               resim.closeIndexes();
             }
 
         }
         
-        resimLdManager.closeIndexes();      
+        resim.closeIndexes();      
         
        
     }
     
+
+//    @Test
+//    public void isResimWorksCorrectlyOnPaperExample() throws FileNotFoundException, Exception {
+    
+    public static void main(String args[]) throws FileNotFoundException, Exception{
+                
+          int startPairNumbers = 2;
+          int endPairNumbers = 4;
+          int incrementBy = 2;
+          
+          while(startPairNumbers <= endPairNumbers){
+              Resim_valueEquality_Test(startPairNumbers);
+              startPairNumbers = startPairNumbers + incrementBy;
+          }  
+    
+    }
 }

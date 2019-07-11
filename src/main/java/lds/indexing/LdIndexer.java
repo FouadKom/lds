@@ -1,64 +1,71 @@
 package lds.indexing;
 
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lds.measures.resim.Utility;
-import lds.resource.R;
 import org.mapdb.DB;
 import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
 import org.mapdb.serializer.SerializerArrayTuple;
-import org.openrdf.model.URI;
+import sc.research.ldq.LdDataset;
 
 public class LdIndexer {
-
-	String indexFilePath = "";
+    
+      String indexFilePath = "";
 	DB db = null;
 
-	public LdIndexer(String filePath) {
-		this.indexFilePath = filePath;
-		load(this.indexFilePath);
+	public LdIndexer(String filePath) throws Exception {
+            this.indexFilePath = filePath;
+            load(this.indexFilePath);
 	}
+        
+        //Used for reflection in LdSimilarityEngine
+        public LdIndexer(){
+        }
 
-	public void load(String filePath) {
-		this.indexFilePath = filePath;
-		db = DBMaker.fileDB(this.indexFilePath)
-                            .fileChannelEnable()
-                            .make();
-	}
-
-	public void reload() throws Exception {
+	public void load(String filePath) throws Exception {
+            
+            if(Utility.checkPath(filePath)){
+                this.indexFilePath = filePath;
+                db = DBMaker.fileDB(this.indexFilePath)
+                        .fileChannelEnable()
+                        .make();
+            }
+            else
+               throw new Exception("Invalid Index filepath specified");
+ 
+        }
+        
+        public void reload() throws Exception {
 		if (!this.indexFilePath.isEmpty())
 			load(this.indexFilePath);
 		else
-			throw new Exception("no index file has been specified");
-	}
+                    throw new Exception("no index file has been specified");
+	}           
+       
 
-	public void addList(String key, List<String> values) {
+	public  void addList(String key, List<String> values) {
 
-		NavigableSet<Object[]> multimap = db.treeSet("index")
-				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING))
-                                .counterEnable()
-				.createOrOpen();
+            NavigableSet<Object[]> multimap = db.treeSet("index")
+                            .serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING))
+                            .counterEnable()
+                            .createOrOpen();
 
-		for (int i = 0; i < values.size(); i++) {
+            for (int i = 0; i < values.size(); i++) {
 
-			multimap.add(new Object[] { key, values.get(i) });
-		}
-		db.commit();
+                    multimap.add(new Object[] { key, values.get(i) });
+            }
+            db.commit();
 
 	}
              
         
-	public void addValue(String key, String value) {
-
+	public  void addValue(String key, String value) {
+            
             HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
             .counterEnable()
             .createOrOpen();
@@ -66,7 +73,7 @@ public class LdIndexer {
             map.put(key , value);
 	}
         
-        public String getValue(String key){
+        public  String getValue(String key){
               HTreeMap<String, String> map = db.hashMap("index2", Serializer.STRING, Serializer.STRING)
                 .counterEnable()
                 .createOrOpen();
@@ -75,7 +82,7 @@ public class LdIndexer {
         }
         
 
-	public List<String> getList(String key) {
+	public  List<String> getList(String key) {
 
 		NavigableSet<Object[]> multimap = db.treeSet("index")
 				.serializer(new SerializerArrayTuple(Serializer.STRING, Serializer.STRING))
@@ -87,7 +94,7 @@ public class LdIndexer {
 
 		List<Object[]> resultList = new ArrayList<Object[]>(resultSet); // TOFIX, is it necessary to convert ?!
 
-		if (resultList.isEmpty())
+		if (resultList.isEmpty() || resultList.contains("-1"))
 			return null;
 
 		List<String> result = new ArrayList<String>();
@@ -102,21 +109,24 @@ public class LdIndexer {
 		db.close();
 	}
         
-        public static List<String> getListFromIndex(LdIndexer indexName , String key , String methodName , Object... args) {
+        
+        public static List<String> getListFromIndex(LdDataset dataset , LdIndexer indexName , String key , String methodPath , Object... args) {
             
             List<String> data = indexName.getList(key);
-            if(data != null){
+            if(data != null ){
                 return data;
             }
 
             else{
-                updateIndexSet(indexName , key , methodName , args);
-                return getListFromIndex(indexName , key , methodName , args);
+                updateIndexSet(dataset , indexName , key , methodPath , args);
+                return getListFromIndex(dataset , indexName , key , methodPath , args);
             }
            
         }
         
-        public static int getIntegerFromIndex(LdIndexer indexName , String key , String methodName , Object... args) {
+        
+        
+        public static int getIntegerFromIndex(LdDataset dataset , LdIndexer indexName , String key , String methodPath , Object... args) {
                 
             String data = indexName.getValue(key);
             
@@ -127,13 +137,46 @@ public class LdIndexer {
                 return 0;
             }
             else{
-                updateIndexTree(indexName , key , methodName , args);
-                return getIntegerFromIndex(indexName , key , methodName , args);
+                updateIndexTree(dataset , indexName , key , methodPath , args);
+                return getIntegerFromIndex(dataset , indexName , key , methodPath , args);
             }
 
         }
         
-        public static boolean getBooleanFromIndex(LdIndexer indexName , String key , String methodName , Object... args) {
+        public static double getDoubleFromIndex(LdDataset dataset , LdIndexer indexName , String key , String methodPath , Object... args) {
+                
+            String data = indexName.getValue(key);
+            
+            if(data != null && ! data.equals("-1")){
+                return Double.parseDouble(data);
+            }
+            else if(data != null && data.equals("-1")){
+                return 0;
+            }
+            else{
+                updateIndexTree(dataset , indexName , key , methodPath , args);
+                return getDoubleFromIndex(dataset , indexName , key , methodPath , args);
+            }
+
+        }
+        
+        //Used only by Weight class
+        public static double getDoubleFromIndex(LdIndexer indexName , String key , String methodPath , Object... args) {
+            
+            String data = indexName.getValue(key);
+            
+            if(data != null){
+                return Double.parseDouble(data);
+            }
+            
+            else{
+                updateIndexTree(indexName , key , methodPath , args);
+                return getDoubleFromIndex(indexName , key , methodPath , args);
+            }
+
+        }
+        
+        public static boolean getBooleanFromIndex(LdDataset dataset , LdIndexer indexName , String key , String methodPath , Object... args) {
                 
             String data = indexName.getValue(key);
             
@@ -144,16 +187,17 @@ public class LdIndexer {
                 return false;
             }
             else{
-                updateIndexTree(indexName , key , methodName , args);
-                return getBooleanFromIndex(indexName , key , methodName , args);
+                updateIndexTree(dataset , indexName , key , methodPath , args);
+                return getBooleanFromIndex(dataset , indexName , key , methodPath , args);
             }
 
         }
         
-        public static void updateIndexSet(LdIndexer indexName, String key , String methodName , Object... args){
- 
-            
-            Object returnedItem = executeMethod("lds.LdManager.LdManagerBase" , methodName , args);
+        public static synchronized void updateIndexSet(LdDataset dataset , LdIndexer indexName, String key , String methodPath , Object... args){
+
+            String classPath = Utility.getClassPath(methodPath);
+            String methodName = Utility.getMethodName(methodPath);
+            Object returnedItem = Utility.executeMethod(dataset , classPath , methodName , args);
             
             try{
                 if(returnedItem != null){
@@ -175,12 +219,15 @@ public class LdIndexer {
                           
         }
 
-        public static void updateIndexTree(LdIndexer indexName, String key, String methodName , Object... args) {      
+        public static synchronized void updateIndexTree(LdDataset dataset , LdIndexer indexName, String key, String methodPath , Object... args) {      
 
-            Object returnedItem = executeMethod("lds.LdManager.LdManagerBase" , methodName , args);
+            String classPath = Utility.getClassPath(methodPath);
+            String methodName = Utility.getMethodName(methodPath);
+            Object returnedItem = Utility.executeMethod(dataset , classPath , methodName , args);
             
             boolean boolValue = false;
             int intValue = 0;
+            double dblValue = 0;
             String value = null;
             
             try{
@@ -193,6 +240,11 @@ public class LdIndexer {
                     if(returnedItem instanceof Integer){
                         intValue = (Integer) returnedItem;
                         value = Integer.toString(intValue);
+                    }
+                    
+                    if(returnedItem instanceof Double){
+                        dblValue = (Double) returnedItem;
+                        value = Double.toString(dblValue);
                     }
 
                     indexName.addValue(key , value);                    
@@ -208,31 +260,14 @@ public class LdIndexer {
             }
         }
         
-        private static Object executeMethod(String classPath , String methodName , Object... args){
+        
+        //Used only for Weight class
+        public static synchronized void updateIndexTree(LdIndexer indexName, String key, String methodPath , Object... args) {      
+            String classPath = Utility.getClassPath(methodPath);
+            String methodName = Utility.getMethodName(methodPath);
+            Utility.executeMethod(classPath , methodName , args);
             
-            Object returnedItem = null;
-            
-            try {  
-                Class<?> params[] = new Class[args.length];
-                for (int i = 0; i < args.length; i++) {
-                    if (args[i] instanceof R) {
-                        params[i] = R.class;
-                    } else if (args[i] instanceof URI) {
-                        params[i] = URI.class;
-                    }
-                }
-                
-                Class<?> cls = Class.forName(classPath);
-                Object _instance = cls.newInstance();
-                Method method = cls.getDeclaredMethod(methodName, params);
-                returnedItem = method.invoke(_instance , args);
-            }
-             catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException ex) {
-                Logger.getLogger(LdIndexer.class.getName()).log(Level.SEVERE, null, ex);
-                return null;
-            }
-            
-            return returnedItem;
-        }
+        }       
+        
 
 }
