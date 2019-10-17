@@ -3,10 +3,12 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.picss;
+package lds.measures.newMeasure;
 
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lds.LdManager.PicssLdManager;
 import lds.measures.LdSimilarityMeasure;
 import lds.resource.R;
@@ -17,15 +19,17 @@ import slib.utils.i.Conf;
  *
  * @author Fouad Komeiha
  */
-public class PICSS implements LdSimilarityMeasure{
+public class EPICS implements LdSimilarityMeasure{
     private PicssLdManager ldManager;
     private boolean useIndeses;
     private int NumberOfResources;
+    private Conf config;
     
-    public PICSS(Conf config) throws Exception{
-        if( config.getParam("LdDatasetMain")== null || config.getParam("useIndexes") == null || config.getParam("useIndexes")== null)
+    public EPICS(Conf config) throws Exception{
+        if( config.getParam("LdDatasetMain")== null || config.getParam("useIndexes")== null || config.getParam("resourcesCount")== null )
             throw new Exception("Some configuration parameters missing"); 
         
+        this.config = config;
         this.ldManager = new PicssLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
         this.useIndeses = (Boolean) config.getParam("useIndexes");
         this.NumberOfResources = (Integer) config.getParam("resourcesCount");
@@ -53,14 +57,18 @@ public class PICSS implements LdSimilarityMeasure{
     public double compare(R a, R b) {
 	double sim = 0;
 
-        sim= PICSS(a , b);
+        try {
+            sim= PICSS(a , b);
+        } catch (Exception ex) {
+            Logger.getLogger(EPICS.class.getName()).log(Level.SEVERE, null, ex);
+        }
 
 
         return sim;
 
     }
 
-    private double PICSS(R a , R b) {
+    private double PICSS(R a , R b) throws Exception {
 
         List<String> features_a = ldManager.getFeatures(a);
         List<String> features_b = ldManager.getFeatures(b);
@@ -70,28 +78,32 @@ public class PICSS implements LdSimilarityMeasure{
         
         List<String> common_features = Utility.commonFeatures(features_a, features_b);
         
-        if(common_features.isEmpty())
-            return 0;
+        features_a.removeAll(common_features);
+        features_b.removeAll(common_features);
         
-        List<String> unique_features_a = Utility.uniqueFeatures(features_a , features_b);
+        List<String> similar_features = Utility.similarFeatures(features_a, features_b , config);
+        
+        features_a.removeAll(similar_features);
+        features_b.removeAll(similar_features);
+        
+	List<String> unique_features_a = Utility.uniqueFeatures(features_a , features_b);
 	List<String> unique_features_b = Utility.uniqueFeatures(features_b, features_a);
-
-	double x = PIC(common_features);
+        
+        double x = PIC(common_features);
 	double y = PIC(unique_features_a);
 	double z = PIC(unique_features_b);
+        double s = PIC(similar_features)/2; //because similar features we get average
 
-	if ((x + y + z) == 0)
+	if ((x + s + y + z) == 0)
             return 0;
         
-	return (x / (x + y + z));
+	return ( (x + s) / (x +  s + y + z));
     }
     
     
     private double PIC(List<String> F) {
 	double s = 0.0;
 //        int N = ldManager.countResource();
-//        int N = 9;
-//        int N = 2350906;
         
 	for (String f : F) {
             

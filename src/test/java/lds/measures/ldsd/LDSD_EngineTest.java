@@ -46,7 +46,7 @@ public class LDSD_EngineTest {
         config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataSetMain);
         config.addParam("LdDatasetSpecific" , dataSetSpecific);
-        config.addParam("WeightMethod", WeightMethod.ITW);
+        //config.addParam("WeightMethod", WeightMethod.ITW);
         
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Johnny_Cash").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("June_Carter_Cash").create();

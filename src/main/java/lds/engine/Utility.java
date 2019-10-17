@@ -71,14 +71,33 @@ public class Utility {
         return resourceList;
     }
     
+    public static List<String> readRowsFromFile(String filePath) throws FileNotFoundException{
+        if(! checkPath(filePath) )
+            return null;
+        
+        List<String> resourceList = new ArrayList<>();
+        
+        File file =  new File(filePath); 
+        Scanner sc = new Scanner(file); 
+  
+        while (sc.hasNextLine()){
+          String[] splited = sc.nextLine().split("\\s+");
+          
+          if(isNumeric(splited[1]))
+            resourceList.add(splited[1]);
+        }
+        
+        return resourceList;
+    }
     
-    public static void writeListToFile(List<Double> resultsList , String filePath) throws IOException{
+    
+    public static void writeListToFile(List<String> resultsList , String filePath) throws IOException{
         if(! checkPath(filePath) )
             return;
         
         FileWriter writer = new FileWriter(filePath);
         
-        for(Double result : resultsList){
+        for(String result : resultsList){
             writer.write(result + "\n");
         }
         
@@ -86,24 +105,13 @@ public class Utility {
     }
     
     
-    public static double checkCorrelation(String listPath , String benchMarkPath) throws FileNotFoundException{
-        if( !checkPath(listPath) && !checkPath(benchMarkPath) )
-            return -1;
-        
-        List<String> list = readListFromFile(listPath);
-        List<String> benchMark = readListFromFile(benchMarkPath);
-        
-        return calculateCorrelation(list , benchMark);
-        
-    }
-    
-    
-    
     //Pearson Correlation
-    private static double calculateCorrelation( List<String> xs, List<String> ys){
+    public static double calculateCorrelation( List<String> xs, List<String> ys){
 
-            if(xs.size() != ys.size())
+            if(xs.size() != ys.size()){
+                System.out.println("Results List and Benchmark are not of the same size, Benchmarks format should be: \"R1,R2 <value>\"");
                 return -1;
+            }
 
             double sx = 0.0;
             double sy = 0.0;
@@ -131,7 +139,7 @@ public class Utility {
     }
     
     
-    private static boolean checkPath(String path){
+    public static boolean checkPath(String path){
         File file = new File(path);
 
         if (!file.isDirectory()){
@@ -144,6 +152,15 @@ public class Utility {
             }
         }
 
+        return true;
+    }
+    
+    public static boolean isNumeric(String strNum) {
+        try {
+            double d = Double.parseDouble(strNum);
+        } catch (NumberFormatException | NullPointerException nfe) {
+            return false;
+        }
         return true;
     }
 }

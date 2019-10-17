@@ -23,6 +23,7 @@ public class PICSSTest_paperEvaluation_Test {
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataset);
+        config.addParam("resourcesCount" , 2350906);
         
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Bob_Dylan").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Ronnie_Hawkins").create();
@@ -32,6 +33,8 @@ public class PICSSTest_paperEvaluation_Test {
         picss.loadIndexes();
         
         System.out.println(picss.compare(r1, r2));
+        
+        picss.closeIndexes();
         
         
     }

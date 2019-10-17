@@ -4,7 +4,7 @@ import java.util.Set;
 
 import org.openrdf.model.URI;
 
-import lds.measures.LdSimilarityMeasureBase;
+import lds.measures.LdSimilarityMeasure;
 import lds.LdManager.LdsdLdManager;
 import lds.measures.weight.Weight;
 import lds.measures.weight.WeightMethod;
@@ -13,7 +13,7 @@ import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 
 
-public abstract class LDSD extends LdSimilarityMeasureBase {
+public abstract class LDSD implements LdSimilarityMeasure {
     protected Set<URI> edges;
     protected LdsdLdManager LDSDLDLoader;
     protected LdsdLdManager SpecificLDSDLDLoader;
@@ -23,20 +23,29 @@ public abstract class LDSD extends LdSimilarityMeasureBase {
     public LDSD(Conf config) throws Exception {
         int confsize = config.getParams().size();
         switch(confsize){
+            case 0:
+                throw new Exception("Configuration parameters missing"); 
+                
+            case 1:
+                throw new Exception("Some configuration parameters missing"); 
+                
             case 2:
                 this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
+                
+            case 3:
+                throw new Exception("Some configuration parameters missing"); 
 
-            case 4:
+            default:
                 this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
                 this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
                 this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
 
-            default:
-                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
         }
         
     }
@@ -184,6 +193,7 @@ public abstract class LDSD extends LdSimilarityMeasureBase {
             return cii_norm;
 
     }
+    
 
     //Similar to Resim
     public int Cio(URI l, R a) {
@@ -229,6 +239,12 @@ public abstract class LDSD extends LdSimilarityMeasureBase {
 
         return cio_norm;
 
+    }
+    
+    
+    @Override
+    public LdSimilarityMeasure getMeasure(){
+        return this;
     }
 
 }

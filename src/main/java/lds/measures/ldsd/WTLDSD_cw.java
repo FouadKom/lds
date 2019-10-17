@@ -17,6 +17,8 @@ public class WTLDSD_cw extends LDSD_cw{
     
     public WTLDSD_cw(Conf config) throws Exception {
         super(config);
+        if( config.getParam("LdDatasetSpecific")== null && config.getParam("WeightMethod") == null)
+            throw new Exception("Some configuration parameters missing"); 
     }
     
     @Override

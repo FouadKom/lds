@@ -30,7 +30,7 @@ public class ResourcePair {
     
     @Override
     public String toString(){
-       return firstResource.getUri().toString() + " , " + secondResource.getUri().toString();
+       return firstResource.getUri().toString() + "," + secondResource.getUri().toString();
     }
     
 }

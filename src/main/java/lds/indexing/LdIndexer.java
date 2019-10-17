@@ -215,8 +215,7 @@ public class LdIndexer {
             catch(Exception ex){
                 Logger.getLogger(Utility.class.getName()).log(Level.SEVERE, null, ex);
                 indexName.close();
-            }
-                          
+            }          
         }
 
         public static synchronized void updateIndexTree(LdDataset dataset , LdIndexer indexName, String key, String methodPath , Object... args) {      
