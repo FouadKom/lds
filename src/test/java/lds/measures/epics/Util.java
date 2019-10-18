@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.newMeasure;
+package lds.measures.epics;
 
 import lds.engine.*;
 import java.io.File;

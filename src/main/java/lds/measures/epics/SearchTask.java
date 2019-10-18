@@ -3,15 +3,15 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.newMeasure;
+package lds.measures.epics;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
 import lds.measures.LdSimilarityMeasure;
-import static lds.measures.newMeasure.Utility.getDirection;
-import static lds.measures.newMeasure.Utility.getLink;
-import static lds.measures.newMeasure.Utility.getVertex;
+import static lds.measures.epics.Utility.getDirection;
+import static lds.measures.epics.Utility.getLink;
+import static lds.measures.epics.Utility.getVertex;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 

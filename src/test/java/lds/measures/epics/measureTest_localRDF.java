@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.newMeasure;
+package lds.measures.epics;
 
 import lds.measures.picss.PICSS;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
