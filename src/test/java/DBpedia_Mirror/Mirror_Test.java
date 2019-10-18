@@ -11,6 +11,7 @@ import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
+import org.junit.Test;
 
 
 /**
@@ -20,6 +21,12 @@ import org.apache.jena.query.ResultSetFormatter;
 public class Mirror_Test {
    
     public static void main(String[] arg){
+        mirror_test();
+    }
+    
+    
+    @Test
+    public static void mirror_test(){
         String queryString = "select * WHERE {?s ?p ?o. FILTER ( REGEX (STR (?s), \"resource\" ) )} limit 30";        
 //        String queryString = " Select * where { ?s ?p ?o} limit 30";
         Query query = QueryFactory.create(queryString);
