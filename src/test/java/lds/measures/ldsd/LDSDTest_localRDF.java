@@ -57,17 +57,16 @@ public class LDSDTest_localRDF {
         ldsd_d.loadIndexes();
         
         ldsd_dSim = ldsd_d.compare(r1, r2);
-        assertEquals(0.66666666666666666, ldsd_dSim , 0.0);
+        assertEquals(0.6666666666666667, ldsd_dSim , 0.0);
         
         ldsd_dSim = ldsd_d.compare(r2, r1);
-        assertEquals(0.66666666666666666, ldsd_dSim , 0.0);
-        
+        assertEquals(0.6666666666666667, ldsd_dSim , 0.0);
         ldsd_d.closeIndexes();
         
         ldsd_dw.loadIndexes();
         
         ldsd_dwSim = ldsd_dw.compare(r1, r2);
-        assertEquals(0.66666666666666666, ldsd_dwSim , 0.0);
+        assertEquals(0.6666666666666667, ldsd_dwSim , 0.0);
         
         ldsd_dwSim = ldsd_dw.compare(r1, r1);
         assertEquals(0.0, ldsd_dwSim , 0.0);
