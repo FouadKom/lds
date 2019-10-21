@@ -10,6 +10,7 @@ import java.util.List;
 import lds.measures.picss.PICSS;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
@@ -19,7 +20,10 @@ import slib.utils.i.Conf;
  * @author Fouad Komeiha
  */
 public class measureTest_DBpedia {
-    public static void main(String args[]) throws Exception{
+    
+    @Test
+    public void runEngineOnSpecificLdMeasureTest() throws Exception{  
+//    public static void main(String args[]) throws Exception{
         
         String datasetDir2 = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
         
@@ -39,16 +43,16 @@ public class measureTest_DBpedia {
         config.addParam("LdDatasetMain" , dataset);
         config.addParam("resourcesCount" , 2350906); 
         
-//        PICSS picss = new PICSS(config);
+        PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);
         
-//        picss.loadIndexes();
+        picss.loadIndexes();
         epics.loadIndexes();
         
-//        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
+        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
         System.out.println("EPICS(r1 , r2) = " + epics.compare(r1, r2));
         
-//        picss.closeIndexes();
+        picss.closeIndexes();
         epics.closeIndexes();
         
     }

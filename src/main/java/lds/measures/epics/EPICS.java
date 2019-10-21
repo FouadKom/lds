@@ -58,7 +58,7 @@ public class EPICS implements LdSimilarityMeasure{
 	double sim = 0;
 
         try {
-            sim= PICSS(a , b);
+            sim= EPICS(a , b);
         } catch (Exception ex) {
             Logger.getLogger(EPICS.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -68,7 +68,7 @@ public class EPICS implements LdSimilarityMeasure{
 
     }
 
-    private double PICSS(R a , R b) throws Exception {
+    private double EPICS(R a , R b) throws Exception {
 
         List<String> features_a = ldManager.getFeatures(a);
         List<String> features_b = ldManager.getFeatures(b);

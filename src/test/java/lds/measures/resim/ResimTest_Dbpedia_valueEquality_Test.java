@@ -22,7 +22,7 @@ import slib.utils.i.Conf;
 
 /**
  *
- * @author LENOVO
+ * @author Foouad Komeiha
  */
 public class ResimTest_Dbpedia_valueEquality_Test {
     
@@ -97,10 +97,9 @@ public class ResimTest_Dbpedia_valueEquality_Test {
     }
     
 
-//    @Test
-//    public void isResimWorksCorrectlyOnPaperExample() throws FileNotFoundException, Exception {
-    
-    public static void main(String args[]) throws FileNotFoundException, Exception{
+    @Test
+    public void isResimWorksCorrectlyOnPaperExample() throws FileNotFoundException, Exception {    
+//    public static void main(String args[]) throws FileNotFoundException, Exception{
                 
           int startPairNumbers = 2;
           int endPairNumbers = 4;

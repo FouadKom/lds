@@ -7,6 +7,7 @@ package lds.measures.picss;
 
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 
@@ -16,7 +17,10 @@ import slib.utils.i.Conf;
  */
 public class PICSSTest_paperEvaluation_Test {
     
-    public static void main(String args[]) throws Exception{
+    
+    @Test
+    public void isLDSDWorksCorrectlyOnPaperExample() throws Exception{
+//    public static void main(String args[]) throws Exception{
         
         LdDataset dataset = Util.getDBpediaDataset();
                 

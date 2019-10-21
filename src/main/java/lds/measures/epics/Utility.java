@@ -5,6 +5,7 @@
  */
 package lds.measures.epics;
 
+import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -16,6 +17,8 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import lds.engine.SimilarityCompareTask;
 import lds.engine.SimilarityCompareTaskRunnable;
+import lds.measures.LdSimilarityMeasure;
+import lds.measures.Measure;
 import lds.measures.ldsd.LDSD;
 import lds.measures.ldsd.LDSD_cw;
 import lds.measures.ldsd.LDSD_d;
@@ -55,11 +58,26 @@ public class Utility {
         
         Conf ldsd_conf = new Conf();
         ldsd_conf.addParam("useIndexes", useIndex);
-        ldsd_conf.addParam("LdDatasetMain" , dataset);
-        
+        ldsd_conf.addParam("LdDatasetMain" , dataset);        
         LDSD ldsd = new LDSD_cw(ldsd_conf);
         ldsd.loadIndexes();
         
+        
+        /*Class<?> measureClass;
+        LdSimilarityMeasure ldMeasure = null;
+        try {
+                measureClass = Class.forName(Measure.getPath(measureName));
+                Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
+                ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
+//                    this.measure = ldMeasure;
+                ldMeasure.loadIndexes();
+
+
+        } 
+        catch (Exception e) {
+                e.printStackTrace();
+        }*/
+       
 //        HashMap<String, String> map_a = new HashMap();
 //        HashMap<String, String> map_b = new HashMap();
 //        
@@ -88,8 +106,6 @@ public class Utility {
 //            }
 //            
 //        }
-
-
            SearchTask[] threads = new SearchTask[a.size()];
            
            int i = 0;
@@ -135,6 +151,7 @@ public class Utility {
 //        }
 
         ldsd.closeIndexes();
+//        ldMeasure.closeIndexes();
         return result;
         
     }

@@ -23,6 +23,7 @@ import lds.resource.LdResourceFactory;
 import static org.junit.Assert.fail;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
+import org.junit.Test;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
@@ -38,8 +39,9 @@ public class ResourceSimilarity_EngineTest {
     public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
     public static final String datasetDir2 = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
     
-
-    public static void main(String args[]) throws Exception {
+    @Test
+    public void isLDSDWorksCorrectlyOnPaperExample() throws Exception{ 
+//    public static void main(String args[]) throws Exception {
         
        
 //        ResimLdManager resimLdManagerMain;

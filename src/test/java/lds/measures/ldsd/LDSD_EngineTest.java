@@ -14,6 +14,7 @@ import lds.measures.weight.WeightMethod;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.fail;
+import org.junit.Test;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
@@ -26,7 +27,10 @@ import slib.utils.i.Conf;
 public class LDSD_EngineTest {
     public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/sparql.rdf";
     
-    public static void main(String args[]) throws Exception{
+    @Test
+    public void runEngineOnSpecificLdMeasureTest() throws Exception{
+    
+//    public static void main(String args[]) throws Exception{
         
         LdDataset dataSetMain = null;
         LdDataset dataSetSpecific = null;
@@ -46,7 +50,7 @@ public class LDSD_EngineTest {
         config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataSetMain);
         config.addParam("LdDatasetSpecific" , dataSetSpecific);
-        //config.addParam("WeightMethod", WeightMethod.ITW);
+        config.addParam("WeightMethod", WeightMethod.ITW);
         
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Johnny_Cash").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("June_Carter_Cash").create();

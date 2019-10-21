@@ -57,23 +57,23 @@ public class LDSDTest_localRDF {
         ldsd_d.loadIndexes();
         
         ldsd_dSim = ldsd_d.compare(r1, r2);
-        assertEquals(0.3333333333333333, ldsd_dSim , 0.0);
+        assertEquals(0.66666666666666666, ldsd_dSim , 0.0);
         
         ldsd_dSim = ldsd_d.compare(r2, r1);
-        assertEquals(0.3333333333333333, ldsd_dSim , 0.0);
+        assertEquals(0.66666666666666666, ldsd_dSim , 0.0);
         
         ldsd_d.closeIndexes();
         
         ldsd_dw.loadIndexes();
         
         ldsd_dwSim = ldsd_dw.compare(r1, r2);
-        assertEquals(0.3333333333333333, ldsd_dwSim , 0.0);
+        assertEquals(0.66666666666666666, ldsd_dwSim , 0.0);
         
         ldsd_dwSim = ldsd_dw.compare(r1, r1);
-        assertEquals(1.0, ldsd_dwSim , 0.0);
+        assertEquals(0.0, ldsd_dwSim , 0.0);
         
         ldsd_dwSim = ldsd_dw.compare(r2, r2);
-        assertEquals(1.0, ldsd_dwSim , 0.0);
+        assertEquals(0.0, ldsd_dwSim , 0.0);
         
         ldsd_dw.closeIndexes();
  
@@ -94,14 +94,14 @@ public class LDSDTest_localRDF {
         ldsd_cw.loadIndexes();
         
         ldsd_cwSim = ldsd_cw.compare(r1, r2);
-        assertEquals(0.25 , ldsd_cwSim , 0.0);
+        assertEquals(0.75 , ldsd_cwSim , 0.0);
         
         ldsd_cw.closeIndexes();
         
         tldsd_cw.loadIndexes();
         
         tldsd_cwSim = tldsd_cw.compare(r1, r2);
-        assertEquals(0.25 , tldsd_cwSim , 0.0);
+        assertEquals(0.75 , tldsd_cwSim , 0.0);
         
         tldsd_cw.closeIndexes();
         
