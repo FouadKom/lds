@@ -21,6 +21,8 @@ public class WTResim extends ResourceSimilarity{
     
      public WTResim(Conf config) throws Exception {
         super(config);
+        if( config.getParam("LdDatasetSpecific")== null || config.getParam("WeightMethod") == null)
+            throw new Exception("Some configuration parameters missing"); 
     }
 
     @Override

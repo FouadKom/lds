@@ -22,7 +22,7 @@ public class LDSD_dw extends LDSD{
     @Override
     public double compare(R a, R b) {
         edges = LDSDLDLoader.getEdges(a, b);
-        return LDSD_dw(a, b);
+        return LDSD_dw_sim(a, b);
     }
     
     public double LDSD_dw(R a, R b) {
@@ -36,6 +36,10 @@ public class LDSD_dw extends LDSD{
             }      	
 
             return 1 / (1 + cdA_norm + cdB_norm );
+    }
+    
+    public double LDSD_dw_sim(R a, R b) {
+        return 1 - LDSD_dw(a , b);
     }
     
 }

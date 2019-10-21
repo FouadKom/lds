@@ -13,6 +13,15 @@ import java.util.Optional;
 import java.util.Set;
 import lds.indexing.LdIndexer;
 import lds.resource.R;
+import org.apache.jena.query.ParameterizedSparqlString;
+import org.apache.jena.query.Query;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
+import org.apache.jena.query.ResultSet;
+import org.apache.jena.query.ResultSetFormatter;
+import org.apache.jena.rdf.model.Literal;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 
@@ -31,11 +40,13 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         private LdIndexer commonSubjectsIndex;
         private LdIndexer typlessCommonObjectsIndex;
         private LdIndexer typlessCommonSubjectsIndex; 
-        
+      
        
+        
         public ResimLdManager(LdDataset dataset , boolean useIndex) throws Exception {                
 		super(dataset , useIndex);
-                this.useIndex = useIndex;             
+                this.useIndex = useIndex; 
+
         }
 
        
@@ -92,6 +103,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
              return LdIndexer.getIntegerFromIndex(dataset , subjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countSubject" , link , a);
 
            }
+           
            return super.countSubject(link , a);
 	}
         
@@ -103,6 +115,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
              return LdIndexer.getIntegerFromIndex(dataset , subjectsIndex , a.getUri().stringValue(), baseClassPath + "countSubject" , a);
 
            }
+            
            return super.countSubject(a);
                
 	}
@@ -115,6 +128,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
                 return LdIndexer.getBooleanFromIndex(dataset , sameAsIndex, a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "isSameAs", a , b);
 
             }
+            
             return super.isSameAs(a, b);
                 
 	}
@@ -125,7 +139,9 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
              if (useIndex) {
                    return LdIndexer.getIntegerFromIndex(dataset , propertyOccurrenceIndex, link.stringValue() , baseClassPath + "countPropertyOccurrence", link);
                }
+             
                return super.countPropertyOccurrence(link);
+
          }
          
         
@@ -133,7 +149,8 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         public List<String> getTyplessCommonObjects(R a , R b){
             if (useIndex) {
                  return LdIndexer.getListFromIndex(dataset , typlessCommonObjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonObjects" , a , b);
-            }                                                                                                                                                                                       
+            }  
+            
             return super.getTyplessCommonObjects(a, b);
         }
         
@@ -142,7 +159,8 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         public List<String> getTyplessCommonSubjects(R a , R b){
             if (useIndex) {
                  return LdIndexer.getListFromIndex(dataset , typlessCommonSubjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonSubjects" , a , b);
-            }                                                                           
+            }  
+            
             return super.getTyplessCommonSubjects(a, b);
             
         }
@@ -151,7 +169,8 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         public List<String> getCommonObjects(R a , R b){
             if (useIndex) {
                  return LdIndexer.getListFromIndex(dataset , commonObjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonObjects" , a , b);
-            }                                                                                                                                                                                       
+            }  
+            
             return super.getTyplessCommonObjects(a, b);
         }
         
@@ -160,7 +179,8 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         public List<String> getCommonSubjects(R a , R b){
             if (useIndex) {
                  return LdIndexer.getListFromIndex(dataset , commonSubjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonSubjects" , a , b);
-            }                                                                           
+            } 
+            
             return super.getTyplessCommonSubjects(a, b);
             
         }

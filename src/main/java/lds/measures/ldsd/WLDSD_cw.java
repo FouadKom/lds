@@ -24,6 +24,8 @@ public class WLDSD_cw extends LDSD_cw{
     
     public WLDSD_cw(Conf config) throws Exception {
         super(config);
+        if( config.getParam("LdDatasetSpecific")== null && config.getParam("WeightMethod") == null)
+            throw new Exception("Some configuration parameters missing"); 
 //        this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
 //        this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
 //        this.useIndeses = (Boolean) config.getParam("useIndexes");

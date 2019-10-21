@@ -7,6 +7,7 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import lds.indexing.LdIndexer;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
@@ -19,7 +20,7 @@ import sc.research.ldq.LdDataset;
  * @author Fouad Komeiha
  */
 public class HybridMeasuresLdManager extends LdManagerBase{
-    protected String baseClassPath = "lds.LdManager.FeatureMeasuresLdManager.";
+    protected String baseClassPath = "lds.LdManager.HybridMeasuresLdManager.";
     
     public HybridMeasuresLdManager(LdDataset dataset) {
         super(dataset);
@@ -136,6 +137,36 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         return 0;
 
     }
+    
+    @Override
+    public  int countResource() {
+        Literal count = null;
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+        query_cmd.setCommandText("select (count(distinct ?s) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
+                                   + " WHERE\n" +
+                                "  {\n" +
+                                "    ?s ?p ?o .\n" +
+                                "    FILTER ( REGEX (STR (?s), \"resource\" ) )\n" +
+                               "  }");
+        
+        
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        if (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+                count = (Literal) qs.getLiteral("count");
+                // dataset.close();
+                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+
+        }
+        
+
+        // dataset.close();
+        return 0;
+        
+    }
+    
 
     
 }

@@ -5,9 +5,15 @@
  */
 package lds.engine;
 
+import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
+import lds.LdManager.LdManagerBase;
+import lds.indexing.LdIndexer;
 import lds.measures.LdSimilarityMeasure;
+import lds.measures.Measure;
 import lds.resource.R;
+import sc.research.ldq.LdDataset;
+import slib.utils.i.Conf;
 
 /**
  *
@@ -17,12 +23,33 @@ public class SimilarityCompareTask implements Callable<String> {
     private LdSimilarityMeasure measure;
     private R resource1;
     private R resource2;
+
     
     public SimilarityCompareTask(LdSimilarityMeasure measure , R  r1 , R r2){
         this.measure = measure;
         this.resource1 = r1;
         this.resource2 = r2;
     }
+    
+    /*public SimilarityCompareTask(Measure measureName, Conf config  , R  r1 , R r2){
+        Class<?> measureClass;
+        LdSimilarityMeasure ldMeasure = null;
+        try {
+            
+            measureClass = Class.forName(Measure.getPath(measureName));
+            Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
+            ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
+            this.measure = ldMeasure;
+
+        } 
+        catch (Exception e) {
+                e.printStackTrace();
+        }
+        this.resource1 = r1;
+        this.resource2 = r2;
+    }*/
+    
+    
     
     @Override
     public String call() {

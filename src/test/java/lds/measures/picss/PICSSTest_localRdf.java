@@ -39,6 +39,7 @@ public class PICSSTest_localRdf {
                 Conf config = new Conf();
                 config.addParam("useIndexes", true);
                 config.addParam("LdDatasetMain" , dataSet);
+                config.addParam("resourcesCount" , 9);
                 
 
 		PICSS picss = new PICSS(config);

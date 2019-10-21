@@ -11,7 +11,7 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.ResimLdManager;
-import lds.measures.LdSimilarityMeasureBase;
+import lds.measures.LdSimilarityMeasure;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -21,7 +21,7 @@ import slib.utils.i.Conf;
  *
  * @author Fouad Komeiha
  */
-public abstract class ResourceSimilarity extends LdSimilarityMeasureBase {
+public abstract class ResourceSimilarity implements LdSimilarityMeasure {
     protected Set<URI> edges;
     protected ResimLdManager resimLDLoader;
     protected ResimLdManager SpecificResimLdLoader;
@@ -31,22 +31,32 @@ public abstract class ResourceSimilarity extends LdSimilarityMeasureBase {
     public ResourceSimilarity(Conf config) throws Exception{
         int confsize = config.getParams().size();
         switch(confsize){
+            case 0:
+                throw new Exception("Configuration parameters missing"); 
+                
+            case 1:
+                throw new Exception("Some configuration parameters missing");  
+                
             case 2:
                 this.resimLDLoader = new ResimLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
                 
-            case 4:
+            case 3:
+                throw new Exception("Some configuration parameters missing");
+                
+            default:
                 this.resimLDLoader = new ResimLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
                 this.SpecificResimLdLoader = new ResimLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
                 this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , resimLDLoader , SpecificResimLdLoader , (Boolean)config.getParam("useIndexes"));
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
             
-            default:
-                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
         }            
     }
+    
     
     @Override
     public void closeIndexes(){
@@ -90,7 +100,6 @@ public abstract class ResourceSimilarity extends LdSimilarityMeasureBase {
     }
     
     
-    @Override
     public double compare(R a, R b , int w1 , int w2) {
         double sim = 0;
         try {
@@ -249,8 +258,36 @@ public abstract class ResourceSimilarity extends LdSimilarityMeasureBase {
     
     public abstract double Cio_normalized(URI li , URI lj , R a, R b);
     
-   
     
+    /*public ResimLdManager getMainLdManager(){
+        return this.resimLDLoader;
+    }
+    
+    public ResimLdManager getSpecificLdManager(){
+        return this.SpecificResimLdLoader;
+    }
+    
+    public Weight getWeight(){
+        return this.weight;
+    }
+    
+    
+    public void setMainLdManager(ResimLdManager manager){
+        this.resimLDLoader = manager;
+    }
+    
+    public void setSpecificLdManager(ResimLdManager manager){
+        this.SpecificResimLdLoader = manager;
+    }
+    
+    public void setWeight(Weight weight){
+        this.weight = weight;
+    }*/
+    
+    @Override
+    public LdSimilarityMeasure getMeasure(){
+        return this;
+    }
     
     
 }

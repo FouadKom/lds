@@ -57,7 +57,7 @@ public class Engine_Multithread_Test_LocalRDF {
         }
 
         Conf config = new Conf();
-        config.addParam("useIndexes", true);
+        config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSet);
         
         List<R> listOfResources1 = new ArrayList<>();
@@ -87,7 +87,7 @@ public class Engine_Multithread_Test_LocalRDF {
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
-        engine.load(Measure.LDSD_cw , config);
+        engine.load(Measure.Resim , config);
 
 
         startTime = System.nanoTime();
@@ -95,9 +95,9 @@ public class Engine_Multithread_Test_LocalRDF {
         Map<String , Double> results = engine.similarity(pairs);          
 
 
-//            for( Map.Entry<String,Double> entry : results.entrySet()){
-//                    System.out.println( entry.getKey() + ":" + entry.getValue());
-//            }
+            for( Map.Entry<String,Double> entry : results.entrySet()){
+                    System.out.println( entry.getKey() + ":" + entry.getValue());
+            }
 
         //end timing
         endTime = System.nanoTime();
@@ -108,7 +108,7 @@ public class Engine_Multithread_Test_LocalRDF {
         startTime = System.nanoTime();
 
         for(int i = 0 ; i < listOfResources1.size() ; i++){
-            engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            System.out.println(listOfResources1.get(i).getUri().toString() + " , " + listOfResources2.get(i).getUri().toString() + " : " + engine.similarity(listOfResources1.get(i) , listOfResources2.get(i)));
         }
 
         //end timing
