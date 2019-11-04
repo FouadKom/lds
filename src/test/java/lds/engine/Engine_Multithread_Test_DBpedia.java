@@ -19,10 +19,10 @@ import slib.utils.i.Conf;
 public class Engine_Multithread_Test_DBpedia {
 	public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
 
-	@Test
-	public void runEngineOnSpecificLdMeasureTest() {        
+//	@Test
+//	public void runEngineOnSpecificLdMeasureTest() {        
         
-//        public static void main(String args[]) throws InterruptedException, ExecutionException, Exception{
+        public static void main(String args[]) throws InterruptedException, ExecutionException, Exception{
             
             double startTime , endTime , duration;
             
@@ -31,6 +31,7 @@ public class Engine_Multithread_Test_DBpedia {
             Conf config = new Conf();
             config.addParam("useIndexes", true);
             config.addParam("LdDatasetMain" , dataSetMain);
+            config.addParam("resourcesCount" , 2350906);
             
             Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(100));
 
@@ -61,8 +62,7 @@ public class Engine_Multithread_Test_DBpedia {
             
             LdSimilarityEngine engine = new LdSimilarityEngine();
             
-            engine.load(Measure.PICSS, config);
-            
+            engine.load(Measure.PICSS, config);            
             
             startTime = System.nanoTime();
             

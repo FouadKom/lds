@@ -5,17 +5,21 @@
  */
 package DBpedia_Mirror;
 
+import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.Query;
 import org.apache.jena.query.QueryExecution;
 import org.apache.jena.query.QueryExecutionFactory;
 import org.apache.jena.query.QueryFactory;
+import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.query.ResultSetFormatter;
 import org.junit.Test;
+import sc.research.ldq.LdDataset;
+import sc.research.ldq.LdDatasetFactory;
 
 
-/**
- *
+
+ /*
  * @author Fouad Komeiha
  */
 public class Mirror_Test {
@@ -36,6 +40,26 @@ public class Mirror_Test {
         finally {
            qexec.close();
         }
+    }
+    
+    @Test
+    public void HdtTest() throws Exception{
+            LdDataset dataSet = LdDatasetFactory.getInstance()
+                    .name("example")
+                    .file("file.hdt")
+                    .create();
+            
+            
+            
+            ParameterizedSparqlString query_cmd = dataSet.prepareQuery();
+
+            query_cmd.setCommandText("select * WHERE {?s ?p ?o. FILTER ( REGEX (STR (?s), \"resource\" ) )} limit 30");               
+            
+            
+            ResultSet resultSet = dataSet.executeSelectQuery(query_cmd.toString());
+            System.out.println(ResultSetFormatter.asText(resultSet)); 
+       
+            
     }
     
 }

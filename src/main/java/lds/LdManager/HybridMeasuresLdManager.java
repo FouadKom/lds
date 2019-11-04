@@ -32,7 +32,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         
         List<String> features = new ArrayList<>();
 
-        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery(); 
 
         query_cmd.setCommandText("select distinct ?property ?subject\n"
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
@@ -50,7 +50,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         }
 
         dataset.close();
-
+        
         if(! features.isEmpty())
             return features;
         else
