@@ -47,8 +47,7 @@ public class Mirror_Test {
             LdDataset dataSet = LdDatasetFactory.getInstance()
                     .name("example")
                     .file("file.hdt")
-                    .create();
-            
+                    .create();          
             
             
             ParameterizedSparqlString query_cmd = dataSet.prepareQuery();
