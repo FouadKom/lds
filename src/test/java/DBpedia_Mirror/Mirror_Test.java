@@ -24,7 +24,7 @@ import sc.research.ldq.LdDatasetFactory;
  */
 public class Mirror_Test {
    
-    @Test
+    /*@Test
     public void mirror_test(){
         String queryString = "select * WHERE {?s ?p ?o. FILTER ( REGEX (STR (?s), \"resource\" ) )} limit 30";        
 //        String queryString = " Select * where { ?s ?p ?o} limit 30";
@@ -40,7 +40,7 @@ public class Mirror_Test {
         finally {
            qexec.close();
         }
-    }
+    }*/
     
     @Test
     public void HdtTest() throws Exception{
