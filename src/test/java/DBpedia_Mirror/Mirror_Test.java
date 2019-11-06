@@ -24,13 +24,13 @@ import sc.research.ldq.LdDatasetFactory;
  */
 public class Mirror_Test {
    
-    /*@Test
+   /* @Test
     public void mirror_test(){
         String queryString = "select * WHERE {?s ?p ?o. FILTER ( REGEX (STR (?s), \"resource\" ) )} limit 30";        
 //        String queryString = " Select * where { ?s ?p ?o} limit 30";
         Query query = QueryFactory.create(queryString);
-        QueryExecution qexec = QueryExecutionFactory.sparqlService("http://localhost:8891/sparql", query);
-//        QueryExecution qexec = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
+//        QueryExecution qexec = QueryExecutionFactory.sparqlService("http://localhost:8891/sparql", query);
+        QueryExecution qexec = QueryExecutionFactory.sparqlService("http://dbpedia.org/sparql", query);
         
         try {
             ResultSet results = qexec.execSelect();
@@ -46,7 +46,7 @@ public class Mirror_Test {
     public void HdtTest() throws Exception{
             LdDataset dataSet = LdDatasetFactory.getInstance()
                     .name("example")
-                    .file("file.hdt")
+                    .file(System.getProperty("user.dir") + "/src/test/resources/swdf-2012-11-28.hdt")
                     .create();          
             
             

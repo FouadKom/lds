@@ -50,10 +50,10 @@ public class PICSSTest_localRdf {
 		double comp;               
                 
                 comp = picss.compare(r1, r2);
-		assertEquals(0.11663433805905218, comp, 0.0);
+		assertEquals(0.11663433805905217, comp, 0.0);
 
 		comp = picss.compare(r2, r1);
-		assertEquals(0.11663433805905218, comp, 0.0);
+		assertEquals(0.11663433805905217, comp, 0.0);
 
 		comp = picss.compare(r1, r1);
 		assertEquals(1.0, comp, 0.0);
