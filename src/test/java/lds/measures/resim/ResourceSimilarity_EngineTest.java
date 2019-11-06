@@ -11,7 +11,6 @@ import java.util.Set;
 import lds.LdManager.LdManager;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
-import lds.measures.picss.Util;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResourceSimilarity;
 import lds.measures.resim.TResim;
@@ -28,6 +27,7 @@ import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
+import test.utility.Util;
 
 /**
  *

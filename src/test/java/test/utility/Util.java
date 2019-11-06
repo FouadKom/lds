@@ -3,14 +3,14 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.ldsd;
+package test.utility;
 
-import lds.measures.picss.*;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static lds.engine.Engine_Multithread_Test_LocalRDF.dataSetDir;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
@@ -20,6 +20,7 @@ import org.apache.jena.rdf.model.Resource;
 import static org.junit.Assert.fail;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
+import static org.junit.Assert.fail;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 
@@ -37,6 +38,30 @@ public class Util {
             try {
                     dataset = LdDatasetFactory.getInstance()
                                     .service("https://dbpedia.org/sparql")
+                                    .name("dbpedia")
+                                    .defaultGraph("http://dbpedia.org")
+                                    .prefixes(prefixes).create();
+
+            } catch (Exception e) {
+
+                    fail("Error with dataset: " + e.getMessage());
+            }
+
+            return dataset;
+    }
+    
+    public static LdDataset getDBpediaMirrorDataset() {
+		
+            PrefixMapping prefixes = new PrefixMappingImpl();
+
+            prefixes.setNsPrefix("dbpedia", "http://dbpedia.org/resource/");
+            prefixes.setNsPrefix("dbpedia-owl", "http://dbpedia.org/ontology/");
+
+            LdDataset dataset = null;
+
+            try {
+                    dataset = LdDatasetFactory.getInstance()
+                                    .service("http://localhost:8891/sparql")
                                     .name("dbpedia")
                                     .defaultGraph("http://dbpedia.org")
                                     .prefixes(prefixes).create();
@@ -83,6 +108,80 @@ public class Util {
 
             return resources;
 
+    }
+    
+    public static List<R> getDbpediaMirrorResources(int limit) {
+            List<R> resources = new ArrayList<>();
+            Resource resource;
+            LdDataset dataset = getDBpediaMirrorDataset();
+
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            int offset  = (int)(Math.random() * 5000 + 2077) ;
+
+            try{
+            query_cmd.setCommandText("select ?resource from <http://dbpedia.org> where {\n" +
+                                     "?resource a ?o .\n" +
+                                     "filter(regex(?resource , \"http://dbpedia.org/resource/\", \"i\"))\n" +
+                                     "\n" +
+                                     "} limit " +  Integer.toString(limit) + "\n" +
+                                     "OFFSET " + Integer.toString(offset) );
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                    QuerySolution qs = resultSet.nextSolution();
+                    resource = (Resource) qs.getResource("resource");
+                    resources.add(LdResourceFactory.getInstance().uri(resource.toString()).create());
+            }
+
+            }catch (Exception ex) {
+
+                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            dataset.close();
+
+            return resources;
+
+    }
+    
+    public static List<R> getLocalResources(int limit , String datsetPath) {
+        List<R> resources = new ArrayList<>();
+        Resource resource;
+        LdDataset dataset = null;
+        
+        try {
+            dataset = LdDatasetFactory.getInstance().name("Local_Eample_Dataset").file(datsetPath)
+                       .defaultGraph("http://graph/dataset").create();
+
+        } catch (Exception e) {
+                fail(e.getMessage());
+        }
+        
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+        
+        try{
+            query_cmd.setCommandText("select distinct ?resource where {\n" +
+                                     "?resource ?p ?o} limit " +  Integer.toString(limit));
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                    QuerySolution qs = resultSet.nextSolution();
+                    resource = (Resource) qs.getResource("resource");
+                    resources.add(LdResourceFactory.getInstance().uri(resource.toString()).create());
+            }
+
+            }catch (Exception ex) {
+
+                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            dataset.close();
+
+            return resources;
+        
     }
         
         public static SplitedList splitList(List<R> list){

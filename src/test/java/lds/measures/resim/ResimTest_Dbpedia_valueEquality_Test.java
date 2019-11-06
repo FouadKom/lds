@@ -10,8 +10,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lds.LdManager.ResimLdManager;
-import lds.measures.picss.Util;
-import lds.measures.picss.Util.SplitedList;
+import test.utility.Util;
 import lds.measures.resim.Resim;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
@@ -19,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import test.utility.Util.SplitedList;
 
 /**
  *

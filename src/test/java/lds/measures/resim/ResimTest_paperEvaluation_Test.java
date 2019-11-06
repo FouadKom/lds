@@ -5,7 +5,7 @@
  */
 package lds.measures.resim;
 
-import lds.measures.picss.Util;
+import test.utility.Util;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResourceSimilarity;
 import lds.resource.LdResourceFactory;

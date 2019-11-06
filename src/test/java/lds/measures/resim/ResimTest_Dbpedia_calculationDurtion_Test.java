@@ -11,13 +11,13 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
-import lds.measures.picss.Util;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResourceSimilarity;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import test.utility.Util;
 
 /**
  *

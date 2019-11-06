@@ -14,6 +14,7 @@ import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
+import test.utility.Util;
 
 /**
  *
@@ -27,7 +28,7 @@ public class measureTest_DBpedia {
         
         String datasetDir2 = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
         
-        LdDataset dataset = lds.measures.picss.Util.getDBpediaDataset();
+        LdDataset dataset = Util.getDBpediaDataset();
         
         LdDataset datasetSpecific  = LdDatasetFactory.getInstance()
                                                      .name("specificSet")

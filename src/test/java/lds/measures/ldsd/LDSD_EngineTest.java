@@ -19,6 +19,7 @@ import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
+import test.utility.Util;
 
 /**
  *
@@ -44,7 +45,7 @@ public class LDSD_EngineTest {
         }
         
 
-        dataSetMain = lds.measures.picss.Util.getDBpediaDataset();
+        dataSetMain = Util.getDBpediaDataset();
                 
         Conf config = new Conf();
         config.addParam("useIndexes", true);
