@@ -98,90 +98,204 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         
         @Override
         public int countSubject(URI link , R a) {
+            
+           double startTime , endTime , duration;
+           
+           startTime = System.nanoTime();
+           
+           int count = 0;
                 
            if (useIndex) {
              return LdIndexer.getIntegerFromIndex(dataset , subjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countSubject" , link , a);
 
            }
            
-           return super.countSubject(link , a);
+           count = super.countSubject(link , a);
+           
+           //end timing
+          endTime = System.nanoTime();
+          duration = (endTime - startTime) / 1000000000 ;
+          System.out.println("countSubject(" + link.stringValue() + " , " +  a.getUri().stringValue() +") finished in " + duration + " second(s) ");
+          System.out.println();
+           
+          return count;
 	}
         
         
         @Override
         public int countSubject(R a) {
+            
+           double startTime , endTime , duration;
+           
+           startTime = System.nanoTime();
+           
+           int count = 0;
 
             if (useIndex) {
              return LdIndexer.getIntegerFromIndex(dataset , subjectsIndex , a.getUri().stringValue(), baseClassPath + "countSubject" , a);
 
            }
             
-           return super.countSubject(a);
+           count = super.countSubject(a);
+           
+           //end timing
+          endTime = System.nanoTime();
+          duration = (endTime - startTime) / 1000000000 ;
+          System.out.println("countSubject(" + a.getUri().stringValue() +") finished in " + duration + " second(s) ");
+          System.out.println();
+           
+          return count;
                
 	}
 
         
         @Override
 	public boolean isSameAs(R a, R b) {
+            
+            double startTime , endTime , duration;
+           
+           startTime = System.nanoTime();
+           
+           boolean result;
 
             if (useIndex) {
                 return LdIndexer.getBooleanFromIndex(dataset , sameAsIndex, a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "isSameAs", a , b);
 
             }
             
-            return super.isSameAs(a, b);
+            result = super.isSameAs(a, b);
+            
+            //end timing
+          endTime = System.nanoTime();
+          duration = (endTime - startTime) / 1000000000 ;
+          System.out.println("isSameAs(" + a.getUri().stringValue() + " , " + b.getUri().stringValue() + ") finished in " + duration + " second(s) ");
+          System.out.println();
+            
+            return result;
                 
 	}
         
         @Override
          public int countPropertyOccurrence(URI link){
+             double startTime , endTime , duration;
+           
+             startTime = System.nanoTime();
+             
+             int count = 0;
 
              if (useIndex) {
                    return LdIndexer.getIntegerFromIndex(dataset , propertyOccurrenceIndex, link.stringValue() , baseClassPath + "countPropertyOccurrence", link);
                }
              
-               return super.countPropertyOccurrence(link);
+               count = super.countPropertyOccurrence(link);
+               
+               //end timing
+          endTime = System.nanoTime();
+          duration = (endTime - startTime) / 1000000000 ;
+          System.out.println("countPropertyOccurrence(" + link.stringValue() + ") finished in " + duration + " second(s) ");
+          System.out.println();
+          
+          return count;
 
          }
          
         
         @Override
         public List<String> getTyplessCommonObjects(R a , R b){
+            
+            double startTime , endTime , duration;
+           
+            startTime = System.nanoTime();
+            
+            List<String> list;
+             
             if (useIndex) {
                  return LdIndexer.getListFromIndex(dataset , typlessCommonObjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonObjects" , a , b);
             }  
             
-            return super.getTyplessCommonObjects(a, b);
+            list = super.getTyplessCommonObjects(a, b);
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("getTyplessCommonObjects(" + a.getUri().stringValue() + " , " + b.getUri().stringValue() + ") finished in " + duration + " second(s) ");
+            System.out.println();
+          
+            return list;
         }
         
         
         @Override
         public List<String> getTyplessCommonSubjects(R a , R b){
+            double startTime , endTime , duration;
+           
+            startTime = System.nanoTime();
+            
+            List<String> list;
+            
             if (useIndex) {
                  return LdIndexer.getListFromIndex(dataset , typlessCommonSubjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonSubjects" , a , b);
             }  
             
-            return super.getTyplessCommonSubjects(a, b);
+            list = super.getTyplessCommonSubjects(a, b);
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("getTyplessCommonSubjects(" + a.getUri().stringValue() + " , " + b.getUri().stringValue() + ") finished in " + duration + " second(s) ");
+            System.out.println();
+          
+            return list;
+            
+            
             
         }
         
         @Override
         public List<String> getCommonObjects(R a , R b){
+            double startTime , endTime , duration;
+           
+            startTime = System.nanoTime();
+            
+            List<String> list;
+            
             if (useIndex) {
-                 return LdIndexer.getListFromIndex(dataset , commonObjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonObjects" , a , b);
+                 return LdIndexer.getListFromIndex(dataset , commonObjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getCommonObjects" , a , b);
             }  
             
-            return super.getTyplessCommonObjects(a, b);
+            list = super.getCommonObjects(a, b);
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("getCommonObjects(" + a.getUri().stringValue() + " , " + b.getUri().stringValue() + ") finished in " + duration + " second(s) ");
+            System.out.println();
+          
+            return list;
         }
         
         
         @Override
         public List<String> getCommonSubjects(R a , R b){
+            double startTime , endTime , duration;
+           
+            startTime = System.nanoTime();
+            
+            List<String> list;
+            
             if (useIndex) {
-                 return LdIndexer.getListFromIndex(dataset , commonSubjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonSubjects" , a , b);
+                 return LdIndexer.getListFromIndex(dataset , commonSubjectsIndex , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getCommonSubjects" , a , b);
             } 
             
-            return super.getTyplessCommonSubjects(a, b);
+            list = super.getCommonSubjects(a, b);
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("getCommonSubjects(" + a.getUri().stringValue() + " , " + b.getUri().stringValue() + ") finished in " + duration + " second(s) ");
+            System.out.println();
+          
+            return list;
             
         }
          

@@ -47,7 +47,7 @@ public class Engine_Multithread_Test_HdtFiles {
                 fail(e.getMessage());
         }
         
-       /* Util.SplitedList sp = Util.splitList(Util.getLocalResources(10 , dataSetDir));
+       Util.SplitedList sp = Util.splitList(Util.getLocalResources(10 , dataSetDir));
         List<R> listOfResources1 = sp.getFirstList();
         List<R> listOfResources2 = sp.getSecondList();
         
@@ -56,10 +56,10 @@ public class Engine_Multithread_Test_HdtFiles {
         for(int i = 0 ; i < listOfResources1.size() ; i++){
             ResourcePair pair = new ResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
             pairs.add(pair);
-        }*/
+        }
        
-       List<String> resourceList  =  Utility.readListFromFile(resourcesFilePath1);
-       List<ResourcePair> pairs = Utility.generateRandomResourcePairs(resourceList);
+       //List<String> resourceList  =  Utility.readListFromFile(resourcesFilePath1);
+       //List<ResourcePair> pairs = Utility.generateRandomResourcePairs(resourceList);
        
         
         Conf config = new Conf();
