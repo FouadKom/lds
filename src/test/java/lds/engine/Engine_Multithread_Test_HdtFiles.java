@@ -18,6 +18,7 @@ import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 import org.junit.Test;
+import lds.engine.Utility;
 
 /**
  *
@@ -25,6 +26,8 @@ import org.junit.Test;
  */
 public class Engine_Multithread_Test_HdtFiles {
     public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/dbpedia2016-04en.hdt";
+    public static final String resourcesFilePath1 = System.getProperty("user.dir") + "/src/test/resources/facebook_book_resources.txt";
+    public static final String resourcesFilePath2 = System.getProperty("user.dir") + "/src/test/resources/facebook_book_resources.txt";
 
 
    @Test
@@ -44,22 +47,25 @@ public class Engine_Multithread_Test_HdtFiles {
                 fail(e.getMessage());
         }
         
-        Util.SplitedList sp = Util.splitList(Util.getLocalResources(10 , dataSetDir));
+       /* Util.SplitedList sp = Util.splitList(Util.getLocalResources(10 , dataSetDir));
         List<R> listOfResources1 = sp.getFirstList();
         List<R> listOfResources2 = sp.getSecondList();
         
         List<ResourcePair> pairs = new ArrayList<>();
+
+        for(int i = 0 ; i < listOfResources1.size() ; i++){
+            ResourcePair pair = new ResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
+            pairs.add(pair);
+        }*/
+       
+       List<String> resourceList  =  Utility.readListFromFile(resourcesFilePath1);
+       List<ResourcePair> pairs = Utility.generateRandomResourcePairs(resourceList);
+       
         
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSet);
 //        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
-        
-        
-        for(int i = 0 ; i < listOfResources1.size() ; i++){
-            ResourcePair pair = new ResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
-            pairs.add(pair);
-        }
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
@@ -84,15 +90,15 @@ public class Engine_Multithread_Test_HdtFiles {
 
         startTime = System.nanoTime();
 
-        for(int i = 0 ; i < listOfResources1.size() ; i++){
-            engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+        for(ResourcePair pair: pairs){
+            engine.similarity(pair.getFirstresource() , pair.getSecondresource());
 //            System.out.println(listOfResources1.get(i).getUri().toString() + " , " + listOfResources2.get(i).getUri().toString() + " : " + engine.similarity(listOfResources1.get(i) , listOfResources2.get(i)));
         }
 
         //end timing
         endTime = System.nanoTime();
         duration = (endTime - startTime) / 1000000000 ;
-        System.out.println("Comparing " + listOfResources1.size() + " pairs from local RDF without multithreading finished in " + duration + " second(s) ");
+        System.out.println("Comparing " + pairs.size() + " pairs from local RDF without multithreading finished in " + duration + " second(s) ");
         System.out.println(); 
 
 
