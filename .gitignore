@@ -2,3 +2,9 @@
 
 # ignore all index files
 *.db
+
+#ignoring hdtFiles
+*.hdt
+
+#ignoring indexes for hdtFiles
+*.hdt.index.v1-1

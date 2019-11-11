@@ -91,7 +91,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
     
 
     public int getOutgoingFeatureFrequency(String property, String resource) {
-        Literal count;
+        int count=0;
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
         
@@ -103,19 +103,19 @@ public class HybridMeasuresLdManager extends LdManagerBase{
        
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            count = (Literal) qs.getLiteral("count");
+            count = qs.getLiteral("count").getInt();
             dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+//          return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
 
         dataset.close();
-        return 0;
+        return count;
     }
     
 
     public int getIngoingFeatureFrequency(String property, String resource) {
-       Literal count;
+       int count =0;
        
        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
         
@@ -127,20 +127,20 @@ public class HybridMeasuresLdManager extends LdManagerBase{
        
        if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            count = (Literal) qs.getLiteral("count");
+            count = qs.getLiteral("count").getInt();
             dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+//            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
 
         dataset.close();
-        return 0;
+        return count;
 
     }
     
     @Override
     public  int countResource() {
-        Literal count = null;
+        int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
         query_cmd.setCommandText("select (count(distinct ?s) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
@@ -155,15 +155,15 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                count =  qs.getLiteral("count").getInt();
                 // dataset.close();
-                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+//                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
         
 
         // dataset.close();
-        return 0;
+        return count;
         
     }
     
