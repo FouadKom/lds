@@ -157,8 +157,9 @@ public abstract class ResourceSimilarity implements LdSimilarityMeasure {
             double x = 0, y = 0, cip = 0 , cop = 0 ,ip = 0, op = 0, ppty = 0;
 
             for (URI e : edges) {
-                    x = x + ((double) Csip(e, a, b) / Cd(e));
-                    y = y + ((double) Csop(e, a, b) / Cd(e));
+                    int cd = Cd(e);
+                    x = x + ((double) Csip(e, a, b) / cd);
+                    y = y + ((double) Csop(e, a, b) / cd);
             }
             
             if (x !=0)

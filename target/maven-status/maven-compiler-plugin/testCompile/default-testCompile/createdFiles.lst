@@ -21,6 +21,7 @@ lds\measures\epics\CorrelationCalculation.class
 lds\measures\epics\measureTest_DBpedia.class
 lds\benchmark\Benchmarking.class
 lds\measures\resim\ResimTest_Dbpedia_calculationDurtion_Test.class
+lds\benchmark\readingFiles_Test.class
 lds\engine\Engine_Multithread_Test_LocalRDF.class
 lds\LdManager\LdManagerTest.class
 lds\engine\Engine_BenchMark_Test.class
@@ -31,3 +32,4 @@ lds\graph\GraphManagerTest.class
 lds\measures\picss\PICSSTest_hdtFiles.class
 lds\measures\ldsd\LDSDTest_localRDF.class
 lds\indexing\LdIndexerTest.class
+lds\benchmark\writingResults_Test.class

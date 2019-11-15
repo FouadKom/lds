@@ -1,4 +1,5 @@
 lds\engine\SimilarityCompareTask.class
+lds\benchmark\Utility.class
 lds\measures\Measure.class
 lds\LdManager\Utility.class
 lds\measures\epics\Utility.class
@@ -8,7 +9,6 @@ lds\graph\GraphManager.class
 lds\LdManager\DistanceMeasuresLdManager.class
 lds\measures\epics\SearchTask.class
 lds\measures\picss\PICSS.class
-lds\resource\ResourcePair.class
 lds\measures\resim\ResourceSimilarity.class
 lds\engine\SimilarityCompareTaskRunnable.class
 lds\measures\picss\Utility.class
@@ -18,9 +18,9 @@ lds\LdManager\LdManagerBase.class
 lds\graph\LdResources.class
 lds\resource\LdResourceFactory.class
 lds\indexing\LdIndexer.class
+lds\resource\LdResult.class
 lds\graph\LdGraph.class
 lds\measures\ldsd\WLDSD_cw.class
-lds\engine\Utility.class
 lds\measures\weight\WeightMethod.class
 lds\graph\LdResourceFactory.class
 lds\measures\ldsd\LDSD.class
@@ -30,6 +30,7 @@ lds\measures\resim\TResim.class
 lds\measures\ldsd\LDSD_cw.class
 lds\measures\resim\WResim.class
 lds\measures\ldsd\LDSD_d.class
+lds\benchmark\LdBenchmark.class
 lds\LdManager\LdsdLdManager.class
 lds\measures\ldsd\LDSD_iw.class
 lds\measures\weight\Weight.class
@@ -41,9 +42,11 @@ lds\measures\resim\WTResim.class
 lds\graph\LdGraphManager.class
 lds\measures\epics\EPICS.class
 lds\measures\LdSimilarityMeasure.class
+lds\resource\LdResourcePair.class
 lds\LdManager\HybridMeasuresLdManager.class
 lds\measures\ldsd\WTLDSD_cw.class
 lds\indexing\Utility.class
 lds\LdManager\PicssLdManager.class
 lds\engine\LdSimilarityEngine.class
 lds\LdManager\LdManager.class
+lds\resource\LdResourceTriple.class

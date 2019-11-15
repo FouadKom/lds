@@ -26,7 +26,7 @@ import lds.measures.ldsd.LDSD_dw;
 import lds.measures.ldsd.LDSD_iw;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import lds.resource.ResourcePair;
+import lds.resource.LdResourcePair;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 

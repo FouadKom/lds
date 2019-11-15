@@ -5,17 +5,15 @@
  */
 package lds.resource;
 
-import lds.resource.R;
-
 /**
  *
  * @author Fouad Komeiha
  */
-public class ResourcePair {
+public class LdResourcePair {
     private R firstResource;
     private R secondResource;
     
-    public ResourcePair(R r1 , R r2){
+    public LdResourcePair(R r1 , R r2){
         this.firstResource = r1;
         this.secondResource = r2;
     }
@@ -30,7 +28,15 @@ public class ResourcePair {
     
     @Override
     public String toString(){
-       return firstResource.getUri().toString() + "," + secondResource.getUri().toString();
+       return firstResource.getUri().toString() + " , " + secondResource.getUri().toString();
+    }
+    
+    public String toString(char separator){
+       return firstResource.getUri().toString() + " " + separator + " " + secondResource.getUri().toString();
+    }
+    
+    public boolean equals(LdResourcePair pair){
+        return this.firstResource.equals(pair.getFirstresource()) && this.secondResource.equals(pair.getSecondresource());
     }
     
 }

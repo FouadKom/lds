@@ -23,13 +23,15 @@ public class SimilarityCompareTaskRunnable extends Thread{
     private R resource2;
     private String sim;
     private LdIndexer resultsIndex;
+
     
     
-    public SimilarityCompareTaskRunnable(LdSimilarityMeasure measure , R  r1 , R r2 , LdIndexer resultsIndex){
+    public SimilarityCompareTaskRunnable(LdSimilarityMeasure measure , R  r1 , R r2 , LdIndexer resultsIndex) throws Exception{
         this.measure = measure;
         this.resource1 = r1;
         this.resource2 = r2;
         this.resultsIndex = resultsIndex;
+        
     }
 
     

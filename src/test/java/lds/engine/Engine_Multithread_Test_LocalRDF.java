@@ -12,7 +12,7 @@ import java.util.concurrent.ExecutionException;
 import lds.measures.Measure;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
-import lds.resource.ResourcePair;
+import lds.resource.LdResourcePair;
 import static org.junit.Assert.fail;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
@@ -78,10 +78,10 @@ public class Engine_Multithread_Test_LocalRDF {
         listOfResources2.add(r10);
         listOfResources2.add(r12);
         
-        List<ResourcePair> pairs = new ArrayList<>();
+        List<LdResourcePair> pairs = new ArrayList<>();
 
         for(int i = 0 ; i < listOfResources1.size() ; i++){
-            ResourcePair pair = new ResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
+            LdResourcePair pair = new LdResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
             pairs.add(pair);
         }
         
@@ -92,12 +92,11 @@ public class Engine_Multithread_Test_LocalRDF {
 
         startTime = System.nanoTime();
 
-        Map<String , Double> results = engine.similarity(pairs);          
+//        Map<String , Double> results = engine.similarity(pairs);          
 
-
-            for( Map.Entry<String,Double> entry : results.entrySet()){
-                    System.out.println( entry.getKey() + ":" + entry.getValue());
-            }
+//        for( Map.Entry<String,Double> entry : results.entrySet()){
+//                System.out.println( entry.getKey() + ":" + entry.getValue());
+//        }
 
         //end timing
         endTime = System.nanoTime();

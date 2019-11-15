@@ -1,9 +1,10 @@
 package lds.engine;
 
+import lds.benchmark.LdBenchmark;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import lds.measures.Measure;
-import lds.resource.ResourcePair;
+import lds.resource.LdResourcePair;
 import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,8 +17,11 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
+import lds.benchmark.Utility;
 import lds.indexing.LdIndexer;
 import lds.measures.LdSimilarityMeasure;
+import lds.resource.LdResourceTriple;
+import lds.resource.LdResult;
 import lds.resource.R;
 import slib.utils.i.Conf;
 
@@ -30,6 +34,7 @@ public class LdSimilarityEngine {
         private Measure measureName;
         private Conf config;
         private LdIndexer resultsIndex;
+        
 
 	public void load(Measure measureName, Conf config){
             
@@ -64,10 +69,17 @@ public class LdSimilarityEngine {
         }
         
         
-       //calcuate the similariy for a list of pairs using multithreading
-       public Map<String , Double> similarity(List<ResourcePair> resourcePairs) throws InterruptedException, ExecutionException {
+        public void close(){
+            measure.closeIndexes();
            
-           ExecutorService executorService = Executors.newFixedThreadPool(resourcePairs.size());
+        }     
+        
+        
+       //calcuate the similariy for a list of pairs using multithreading
+       public List<LdResult> similarity(List<LdResourceTriple> resourceTriples , String resultsFilePath) throws InterruptedException, ExecutionException {
+           
+//           ExecutorService executorService = Executors.newFixedThreadPool(resourcePairs.size());
+             ExecutorService executorService = Executors.newFixedThreadPool(200);
 //            ExecutorService executorService = Executors.newCachedThreadPool();
 //            ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
 
@@ -81,13 +93,14 @@ public class LdSimilarityEngine {
 //                  }
 //                });
 
-            Map<String , Double> map = new HashMap<>();
+            List<LdResult> resultList = new ArrayList<>();
 
             List<Callable<String>> lst = new ArrayList<>();
         
-            for(ResourcePair pair: resourcePairs){
-//                lst.add(new SimilarityCompareTask(measureName , config , pair.getFirstresource() , pair.getSecondresource()));
-                lst.add(new SimilarityCompareTask(measure.getMeasure() , pair.getFirstresource() , pair.getSecondresource()));
+            for(LdResourceTriple triple: resourceTriples){
+                if(triple.getSimilarityResult() < 0){
+                    lst.add(new SimilarityCompareTask(measure.getMeasure() , triple , resultsFilePath));
+                }
             }
 
             // returns a list of Futures holding their status and results when all complete
@@ -109,26 +122,26 @@ public class LdSimilarityEngine {
             {
 
                 if(task.isDone()){
-                    String s[] = task.get().split("\\|");
-                    map.put( s[0]  , Double.parseDouble(s[1]));
+                    String s[] = task.get().split(",");
+                    resultList.add( new LdResult( new R(s[0].trim()) , new R(s[1].trim()) , Double.parseDouble(s[2].trim()) , Double.parseDouble(s[3].trim()) ));
                 }
 
             }
 
-           return map;
+           return resultList;
         }
-       
-       
+              
        
        //calcuate the similariy for a list of pairs using multithreading
-       public void similarity2(List<ResourcePair> resourcePairs) throws Exception{
+       public void similarity2(List<LdResourcePair> resourcePairs) throws Exception{
            int i = 0;
+           
            String resultsIndexFile = System.getProperty("user.dir") + "/Indexes/" + measureName.toString() + "_MultiThreading_Results/results_index.db";
            resultsIndex = new LdIndexer(resultsIndexFile);
            
            SimilarityCompareTaskRunnable[] threads = new SimilarityCompareTaskRunnable[resourcePairs.size()];
            
-           for(ResourcePair pair: resourcePairs){
+           for(LdResourcePair pair: resourcePairs){
                 threads[i] = new SimilarityCompareTaskRunnable(measure.getMeasure() , pair.getFirstresource() , pair.getSecondresource() , resultsIndex);
 //                threads[i] = new SimilarityCompareTaskRunnable(this.measure , pair.getFirstresource() , pair.getSecondresource() , resultsIndex);
                 threads[i].start();
@@ -148,45 +161,51 @@ public class LdSimilarityEngine {
            
        }
        
-       
-       
-       
        //calculate the similatiy for a list of generated pairs from a file contatining list of resources and write the result to a new file
-       public void similarity(String resourcesFilePath , String resultsFilePath) throws FileNotFoundException, IOException{
+       public void similarity(String resourcesFilePath , boolean useMultiThreading) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
            
-           List<String> resourceList  =  Utility.readListFromFile(resourcesFilePath);
-           List<ResourcePair> pairs = Utility.generateRandomResourcePairs(resourceList);
-           List<String> results  = new ArrayList<>();
+           double startTime , endTime , duration = 0;
+                             
+           List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFilePath);
            
-           double result = 0;
+           if(triples == null)
+               return;
            
-           for(ResourcePair pair : pairs){
-               result = measure.compare(pair.getFirstresource() , pair.getSecondresource());
-               results.add(pair.toString() + " " + result);
+           String resultsFilePath = LdBenchmark.getResultFilePath(resourcesFilePath);
+           
+           LdResult result = null;
+           
+           double similarityResult = 0;
+           
+           if(useMultiThreading)
+               similarity(triples , resultsFilePath);
+           
+           else{
+               for(LdResourceTriple triple : triples){
+
+                   if(triple.getSimilarityResult() < 0){
+
+                       startTime = System.nanoTime();
+
+                       similarityResult = measure.compare(triple.getResourcePair().getFirstresource() , triple.getResourcePair().getSecondresource());
+
+                       endTime = System.nanoTime();
+                       duration = (endTime - startTime) / 1000000000 ;
+
+                       triple.setSimilarityResult(similarityResult);
+                       
+                       result = new LdResult(triple , duration);
+                       
+                       LdBenchmark.writeResultsToFile(result , resultsFilePath);
+                   }              
+
+               }
            }
-          
-           Utility.writeListToFile(results , resultsFilePath);
+
+           
        }
        
-       
-       public double checkCorrelation(String listPath , String benchMarkPath) throws FileNotFoundException{
-        if( ! Utility.checkPath(listPath) && ! Utility.checkPath(benchMarkPath) )
-            return -1;
         
-        List<String> list = Utility.readListFromFile(listPath);
-        List<String> benchMark = Utility.readRowsFromFile(benchMarkPath);
-        
-        return Utility.calculateCorrelation(list , benchMark);
-        
-        }
-    
-        
-        
-        
-        public void close(){
-            measure.closeIndexes();
-           
-        }
         
 
 	// TODO: transform engine to a factory that inits contructor...

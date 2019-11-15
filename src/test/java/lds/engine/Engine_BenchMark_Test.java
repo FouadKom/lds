@@ -9,17 +9,18 @@ import test.utility.Util;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
+import java.util.concurrent.ExecutionException;
 import lds.measures.Measure;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
-import lds.engine.Utility;
+import lds.benchmark.LdBenchmark;
 /**
  *
  * @author Fouad Komeiha
  */
 public class Engine_BenchMark_Test {
     
-    public static void main(String args[]) throws FileNotFoundException, IOException{
+    public static void main(String args[]) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
         
         
         LdDataset dataSetMain = Util.getDBpediaDataset();
@@ -32,7 +33,7 @@ public class Engine_BenchMark_Test {
 
         engine.load(Measure.LDSD_cw , config);
         
-        engine.similarity("C:\\Users\\LENOVO\\Downloads\\test.txt" , "C:\\Users\\LENOVO\\Downloads\\test_results.txt");
+        engine.similarity("C:\\Users\\LENOVO\\Downloads\\test.txt" , false);
         
         engine.close();
        

@@ -11,6 +11,7 @@ C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\resim\
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\LDSD_cw.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\LDSD_iw.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\weight\WeightMethod.java
+C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\benchmark\Utility.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\LDSD.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\LdManagerBase.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\utilities\Utility.java
@@ -25,7 +26,6 @@ C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\T
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\LdSimilarityMeasure.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\LdsdLdManager.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\picss\PICSS.java
-C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\resource\ResourcePair.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\resim\ResourceSimilarity.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\LDSD_dw.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\WTLDSD_cw.java
@@ -33,17 +33,20 @@ C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\lods\S
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\graph\LdGraph.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\engine\LdSimilarityEngine.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\Utility.java
+C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\resource\LdResourceTriple.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\picss\Utility.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\DistanceMeasuresLdManager.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\LdManager.java
-C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\engine\Utility.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\epics\EPICS.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\resim\WResim.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\Measure.java
+C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\resource\LdResult.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\lods\SimI.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\engine\SimilarityCompareTaskRunnable.java
+C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\benchmark\LdBenchmark.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\HybridMeasuresLdManager.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\lods\SimIDBpedia.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\weight\Weight.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\resim\Resim.java
+C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\resource\LdResourcePair.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\epics\SearchTask.java

@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 import lds.measures.Measure;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import lds.resource.ResourcePair;
+import lds.resource.LdResourcePair;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
@@ -39,7 +39,7 @@ public class Engine_Multithread_Test_DBpedia {
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();
             List<R> listOfResources2 = sp.getSecondList();
-            List<ResourcePair> pairs = new ArrayList<>();
+            List<LdResourcePair> pairs = new ArrayList<>();
             
 //            List<R> listOfResources1 = new ArrayList<>();
 //            List<R> listOfResources2 = new ArrayList<>();
@@ -57,7 +57,7 @@ public class Engine_Multithread_Test_DBpedia {
             
             
             for(int i = 0 ; i < listOfResources1.size() ; i++){
-                ResourcePair pair = new ResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
+                LdResourcePair pair = new LdResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
                 pairs.add(pair);
             }
             
@@ -68,19 +68,11 @@ public class Engine_Multithread_Test_DBpedia {
             startTime = System.nanoTime();
             
             Map<String , Double> results; 
-            try {
-                results = engine.similarity(pairs);
+//            results = engine.similarity(pairs);
 //            engine.similarity2(pairs);
-          
-            for( Map.Entry<String,Double> entry : results.entrySet()){
-                    System.out.println( entry.getKey() + ":" + entry.getValue());
-            }
-            
-             } catch (InterruptedException ex) {
-                Logger.getLogger(Engine_Multithread_Test_DBpedia.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ExecutionException ex) {
-                Logger.getLogger(Engine_Multithread_Test_DBpedia.class.getName()).log(Level.SEVERE, null, ex);
-            }
+//            for( Map.Entry<String,Double> entry : results.entrySet()){
+//            System.out.println( entry.getKey() + ":" + entry.getValue());
+//            }
 
             //end timing
             endTime = System.nanoTime();

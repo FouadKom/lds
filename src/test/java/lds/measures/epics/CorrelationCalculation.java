@@ -7,7 +7,7 @@ package lds.measures.epics;
 
 import java.util.ArrayList;
 import java.util.List;
-import static lds.engine.Utility.calculateCorrelation;
+import static lds.benchmark.LdBenchmark.calculateCorrelation;
 import org.junit.Test;
 
 /**
