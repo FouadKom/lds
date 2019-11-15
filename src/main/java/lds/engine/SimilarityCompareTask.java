@@ -69,7 +69,7 @@ public class SimilarityCompareTask implements Callable<String> {
     
     @Override
     public String call() throws IOException {
-        double startTime , endTime , duration = 0;
+        double startTime = 0 , endTime = 0 , duration = 0;
         double similarityResult = 0;
         
 //        
