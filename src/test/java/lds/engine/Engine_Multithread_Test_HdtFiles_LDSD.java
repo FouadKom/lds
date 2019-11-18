@@ -25,9 +25,9 @@ import lds.resource.LdResourceTriple;
  *
  * @author Fouad Komeiha
  */
-public class Engine_Multithread_Test_HdtFiles {
+public class Engine_Multithread_Test_HdtFiles_LDSD {
     public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/dbpedia2016-04en.hdt";
-    public static final String resourcesFilePath1 = System.getProperty("user.dir") + "/src/test/resources/facebook_book_resources_test.txt";
+    public static final String resourcesFilePath1 = System.getProperty("user.dir") + "/src/test/resources/facebook_book_resources_LDSD.txt";
     public static final String resourcesFilePath2 = System.getProperty("user.dir") + "/src/test/resources/yahoo_movies_resources.txt";
 
 
@@ -66,7 +66,7 @@ public class Engine_Multithread_Test_HdtFiles {
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
-        engine.load(Measure.Resim  ,config);
+        engine.load(Measure.LDSD_cw  ,config);
         
         startTime = System.nanoTime();
         

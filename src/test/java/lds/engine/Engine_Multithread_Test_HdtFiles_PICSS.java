@@ -25,9 +25,9 @@ import lds.resource.LdResourceTriple;
  *
  * @author Fouad Komeiha
  */
-public class Engine_Multithread_Test_HdtFiles {
+public class Engine_Multithread_Test_HdtFiles_PICSS {
     public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/dbpedia2016-04en.hdt";
-    public static final String resourcesFilePath1 = System.getProperty("user.dir") + "/src/test/resources/facebook_book_resources_test.txt";
+    public static final String resourcesFilePath1 = System.getProperty("user.dir") + "/src/test/resources/facebook_book_resources_PICSS.txt";
     public static final String resourcesFilePath2 = System.getProperty("user.dir") + "/src/test/resources/yahoo_movies_resources.txt";
 
 
@@ -62,11 +62,11 @@ public class Engine_Multithread_Test_HdtFiles {
         Conf config = new Conf();
         config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataSet);
-//        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
+        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
-        engine.load(Measure.Resim  ,config);
+        engine.load(Measure.PICSS  ,config);
         
         startTime = System.nanoTime();
         
