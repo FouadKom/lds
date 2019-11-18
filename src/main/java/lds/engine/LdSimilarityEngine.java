@@ -162,11 +162,11 @@ public class LdSimilarityEngine {
        }
        
        //calculate the similatiy for a list of generated pairs from a file contatining list of resources and write the result to a new file
-       public void similarity(String resourcesFilePath , boolean useMultiThreading) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
+       public void similarity(String resourcesFilePath , boolean useMultiThreading , boolean skipCalculated) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
            
            double startTime , endTime , duration = 0;
                              
-           List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFilePath);
+           List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFilePath , skipCalculated);
            
            if(triples == null)
                return;

@@ -33,7 +33,7 @@ public class Engine_BenchMark_Test {
 
         engine.load(Measure.LDSD_cw , config);
         
-        engine.similarity("C:\\Users\\LENOVO\\Downloads\\test.txt" , false);
+        engine.similarity("C:\\Users\\LENOVO\\Downloads\\test.txt" , false , true);
         
         engine.close();
        

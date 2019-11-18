@@ -136,7 +136,7 @@ public class LdBenchmark {
         
     }*/
     
-    public static List<LdResourceTriple> readListFromFile(String initialfilePath) throws FileNotFoundException, IOException{
+    public static List<LdResourceTriple> readListFromFile(String initialfilePath , boolean skipCalculated) throws FileNotFoundException, IOException{
         if(! Utility.checkFile(initialfilePath))
             return null;
 
@@ -158,12 +158,13 @@ public class LdBenchmark {
             resultsFilePath = initialfilePath.replace(".txt", "_Results.csv");
         }
         
-        if(Utility.checkFile(resultsFilePath)){
-            resultsList = readListFromCsvFile(resultsFilePath); 
+      
+        if(skipCalculated && Utility.checkFile(resultsFilePath)){
+            resultsList = readListFromCsvFile(resultsFilePath);
         }
-
-        remainingList = getRemainingTriples(mainList , resultsList);
         
+        remainingList = getRemainingTriples(mainList , resultsList);
+
         mainList = null;
         resultsList = null;
         
@@ -332,7 +333,7 @@ public class LdBenchmark {
     public static List<LdResourceTriple> getRemainingTriples(Map<String , LdResourceTriple> maintriples, Map<String , LdResourceTriple> resultsList) {
         List<LdResourceTriple> remainingTriples = new ArrayList<>();
         
-        if(resultsList.isEmpty()){
+        if(resultsList.isEmpty() || resultsList == null){
             for(Map.Entry<String, LdResourceTriple> entry : maintriples.entrySet()){
 
                 remainingTriples.add(entry.getValue());

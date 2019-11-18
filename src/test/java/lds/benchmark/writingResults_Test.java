@@ -46,7 +46,7 @@ public class writingResults_Test {
 
         engine.load(Measure.LDSD_d , config);
         
-        engine.similarity(resourcesFileCsv , false);
+        engine.similarity(resourcesFileCsv , false , false);
         
         engine.close();
     }

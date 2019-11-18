@@ -70,7 +70,7 @@ public class Engine_Multithread_Test_HdtFiles_LDSD {
         
         startTime = System.nanoTime();
         
-        engine.similarity(resourcesFilePath1 , true);
+        engine.similarity(resourcesFilePath1 , true , true);
         
         //end timing
         endTime = System.nanoTime();
@@ -80,7 +80,7 @@ public class Engine_Multithread_Test_HdtFiles_LDSD {
         
         startTime = System.nanoTime();
         
-        engine.similarity(resourcesFilePath1 , false);
+        engine.similarity(resourcesFilePath1 , false , false);
         
         //end timing
         endTime = System.nanoTime();

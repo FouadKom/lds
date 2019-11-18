@@ -20,12 +20,12 @@ public class readingFiles_Test {
     public static final String resourcesFileText = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
     
     public static void main(String args[]) throws FileNotFoundException, IOException{
-        List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFileText);
+        List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFileText , false);
         for(LdResourceTriple triple : triples){
             System.out.println(triple.toString('|') +"\n");
         }
         
-        triples = LdBenchmark.readListFromFile(resourcesFileText);
+        triples = LdBenchmark.readListFromFile(resourcesFileText , false);
         for(LdResourceTriple triple : triples){
             System.out.println(triple.toString('|') +"\n");
         }
