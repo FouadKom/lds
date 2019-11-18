@@ -114,16 +114,26 @@ public class PICSS implements LdSimilarityMeasure{
 	int count = 0;
         
         String direction = Utility.getDirection(feature);
+        if(direction == null)
+            return count;
+        
         String property = Utility.getLink(feature);
+        if(property == null)
+            return count;
+        
         String resource = Utility.getVertex(feature);
+        if(resource == null)
+            return count;
+        
         
         if(direction.equals("In")){
             count = ldManager.getIngoingFeatureFrequency(property , resource);
         }
-        
+
         if(direction.equals("Out")){
             count = ldManager.getOutgoingFeatureFrequency(property , resource);
         }
+        
 
 	return count;
 

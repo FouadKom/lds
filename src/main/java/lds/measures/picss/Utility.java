@@ -36,16 +36,22 @@ public class Utility {
     
     public static String getLink(String s){
           String string[] =  s.split("\\|");
+          if(string.length < 3)
+            return null;
           return string[0].trim();
     }
     
     public static String getVertex(String s){
           String string[] =  s.split("\\|");
+          if(string.length < 3)
+            return null;
           return string[1].trim();
     }
     
     public static String getDirection(String s){
         String string[] =  s.split("\\|");
+        if(string.length < 3)
+            return null;
         return string[2].trim();
     }
      
