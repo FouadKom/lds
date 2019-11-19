@@ -91,6 +91,7 @@ public class LdBenchmark {
         
         results_writer.close();
         duration_writer.close();
+
     }
     
     /*public static synchronized void updateFile(LdResourceTriple triples , String filePath) throws FileNotFoundException, IOException {
