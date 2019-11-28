@@ -5,6 +5,12 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import lds.measures.lods.ontologies.O;
+import lds.measures.lods.ontologies.O_DBpedia;
+import lds.measures.lods.ontologies.O_Schema;
+import lds.measures.lods.ontologies.O_Umbel;
+import lds.measures.lods.ontologies.O_WikiData;
+import lds.measures.lods.ontologies.O_Yago;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
@@ -828,5 +834,60 @@ public class LdManagerBase implements LdManager {
             return null;
 
     }
+
+    public List<String> getOntologiesPrefixes(R a) {
+        List<String> ontologies = new ArrayList();
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+        
+
+        query_cmd.setCommandText("select distinct ?ontology " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
+                                                              + " where {<" + a.getUri() + "> a ?ontology .}");      
+       
+        
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        while (resultSet.hasNext()) {
+            QuerySolution qs = resultSet.nextSolution();
+            String ontologyPrefix = qs.getResource("ontology").getNameSpace();
+            if(!ontologies.contains(ontologyPrefix))
+                ontologies.add(ontologyPrefix);            
+
+        }
+        
+        if(! ontologies.isEmpty())
+            return ontologies;
+        else
+            return null;
+    }
+    
+    
+    public List<String> getAugmentdOntologiesPrefixes(R a){
+        List<String> ontologies = new ArrayList();
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+        
+
+        query_cmd.setCommandText("select distinct ?concept " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">")
+                                                             + " where {<" + a.getUri() + "> <http://www.w3.org/2002/07/owl#sameAs> ?concept .}");    
+       
+        
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        while (resultSet.hasNext()) {
+            QuerySolution qs = resultSet.nextSolution();
+            String ontologyPrefix = qs.getResource("concept").getNameSpace();
+            if(!ontologies.contains(ontologyPrefix))
+                ontologies.add(ontologyPrefix);            
+
+        }    
+ 
+        
+        if(! ontologies.isEmpty())
+            return ontologies;
+        else
+            return null;
+    }
+    
+
+    
 
 }

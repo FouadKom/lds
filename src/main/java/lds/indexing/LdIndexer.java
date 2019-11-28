@@ -28,17 +28,19 @@ public class LdIndexer {
         }
 
 	public void load(String filePath) throws Exception {
-            
+           
             if(Utility.checkPath(filePath)){
                 this.indexFilePath = filePath;
                 db = DBMaker.fileDB(this.indexFilePath)
                         .fileChannelEnable()
+                        .closeOnJvmShutdown()
                         .make();
             }
             else
                throw new Exception("Invalid Index filepath specified");
- 
         }
+ 
+        
         
         public void reload() throws Exception {
 		if (!this.indexFilePath.isEmpty())
@@ -113,7 +115,7 @@ public class LdIndexer {
         public static List<String> getListFromIndex(LdDataset dataset , LdIndexer indexName , String key , String methodPath , Object... args) {
             
             List<String> data = indexName.getList(key);
-            if(data != null ){
+            if(data != null){
                 return data;
             }
 

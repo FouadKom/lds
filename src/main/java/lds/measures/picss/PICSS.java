@@ -23,7 +23,7 @@ public class PICSS implements LdSimilarityMeasure{
     private int NumberOfResources;
     
     public PICSS(Conf config) throws Exception{
-        if( config.getParam("LdDatasetMain")== null || config.getParam("useIndexes") == null || config.getParam("useIndexes")== null)
+        if( config.getParam("LdDatasetMain")== null || config.getParam("useIndexes") == null || config.getParam("resourcesCount")== null)
             throw new Exception("Some configuration parameters missing"); 
         
         this.ldManager = new PicssLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );

@@ -6,6 +6,7 @@ lds\measures\picss\PICSSTest_paperEvaluation_Test.class
 lds\engine\Engine_Multithread_Test_HdtFiles.class
 lds\measures\resim\TResimTest_localRdf.class
 lds\measures\resim\ResimTest_paperEvaluation_Test.class
+lds\measures\LODS\SimI_Test.class
 test\utility\Util$SplitedList.class
 lds\measures\resim\ResourceSimilarity_EngineTest.class
 lds\graph\CreateFile.class

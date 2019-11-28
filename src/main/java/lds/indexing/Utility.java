@@ -9,6 +9,7 @@ import java.io.File;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.resource.R;
@@ -60,6 +61,10 @@ public class Utility {
                         params[i] = URI.class;
                     } else if (args[i] instanceof String) {
                         params[i] = String.class;
+                    } else if (args[i] instanceof Boolean) {
+                        params[i] = boolean.class;
+                    } else if (args[i] instanceof List) {
+                        params[i] = List.class;
                     }
                 }
                 
