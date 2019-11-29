@@ -23,22 +23,22 @@ import sc.research.ldq.LdDatasetFactory;
  *
  * @author Fouad Komeiha
  */
-public class OntologiesLdManager {
+public class DBpediaOntologiesLdManager {
     protected LdDataset dataSet;
     protected LdDataset dataSetInitial;
     
     protected String baseClassPath = "lds.LdManager.ontologies.OntologiesLdManager.";
     
-    public OntologiesLdManager(LdDataset dataSetInitial) throws Exception {
+    public DBpediaOntologiesLdManager(LdDataset dataSetInitial) throws Exception {
         PrefixMapping prefixes = new PrefixMappingImpl();
         prefixes.setNsPrefix("dbpedia", "http://dbpedia.org/resource/");
         prefixes.setNsPrefix("dbpedia-owl", "http://dbpedia.org/ontology/");
   
         this.dataSet = LdDatasetFactory.getInstance()
-                .service("https://dbpedia.org/sparql")
-                .name("dbpedia")
-                .defaultGraph("http://dbpedia.org")
-                .prefixes(prefixes).create(); 
+                                       .service("https://dbpedia.org/sparql")
+                                       .name("dbpedia")
+                                       .defaultGraph("http://dbpedia.org")
+                                       .prefixes(prefixes).create(); 
         
         this.dataSetInitial = dataSetInitial;
     }
@@ -88,19 +88,19 @@ public class OntologiesLdManager {
         if(dataAugmentation){
             List<R> sameAsResources = null; // same as resources used for dataAugmentation
             List<String> sameAsConcepts = null; // initial concepts from same as resources used for dataAugmentation
-            List<String> augmentedConcepts = null; // superConcepts from intial concepts augmented using sameAs                
+//            List<String> augmentedConcepts = null; // superConcepts from intial concepts augmented using sameAs                
         
             sameAsResources = getSameAsResources(dataSetInitial , a , namespaces);
-            System.out.println(sameAsResources.size());
+//            System.out.println(sameAsResources.size());
             
             for(R sameAsResource: sameAsResources){
-                if(sameAsConcepts.isEmpty()){
+                if(sameAsConcepts == null){
                     sameAsConcepts = getInitialConcepts(dataSetInitial , sameAsResource , namespaces);
-                    System.out.println("Size of sameAsConcepts for " + a.getUri().toString() + " is " + sameAsConcepts.size());
+//                    System.out.println("Size of sameAsConcepts for " + a.getUri().toString() + " is " + sameAsConcepts.size());
                 }
                 else{
                     sameAsConcepts.addAll(getInitialConcepts(dataSetInitial , sameAsResource , namespaces));
-                    System.out.println("Size of sameAsConcepts for " + a.getUri().toString() + " is " + sameAsConcepts.size());
+//                    System.out.println("Size of sameAsConcepts for " + a.getUri().toString() + " is " + sameAsConcepts.size());
                 }
             }      
     
@@ -192,8 +192,6 @@ public class OntologiesLdManager {
         queryStr = queryStr.substring(0 , queryStr.length() - 23);
         
         queryStr = queryStr + ") )}";
-        
-        System.out.println(queryStr);
         
         query_cmd.setCommandText(queryStr);
         

@@ -37,9 +37,9 @@ public class WikiDataLdManager {
         
         try {
             this.dataSet = LdDatasetFactory.getInstance()
-                    .service("https://query.wikidata.org/bigdata/namespace/wdq/sparql")
-                    .name("wikiData")
-                    .create();
+                                           .service("https://query.wikidata.org/bigdata/namespace/wdq/sparql")
+                                           .name("wikiData")
+                                           .create();
             
         } catch (Exception ex) {
             Logger.getLogger(WikiDataLdManager.class.getName()).log(Level.SEVERE, null, ex);

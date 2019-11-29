@@ -40,6 +40,9 @@ public class SimI_Test {
         O dbpedia_de = new O_DBpedia_de();
         ontologyList.add(dbpedia_de);
         
+        O dbpedia_fr = new O_DBpedia_fr();
+        ontologyList.add(dbpedia_fr);
+        
         O yago = new O_Yago();
         ontologyList.add(yago);
 
@@ -56,9 +59,10 @@ public class SimI_Test {
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Paris").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("New_York").create();
        
-        System.out.println(simi.compare(r1, r2));       
-        
+        System.out.println(simi.compare(r1, r2));    
+       
         simi.closeIndexes();
+        
           
     }
     

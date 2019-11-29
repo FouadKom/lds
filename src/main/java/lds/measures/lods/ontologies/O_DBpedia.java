@@ -20,8 +20,8 @@ import slib.utils.i.Conf;
 
 
 public class O_DBpedia implements O {
-    private boolean useIndexes;
-    private boolean dataAugmentation;
+    protected boolean useIndexes;
+    protected boolean dataAugmentation;
     private LdDataset datasetInitial;
     private DBpediaLdManager dbpedialdManager;  
     private List<String> namespaces = Arrays.asList("\"http://dbpedia.org/ontology/\"" , "\"http://www.w3.org/2002/07/owl\"");
@@ -36,7 +36,7 @@ public class O_DBpedia implements O {
         this.dataAugmentation = (Boolean) config.getParam("dataAugmentation");
         this.datasetInitial = (LdDataset) config.getParam("LdDatasetMain");
         
-        this.dbpedialdManager = new DBpediaLdManager(datasetInitial , useIndexes);
+        this.dbpedialdManager = new DBpediaLdManager(config);
         
         if(useIndexes){
             try {
@@ -50,7 +50,12 @@ public class O_DBpedia implements O {
 	
     @Override
     public List<String> getConcepts(R a) {        
-        return dbpedialdManager.getConcepts(a , namespaces , dataAugmentation);  
+        return this.getConcepts(a , namespaces , dataAugmentation);  
+    }
+    
+    
+    protected List<String> getConcepts(R a , List<String> namespaces , boolean dataAugmentation){
+        return dbpedialdManager.getConcepts(a , namespaces , dataAugmentation); 
     }
         
     
@@ -91,9 +96,7 @@ public class O_DBpedia implements O {
           
         return ontology.toString().equals("DBpedia");
         
-    }
-
-    
+    }   
 
     
 }

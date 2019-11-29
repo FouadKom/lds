@@ -14,7 +14,7 @@ import sc.research.ldq.LdDataset;
  *
  * @author Fouad Komeiha
  */
-public class YagoLdManager extends OntologiesLdManager {
+public class YagoLdManager extends DBpediaOntologiesLdManager {
     
     private boolean useIndex;
     private LdIndexer conceptsIndex;

@@ -97,7 +97,7 @@ public class SimI implements LdSimilarityMeasure {
             List<O> augmentedOntologies_b = getAugmentedOntologies(b);
             
             for(O ontology: augmentedOntologies_a){
-                if(ontologyList.contains(ontology) && augmentedOntologies_b.contains(ontology) && !commonOntologies.contains(ontology)){
+                if(ontologyList.contains(ontology) && augmentedOntologies_b.contains(ontology) && !commonOntologies.contains(ontology) ){
                         ontology.initializeOntology(config);
                         commonOntologies.add(ontology);
                 }
