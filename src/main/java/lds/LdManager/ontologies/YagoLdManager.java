@@ -43,12 +43,12 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
     
     
     @Override
-    public List<String> getConcepts(R a , List<String> namespaces , boolean dataAugmentation) {
+    public List<String> getConcepts(R a , List<String> namespacesInitial , List<String> namespacesAugmented , boolean dataAugmentation) {
         if(useIndex){
-             return LdIndexer.getListFromIndex(dataSetInitial , conceptsIndex , a.getUri().stringValue() , baseClassPath + "getConcepts" , a , namespaces , dataAugmentation);
+             return LdIndexer.getListFromIndex(dataSetInitial , conceptsIndex , a.getUri().stringValue() , baseClassPath + "getConcepts"  , a , namespacesInitial , namespacesAugmented , dataAugmentation);
         }
         
-        return super.getConcepts(a , namespaces , dataAugmentation);
+        return super.getConcepts(a , namespacesInitial , namespacesAugmented , dataAugmentation);
     }
     
     

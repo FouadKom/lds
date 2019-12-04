@@ -64,7 +64,7 @@ public class O_Yago implements O{
     @Override
     public List<String> getConcepts(R a) {
         
-        return yagoldManager.getConcepts(a , namespaces , dataAugmentation);       
+        return yagoldManager.getConcepts(a , namespaces , namespaces , dataAugmentation);       
         
     }
     

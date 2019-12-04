@@ -21,10 +21,11 @@ import slib.utils.i.Conf;
 
 public class O_DBpedia implements O {
     protected boolean useIndexes;
-    protected boolean dataAugmentation;
+    protected boolean dataAugmentation;     
+    protected List<String> namespaces = Arrays.asList("\"http://dbpedia.org/ontology/\"" , "\"http://www.w3.org/2002/07/owl\"");
+    
     private LdDataset datasetInitial;
-    private DBpediaLdManager dbpedialdManager;  
-    private List<String> namespaces = Arrays.asList("\"http://dbpedia.org/ontology/\"" , "\"http://www.w3.org/2002/07/owl\"");
+    private DBpediaLdManager dbpedialdManager; 
     
     
     @Override
@@ -50,12 +51,12 @@ public class O_DBpedia implements O {
 	
     @Override
     public List<String> getConcepts(R a) {        
-        return this.getConcepts(a , namespaces , dataAugmentation);  
+        return this.getConcepts(a , namespaces , namespaces , dataAugmentation);  
     }
     
     
-    protected List<String> getConcepts(R a , List<String> namespaces , boolean dataAugmentation){
-        return dbpedialdManager.getConcepts(a , namespaces , dataAugmentation); 
+    protected List<String> getConcepts(R a , List<String> namespacesInitial , List<String> namespacesAugmented , boolean dataAugmentation){
+        return dbpedialdManager.getConcepts(a , namespacesInitial , namespacesAugmented , dataAugmentation); 
     }
         
     

@@ -5,7 +5,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -77,7 +79,9 @@ public class LdBenchmark {
     public static synchronized void writeResultsToFile(LdResult results , String filePath) throws IOException{
         if(! Utility.checkPath(filePath) )
             return;
-        
+        SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss:ms");
+        Date date = new Date();
+
         String results_TimeFilePath = filePath.replace(".csv", "_Duration.csv");
         
         FileWriter duration_writer = new FileWriter(results_TimeFilePath , true);
@@ -86,7 +90,7 @@ public class LdBenchmark {
         results_writer.write(results.getResourceTriple().toString('|'));
         results_writer.write(System.getProperty("line.separator"));
         
-        duration_writer.write(results.toString('|'));
+        duration_writer.write(results.toString('|') + " | Written on: " + dateFormat.format(date));
         duration_writer.write(System.getProperty("line.separator"));
         
         results_writer.close();

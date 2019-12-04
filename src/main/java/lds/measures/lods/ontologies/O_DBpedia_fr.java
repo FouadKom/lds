@@ -16,11 +16,25 @@ import slib.utils.i.Conf;
  */
 public class O_DBpedia_fr extends O_DBpedia{
     
-    private List<String> namespaces = Arrays.asList("\"http://fr.dbpedia.org/resource/\"");
+    private List<String> namespacesInitial = Arrays.asList("\"http://fr.dbpedia.org/resource/\"");
+    private List<String> namespacesAugmentation = super.namespaces;
+    private String endpointURI = "http://fr.dbpedia.org/sparql";
+    private String defaultGraph = "http://fr.dbpedia.org";
+    
+   @Override
+    public void initializeOntology(Conf config) throws Exception {
+        if(config.getParam("useIndexes") == null)
+            throw new Exception("Some configuration parameters missing");
+
+        config.addParam("endpointURI", endpointURI);
+        config.addParam("defaultGraph", defaultGraph);
+        
+        super.initializeOntology(config);
+    }
     
     @Override
     public List<String> getConcepts(R a) {        
-        return super.getConcepts(a , namespaces , dataAugmentation);  
+        return super.getConcepts(a , namespacesInitial , namespacesAugmentation , dataAugmentation);  
     }
     
     @Override

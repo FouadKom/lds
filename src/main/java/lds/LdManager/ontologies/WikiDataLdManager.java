@@ -37,7 +37,7 @@ public class WikiDataLdManager {
         
         try {
             this.dataSet = LdDatasetFactory.getInstance()
-                                           .service("https://query.wikidata.org/bigdata/namespace/wdq/sparql")
+                                           .service("http://query.wikidata.org/bigdata/namespace/wdq/sparql")
                                            .name("wikiData")
                                            .create();
             
@@ -65,29 +65,58 @@ public class WikiDataLdManager {
         List<String> concepts = new ArrayList<>();
         List<String> initialConcepts = getInitialConcepts(dataSetInitial , a); //gets initial concepts from the main dataset provided by user
         
-        for(String initialConcept: initialConcepts){
-            concepts = getSuperConceptsFromInitial(initialConcept);
+        for(String initialConcept: initialConcepts){  
+            System.out.println("Super Concepts for initial concept: " + initialConcept + " are:");
+            if(concepts.isEmpty()){
+                concepts = getSuperConceptsFromInitial(initialConcept);
+                
+                }
+                else{
+                    concepts.addAll(getSuperConceptsFromInitial(initialConcept));
+                }
+            
+            for(String concept: concepts){ 
+                System.out.println(concept + "\n");
+            }
         }
         
+        System.out.println("Finished Getting initial concepts and their superclasses");
+        
         if(dataAugmentation){
-            List<String> sameAsResources = null; // same as resources used for dataAugmentation
-            List<String> sameAsConcepts = null; // initial concepts from same as resources used for dataAugmentation
-            List<String> augmentedConcepts = null; // superConcepts from intial concepts augmented using sameAs
+            List<String> sameAsResources = new ArrayList<>(); // same as resources used for dataAugmentation
+            List<String> sameAsConcepts = new ArrayList<>(); // initial concepts from same as resources used for dataAugmentation
+            List<String> augmentedConcepts = new ArrayList<>(); // superConcepts from intial concepts augmented using sameAs
                 
         
             sameAsResources = getSameAsResources(dataSetInitial , a);
-            sameAsConcepts = getInitialConceptsFromSameAsResources(dataSet , sameAsResources);
-               
-        
+            
+            System.out.println(sameAsResources.size() + " sameAs resources");
+            
+            sameAsConcepts = getInitialConceptsFromSameAsResources(sameAsResources);
+            System.out.println("Finished Getting initial concepts of same as resources");   
+            
             for(String sameAsConcept: sameAsConcepts){
-                augmentedConcepts = getSuperConceptsFromInitial(sameAsConcept);
+                if(sameAsConcept.equals("http://www.wikidata.org/entity/Q208511"))
+                    continue;
+                
+                if(augmentedConcepts.isEmpty()){
+                    augmentedConcepts = getSuperConceptsFromInitial(sameAsConcept);
+                 
+                }
+                else{
+                    augmentedConcepts.addAll(getSuperConceptsFromInitial(sameAsConcept));
+                }
+                
+                
             }
             
             concepts.addAll(sameAsConcepts);
             concepts.addAll(augmentedConcepts);
         }
         
-        concepts.addAll(initialConcepts);        
+        concepts.addAll(initialConcepts);  
+        
+        System.out.println("Finished Getting all concepts");
         return concepts;
     }
     
@@ -123,7 +152,8 @@ public class WikiDataLdManager {
         ParameterizedSparqlString query_cmd = dataSet.prepareQuery();
         
         // get superClasses:
-        String query = "select * where { <" + initialConcept + ">  " + " <http://www.wikidata.org/prop/direct/P279> ?c.}";
+        String query = "select * where { <" + initialConcept + ">  " + " <http://www.wikidata.org/prop/direct/P279>* ?c."
+                                            + " filter (?c != <" + initialConcept + ">)}";
                 
         query_cmd.setCommandText(query);
 
@@ -132,28 +162,10 @@ public class WikiDataLdManager {
         for (; rs.hasNext();) {
             QuerySolution soln = rs.nextSolution();
             String sameConcept = soln.getResource("c").getURI();
-            concepts.add(sameConcept);
-
-        }
+            
+        }    
         
-        
-        /*       
-        
-        // get same calsses
-        query = "select * where { <" + initialConcept + "> <http://www.wikidata.org/prop/direct/P1709> ?same }";
-
-        query_cmd.setCommandText(query);
-        rs = dataSet.executeSelectQuery(query_cmd.toString());
-
-        for (; rs.hasNext();) {
-            QuerySolution soln = rs.nextSolution();
-            String sameConcept = soln.getResource("same").getURI();
-            concepts.add(sameConcept);
-        }
-        */
-        
-        
-        
+        System.out.println(initialConcept + " : " + concepts.size());
         return concepts;
     }
     
@@ -165,8 +177,8 @@ public class WikiDataLdManager {
         ParameterizedSparqlString query_cmd = dataSetInitial.prepareQuery(); 
         
         String query = "SELECT * " + (dataSetInitial.getDefaultGraph() == null ? ("") : " from <" + dataSetInitial.getDefaultGraph()+ ">") 
-                                + " WHERE  { <" + a.getUri() + "> <" + OWL.sameAs + "> ?c."
-                                + " FILTER  ( REGEX (STR (?c), \"http://www.wikidata.org/entity/\") )}";
+                                   + " WHERE  { <" + a.getUri() + "> <" + OWL.sameAs + "> ?c."
+                                   + " FILTER  ( REGEX (STR (?c), \"http://www.wikidata.org/entity/\") )}";
             
             
         query_cmd.setCommandText(query);
@@ -183,13 +195,15 @@ public class WikiDataLdManager {
         
     }
     
-    private List<String> getInitialConceptsFromSameAsResources(LdDataset dataSetInitial , List<String> sameAsResources){
+    private List<String> getInitialConceptsFromSameAsResources(List<String> sameAsResources){
         
         List<String> extraConcepts = new ArrayList<>();
         
-        ParameterizedSparqlString query_cmd = dataSetInitial.prepareQuery();
+        ParameterizedSparqlString query_cmd = dataSet.prepareQuery();
+        
         
         for(String sameAsResource : sameAsResources){
+            System.out.println("Initial Concepts for sameAs resource: " + sameAsResource + " are:");
         
             // Get instances
             String query = "select * where { <" + sameAsResource + "> <http://www.wikidata.org/prop/direct/P31> ?c }";
@@ -201,23 +215,25 @@ public class WikiDataLdManager {
             for (; rs.hasNext();) {
                 QuerySolution soln = rs.nextSolution();
                 String sameConcept = soln.getResource("c").getURI();
+                
+                System.out.println(sameConcept + "\n");
 
                 if (!sameConcept.contains("http://www.wikidata.org/entity/Q16521")) {
                     extraConcepts.add(sameConcept);
                 } 
-                else {
-                    // Get taxons
-                    query = "select * where {<" + sameAsResource + ">  <http://www.wikidata.org/prop/direct/P171>* ?pTaxon. }";
-
-                    query_cmd.setCommandText(query);
-                    rs = dataSet.executeSelectQuery(query_cmd.toString());
-
-                    for (; rs.hasNext();) {
-                        soln = rs.nextSolution();
-                        String pTaxon = soln.getResource("pTaxon").getURI();
-                        extraConcepts.add(pTaxon);
-                    }
-                }
+//                else {
+//                    // Get taxons
+//                    query = "select * where {<" + sameAsResource + ">  <http://www.wikidata.org/prop/direct/P171>* ?pTaxon. }";
+//
+//                    query_cmd.setCommandText(query);
+//                    rs = dataSet.executeSelectQuery(query_cmd.toString());
+//
+//                    for (; rs.hasNext();) {
+//                        soln = rs.nextSolution();
+//                        String pTaxon = soln.getResource("pTaxon").getURI();
+//                        extraConcepts.add(pTaxon);
+//                    }
+//                }
             }
         }
         

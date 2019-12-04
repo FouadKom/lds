@@ -6,9 +6,7 @@
 package lds.measures.lods;
 
 import lds.measures.lods.ontologies.O;
-import java.io.File;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -25,9 +23,11 @@ import slib.utils.i.Conf;
 public class SimI implements LdSimilarityMeasure {
     private boolean useIndeses;
     private List<O> ontologyList;
+    private List<O> commonOntologies;
     private boolean dataAugmentation;
     private SimILdManager simIldManager;
     private Conf config;
+
     
     public SimI(Conf config) throws Exception{
         if(config.getParam("useIndexes") == null || config.getParam("ontologyList") == null || config.getParam("dataAugmentation") == null)
@@ -45,7 +45,6 @@ public class SimI implements LdSimilarityMeasure {
         
         double score = 0;
 
-        List<O> commonOntologies = null;
         try {
             
             commonOntologies = getCommonOntologies(a, b);
@@ -68,10 +67,23 @@ public class SimI implements LdSimilarityMeasure {
     public double calculate_simI_concepts(O ontology , R a, R b) {
         double score = 0;
 
-        List<String> features_a, features_b;
-
+        List<String> features_a = new ArrayList<>() , features_b = new ArrayList<>();
+        
+//        System.out.println("Getting concepts for the ontology " + ontology.toString() +"\n");
         features_a = ontology.getConcepts(a);
+//        System.out.println("Feature of Resource " + a.getUri().stringValue() + " from ontology " + ontology.toString() +"\n");
+//        for(String feature:features_a){
+//            System.out.println(feature + "\n");
+//        }
+       
         features_b = ontology.getConcepts(b);
+//        System.out.println("Feature of Resource " + b.getUri().stringValue() + " from ontology " + ontology.toString() +"\n");
+//        for(String feature:features_b){
+//            System.out.println(feature + "\n");
+//        }
+        
+        if(features_a.isEmpty() && features_b.isEmpty())
+            commonOntologies.remove(ontology);
 
         score = Utility.TverskySimilarity_mod(features_a, features_b);
 

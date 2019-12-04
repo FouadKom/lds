@@ -16,7 +16,8 @@ import slib.utils.i.Conf;
  */
 public class O_DBpedia_el extends O_DBpedia {
     
-    private List<String> namespaces = Arrays.asList("\"http://el.dbpedia.org/resource/\"");
+    private List<String> namespacesInitial = Arrays.asList("\"http://el.dbpedia.org/resource/\"");
+    private List<String> namespacesAugmentation = super.namespaces;
     private String endpointURI = "https://el.dbpedia.org/sparql";
     
    @Override
@@ -31,7 +32,7 @@ public class O_DBpedia_el extends O_DBpedia {
     
     @Override
     public List<String> getConcepts(R a) {        
-        return super.getConcepts(a , namespaces , dataAugmentation);  
+        return super.getConcepts(a , namespacesInitial , namespacesAugmentation , dataAugmentation);     
     }
     
 

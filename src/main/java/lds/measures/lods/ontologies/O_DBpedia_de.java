@@ -19,8 +19,10 @@ import slib.utils.i.Conf;
  */
 public class O_DBpedia_de extends O_DBpedia{
     
-    private List<String> namespaces = Arrays.asList("\"http://de.dbpedia.org/resource/\"");
-    private String endpointURI = "https://de.dbpedia.org/sparql";
+    private List<String> namespacesInitial = Arrays.asList("\"http://de.dbpedia.org/resource/\"");
+    private List<String> namespacesAugmentation = super.namespaces;
+    private String endpointURI = "http://de.dbpedia.org/sparql";
+    private String defaultGraph = "http://de.dbpedia.org";
     
    @Override
     public void initializeOntology(Conf config) throws Exception {
@@ -28,6 +30,7 @@ public class O_DBpedia_de extends O_DBpedia{
             throw new Exception("Some configuration parameters missing");
 
         config.addParam("endpointURI", endpointURI);
+        config.addParam("defaultGraph", defaultGraph);
         
         super.initializeOntology(config);
     }
@@ -35,7 +38,7 @@ public class O_DBpedia_de extends O_DBpedia{
     
     @Override
     public List<String> getConcepts(R a) {        
-        return super.getConcepts(a , namespaces , dataAugmentation);  
+        return super.getConcepts(a , namespacesInitial , namespacesAugmentation , dataAugmentation);   
     }
     
 

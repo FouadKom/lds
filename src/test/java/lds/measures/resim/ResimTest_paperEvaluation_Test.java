@@ -5,6 +5,8 @@
  */
 package lds.measures.resim;
 
+import lds.engine.LdSimilarityEngine;
+import lds.measures.Measure;
 import test.utility.Util;
 import lds.measures.resim.Resim;
 import lds.measures.resim.ResourceSimilarity;

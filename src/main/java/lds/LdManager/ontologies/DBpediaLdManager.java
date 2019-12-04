@@ -21,10 +21,12 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     private LdIndexer conceptsIndex;
     private LdDataset dataSetInitial;
     private String endpointURI;
+    private String defaultGraph;
     
    
     public DBpediaLdManager(LdDataset dataSetInitial , boolean useIndex) throws Exception {
         super(dataSetInitial);
+        
         this.useIndex = useIndex;
         this.dataSetInitial = dataSetInitial;
     
@@ -33,12 +35,21 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     
     public DBpediaLdManager(Conf config) throws Exception {
         super((LdDataset) config.getParam("LdDatasetMain"));
+        
         this.useIndex = (Boolean) config.getParam("useIndexes");
         this.dataSetInitial = (LdDataset) config.getParam("LdDatasetMain");
         
         endpointURI = (String) config.getParam("endpointURI");
-        if(endpointURI != null)
+        defaultGraph = (String) config.getParam("defaultGraph");
+        
+        if(endpointURI != null && defaultGraph != null){
             super.dataSet.setLink(endpointURI);
+            super.dataSet.setDefaultGraph(defaultGraph);
+        }
+        else{
+            super.dataSet.setLink("http://dbpedia.org");
+            super.dataSet.setDefaultGraph("http://dbpedia.org");
+        }
     
     }
     
@@ -58,12 +69,12 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     
 
     @Override
-    public List<String> getConcepts(R a , List<String> namespaces , boolean dataAugmentation) {
+    public List<String> getConcepts(R a , List<String> namespacesInitial , List<String> namespacesAugmented , boolean dataAugmentation) {
         if(useIndex){
-             return LdIndexer.getListFromIndex(dataSetInitial , conceptsIndex , a.getUri().stringValue() , baseClassPath + "getConcepts"  , a , namespaces , dataAugmentation);
+             return LdIndexer.getListFromIndex(dataSetInitial , conceptsIndex , a.getUri().stringValue() , baseClassPath + "getConcepts"  , a , namespacesInitial , namespacesAugmented , dataAugmentation);
         }
         
-        return super.getConcepts(a , namespaces , dataAugmentation);
+        return super.getConcepts(a , namespacesInitial , namespacesAugmented , dataAugmentation);
     }
     
 

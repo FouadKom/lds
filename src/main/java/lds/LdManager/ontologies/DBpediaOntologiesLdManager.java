@@ -6,6 +6,7 @@
 package lds.LdManager.ontologies;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import lds.measures.lods.ontologies.O;
 import lds.resource.R;
@@ -25,8 +26,7 @@ import sc.research.ldq.LdDatasetFactory;
  */
 public class DBpediaOntologiesLdManager {
     protected LdDataset dataSet;
-    protected LdDataset dataSetInitial;
-    
+    protected LdDataset dataSetInitial;    
     protected String baseClassPath = "lds.LdManager.ontologies.OntologiesLdManager.";
     
     public DBpediaOntologiesLdManager(LdDataset dataSetInitial) throws Exception {
@@ -35,87 +35,53 @@ public class DBpediaOntologiesLdManager {
         prefixes.setNsPrefix("dbpedia-owl", "http://dbpedia.org/ontology/");
   
         this.dataSet = LdDatasetFactory.getInstance()
-                                       .service("https://dbpedia.org/sparql")
+//                                       .service("https://dbpedia.org/sparql")
                                        .name("dbpedia")
-                                       .defaultGraph("http://dbpedia.org")
+//                                       .defaultGraph("http://dbpedia.org")
                                        .prefixes(prefixes).create(); 
         
         this.dataSetInitial = dataSetInitial;
     }
     
-//    public List<String> getConcepts(R a , List<String> namespaces){
-//        List<String> dbpedia_features = new ArrayList<>();
-//        
-//        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-//        
-//        String queryStr = "SELECT * " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
-//                                                   + "WHERE  { <" + a.getUri() + "> a ?c."
-//                                                   + "FILTER  ( REGEX (STR (?c), ";
-//        
-//        for(String namespace: namespaces){
-//            queryStr = queryStr + namespace + ") ||  REGEX (STR (?c), ";
-//        }
-//        
-//        queryStr = queryStr.substring(0 , queryStr.length() - 23);
-//        
-//        queryStr = queryStr + ") )}";
-//               
-//        query_cmd.setCommandText(queryStr);
-//            
-//        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-//
-//        while (resultSet.hasNext()) {
-//            QuerySolution soln = resultSet.nextSolution();
-//            Resource c = soln.getResource("c");
-//            dbpedia_features.add(c.getURI());
-//        }
-//        
-//        return dbpedia_features;
-//    }
     
-    
-       public List<String> getConcepts(R a , List<String> namespaces , boolean dataAugmentation) {
-  
-        List<String> concepts = new ArrayList<>();
-        List<String> initialConcepts = getInitialConcepts(dataSetInitial , a , namespaces); //gets initial concepts from the main dataset provided by user
+    public List<String> getConcepts(R a , List<String> namespacesInitial , List<String> namespacesAugmented , boolean dataAugmentation) {
         
-//        for(String initialConcept: initialConcepts){
-//            concepts = getSuperConceptsFromInitial(initialConcept);
-//        }
+        List<String> concepts = new ArrayList<>();
+        List<String> initialConcepts = getInitialConcepts(dataSetInitial , a , namespacesInitial); //gets initial concepts from the main dataset provided by user
         
         concepts.addAll(initialConcepts);
+//        System.out.println(initialConcepts.size() + " Initial Concepts\n");
+//        System.out.println(concepts.size() + " size of concepts list after adding initial concepts\n");
         
         if(dataAugmentation){
-            List<R> sameAsResources = null; // same as resources used for dataAugmentation
-            List<String> sameAsConcepts = null; // initial concepts from same as resources used for dataAugmentation
-//            List<String> augmentedConcepts = null; // superConcepts from intial concepts augmented using sameAs                
+            List<R> sameAsResources = new ArrayList<>(); // same as resources used for dataAugmentation
+            List<String> sameAsConcepts = new ArrayList<>(); // initial concepts from same as resources used for dataAugmentation              
         
-            sameAsResources = getSameAsResources(dataSetInitial , a , namespaces);
-//            System.out.println(sameAsResources.size());
+            sameAsResources = getSameAsResources(dataSetInitial , a , namespacesInitial);
             
             for(R sameAsResource: sameAsResources){
-                if(sameAsConcepts == null){
-                    sameAsConcepts = getInitialConcepts(dataSetInitial , sameAsResource , namespaces);
-//                    System.out.println("Size of sameAsConcepts for " + a.getUri().toString() + " is " + sameAsConcepts.size());
+                if(sameAsConcepts.isEmpty()){
+                    sameAsConcepts = getInitialConcepts(dataSet , sameAsResource , namespacesAugmented);
+//                    System.out.println(sameAsConcepts.size() + " Augmented Concepts");
                 }
+                
                 else{
-                    sameAsConcepts.addAll(getInitialConcepts(dataSetInitial , sameAsResource , namespaces));
-//                    System.out.println("Size of sameAsConcepts for " + a.getUri().toString() + " is " + sameAsConcepts.size());
+                    sameAsConcepts.addAll(getInitialConcepts(dataSet , sameAsResource , namespacesAugmented));
+//                    System.out.println(sameAsConcepts.size() + " Augmented Concepts");
+                    
                 }
             }      
     
-            if(sameAsConcepts != null){
-//                for(String sameAsConcept: sameAsConcepts){
-//                    augmentedConcepts = getSuperConceptsFromInitial(sameAsConcept);
-//                }
-//            
+            if(! sameAsConcepts.isEmpty() ){
                 concepts.addAll(sameAsConcepts);
-//                concepts.addAll(augmentedConcepts);
+//                System.out.println(concepts.size() + " size of concepts list after adding augmented concepts\n");
             }
         }
         
+        
         return concepts;
     }
+    
     
     private List<String> getInitialConcepts(LdDataset dataSetInitial , R a , List<String> namespaces){
         
@@ -124,8 +90,8 @@ public class DBpediaOntologiesLdManager {
         ParameterizedSparqlString query_cmd = dataSetInitial.prepareQuery();      
         
         String queryStr = "SELECT * " + (dataSetInitial.getDefaultGraph() == null ? ("") : "from <" + dataSetInitial.getDefaultGraph()+ ">") 
-                                      + "WHERE  { <" + a.getUri() + "> a ?c."
-                                      + "FILTER  ( REGEX (STR (?c), ";
+                                      + " WHERE  { <" + a.getUri() + "> a ?c."
+                                      + " FILTER  ( REGEX (STR (?c), ";
         
         for(String namespace: namespaces){
             queryStr = queryStr + namespace + ") ||  REGEX (STR (?c), ";
@@ -134,6 +100,8 @@ public class DBpediaOntologiesLdManager {
         queryStr = queryStr.substring(0 , queryStr.length() - 23);
         
         queryStr = queryStr + ") )}";
+        
+//        System.out.println("Getting initial concepts from initial dataset\n" + queryStr + "\n");
                
         query_cmd.setCommandText(queryStr);
 
@@ -147,31 +115,6 @@ public class DBpediaOntologiesLdManager {
         }
         
         return initialConcepts;
-    }
-    
-    
-    
-    private List<String> getSuperConceptsFromInitial(String initialConcept){
-        List<String> concepts = new ArrayList<>();
-        
-        ParameterizedSparqlString query_cmd = dataSet.prepareQuery();
-        
-        // get superClasses:
-        String query = "SELECT * " + (dataSet.getDefaultGraph() == null ? ("") : "from <" + dataSet.getDefaultGraph()+ ">") 
-                                   + "WHERE  { <" + initialConcept + "> <http://www.w3.org/2000/01/rdf-schema#subClassOf> ?c.}";
-                
-        query_cmd.setCommandText(query);
-
-        ResultSet rs = dataSet.executeSelectQuery(query_cmd.toString());
-        
-        for (; rs.hasNext();) {
-            QuerySolution soln = rs.nextSolution();
-            String sameConcept = soln.getResource("c").getURI();
-            concepts.add(sameConcept);
-
-        }
-        
-        return concepts;
     }
     
     
@@ -193,6 +136,8 @@ public class DBpediaOntologiesLdManager {
         
         queryStr = queryStr + ") )}";
         
+//        System.out.println("Getting getSameAsResources from initial dataset\n" + queryStr + "\n");
+        
         query_cmd.setCommandText(queryStr);
         
         ResultSet rs = dataSetInitial.executeSelectQuery(query_cmd.toString());
@@ -207,47 +152,5 @@ public class DBpediaOntologiesLdManager {
         return sameAsResources;      
         
     }
-    
-//    private List<String> getInitialConceptsFromSameAsResources(LdDataset dataSetInitial , List<String> sameAsResources){
-//        
-//        List<String> extraConcepts = new ArrayList<>();
-//        
-//        ParameterizedSparqlString query_cmd = dataSetInitial.prepareQuery();
-//        
-//        for(String sameAsResource : sameAsResources){
-//        
-//            // Get instances
-//            String query = "select * where { <" + sameAsResource + "> <http://www.wikidata.org/prop/direct/P31> ?c }";
-//
-//            query_cmd.setCommandText(query);
-//
-//            ResultSet rs = dataSet.executeSelectQuery(query_cmd.toString());
-//
-//            for (; rs.hasNext();) {
-//                QuerySolution soln = rs.nextSolution();
-//                String sameConcept = soln.getResource("c").getURI();
-//
-//                if (!sameConcept.contains("http://www.wikidata.org/entity/Q16521")) {
-//                    extraConcepts.add(sameConcept);
-//                } 
-//                else {
-//                    // Get taxons
-//                    query = "select * where {<" + sameAsResource + ">  <http://www.wikidata.org/prop/direct/P171>* ?pTaxon. }";
-//
-//                    query_cmd.setCommandText(query);
-//                    rs = dataSet.executeSelectQuery(query_cmd.toString());
-//
-//                    for (; rs.hasNext();) {
-//                        soln = rs.nextSolution();
-//                        String pTaxon = soln.getResource("pTaxon").getURI();
-//                        extraConcepts.add(pTaxon);
-//                    }
-//                }
-//            }
-//        }
-//        
-//        return extraConcepts;
-//        
-//    }
     
 }

@@ -29,7 +29,7 @@ public class SimI_Test {
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSetMain);
-        config.addParam("dataAugmentation" , true);
+        config.addParam("dataAugmentation" , false);
 
         
         List<O> ontologyList = new ArrayList<>();
@@ -62,13 +62,10 @@ public class SimI_Test {
         System.out.println(simi.compare(r1, r2));    
        
         simi.closeIndexes();
-        
+
           
     }
-    
-    
-   // 0.2857142857142857
-   // 0.2857142857142857
+
     
     
     
