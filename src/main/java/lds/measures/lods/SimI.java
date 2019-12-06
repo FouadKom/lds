@@ -7,7 +7,9 @@ package lds.measures.lods;
 
 import lds.measures.lods.ontologies.O;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.SimILdManager;
@@ -56,20 +58,65 @@ public class SimI implements LdSimilarityMeasure {
         if(commonOntologies == null || commonOntologies.isEmpty())
             return -1;
 
-        for (O commonOntology : commonOntologies) {
-            score = score + calculate_simI_concepts(commonOntology , a , b);
-        }
+//        for (O commonOntology : commonOntologies) {
+//            score = score + calculate_simI_concepts(commonOntology , a , b);
+//        }
 
-        return score/commonOntologies.size();
+//        return score/commonOntologies.size();
+
+        return calculate_simI_concepts(a , b);
 
     }
     
-    public double calculate_simI_concepts(O ontology , R a, R b) {
+    public Map<String, List<String>> getConcepts(R a){
+        Map<String, List<String>> concepts = new HashMap<>();
+        
+        for (O commonOntology : commonOntologies) {
+            List<String> o_concepts = commonOntology.getConcepts(a);
+            
+            String ontologyName = commonOntology.toString();
+
+            if(ontologyName.contains("DBpedia") && !o_concepts.isEmpty())
+                concepts.put("DBpedia" , o_concepts);
+            
+            else if(!o_concepts.isEmpty())
+                concepts.put(commonOntology.toString() , o_concepts);
+        }
+        
+        return concepts;
+
+    }
+    
+    private double calculate_simI_concepts(R a , R b){
+        double score = 0;
+        try {
+            commonOntologies = getCommonOntologies(a , b);
+        } catch (Exception ex) {
+            Logger.getLogger(SimI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        Map<String, List<String>> concepts_a = getConcepts(a);
+        Map<String, List<String>> concepts_b = getConcepts(b);
+        
+        for (O commonOntology : commonOntologies) {
+            String ontologyName = commonOntology.toString();
+            if(ontologyName.contains("DBpedia"))
+                ontologyName = "DBpedia";
+            List<String> concepts_a_O = concepts_a.get(ontologyName);
+            List<String> concepts_b_O = concepts_b.get(ontologyName);
+            score = score + Utility.TverskySimilarity_mod(concepts_a_O, concepts_b_O);
+        }
+        
+        return score/concepts_a.size();
+        
+    }
+    
+    private double calculate_simI_concepts_old(O ontology , R a, R b) {
         double score = 0;
 
         List<String> features_a = new ArrayList<>() , features_b = new ArrayList<>();
         
-//        System.out.println("Getting concepts for the ontology " + ontology.toString() +"\n");
+        System.out.println("Getting concepts for the ontology " + ontology.toString() +"\n");
         features_a = ontology.getConcepts(a);
 //        System.out.println("Feature of Resource " + a.getUri().stringValue() + " from ontology " + ontology.toString() +"\n");
 //        for(String feature:features_a){

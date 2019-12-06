@@ -7,6 +7,7 @@ package lds.measures.LODS;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import lds.measures.lods.ontologies.*;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
@@ -14,6 +15,7 @@ import test.utility.Util;
 import lds.measures.lods.SimI;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import org.junit.Test;
 
 /**
  *
@@ -23,13 +25,14 @@ public class SimI_Test {
     
     
     
-    public static void main(String args[]) throws Exception{
+    @Test
+    public void SimI_Test() throws Exception{
         LdDataset dataSetMain = Util.getDBpediaDataset();
         
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSetMain);
-        config.addParam("dataAugmentation" , false);
+        config.addParam("dataAugmentation" , true);
 
         
         List<O> ontologyList = new ArrayList<>();
@@ -47,8 +50,7 @@ public class SimI_Test {
         ontologyList.add(yago);
 
 //        O wikiData = new O_WikiData();
-//        ontologyList.add(wikiData);
-        
+//        ontologyList.add(wikiData);        
         
         config.addParam("ontologyList" , ontologyList);
         
@@ -59,10 +61,9 @@ public class SimI_Test {
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Paris").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("New_York").create();
        
-        System.out.println(simi.compare(r1, r2));    
-       
-        simi.closeIndexes();
+        System.out.println(simi.compare(r1, r2)); 
 
+        simi.closeIndexes();
           
     }
 

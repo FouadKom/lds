@@ -145,6 +145,10 @@ public class Utility {
         return true;
     }
     
+    public static double normalizeValue(double value , double min , double max){
+        return (value - min)/(max - min);
+    }
+    
     
    
     

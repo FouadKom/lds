@@ -39,6 +39,35 @@ public class LdBenchmark {
 
     }
     
+    public static List<LdResourceTriple> readRowsFromWS353set(String datasetPath) throws FileNotFoundException{
+//        String datsetpath = System.getProperty("user.dir") + "/src/test/resources/ws353simre/wordsim_similarity_goldstandard.txt";
+//        String benchMarkPath = System.getProperty("user.dir") + "/src/test/resources/wordsim_similarity_benchmark.csv";
+        String baseURI = "http://dbpedia.org/resource/";
+        List<LdResourceTriple> listTriples = new ArrayList<>();
+        
+        if(! Utility.checkFile(datasetPath) )
+            return null;
+        
+        File file =  new File(datasetPath); 
+        Scanner sc = new Scanner(file); 
+  
+        while (sc.hasNextLine()){
+             String line[] = sc.nextLine().split("\\s+");
+             R r1 = new R(baseURI + line[0]);
+             R r2 = new R(baseURI + line[1]);
+             double simValue = Utility.normalizeValue(Double.parseDouble(line[2]) , 0.0 , 10.0);
+             
+             LdResourceTriple triple = new LdResourceTriple(r1 , r2 ,  simValue);
+             
+             listTriples.add(triple);
+        }
+        
+        
+        
+        return listTriples;
+        
+    }
+    
     public static List<String> readRowsFromFile(String filePath) throws FileNotFoundException{
         if(! Utility.checkFile(filePath) )
             return null;
@@ -95,6 +124,19 @@ public class LdBenchmark {
         
         results_writer.close();
         duration_writer.close();
+
+    }
+    
+    public static synchronized void writeTriplesToFile(LdResourceTriple triple , String filePath) throws IOException{
+        if(! Utility.checkPath(filePath) )
+            return;
+        
+        FileWriter results_writer = new FileWriter(filePath , true);
+        
+        results_writer.write(triple.toString('|'));
+        results_writer.write(System.getProperty("line.separator"));
+        
+        results_writer.close();
 
     }
     

@@ -42,7 +42,6 @@ C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\resim\
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\LDSD_dw.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\ldsd\WTLDSD_cw.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\graph\LdGraph.java
-C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\ontologies\OntologiesLdManager.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\engine\LdSimilarityEngine.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\Utility.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\resource\LdResourceTriple.java
@@ -50,6 +49,7 @@ C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\picss\
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\DistanceMeasuresLdManager.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\lods\ontologies\O_DBpedia_de.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\LdManager.java
+C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\LdManager\ontologies\DBpediaOntologiesLdManager.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\epics\EPICS.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\resim\WResim.java
 C:\Users\LENOVO\Documents\NetBeansProjects\lds\src\main\java\lds\measures\Measure.java

@@ -33,6 +33,7 @@ lds\benchmark\readingFiles_Test.class
 lds\engine\Engine_Multithread_Test_LocalRDF.class
 lds\LdManager\LdManagerTest.class
 lds\engine\Engine_Multithread_Test_HdtFiles_PICSS.class
+lds\measures\epics\ws353Test.class
 lds\engine\Engine_BenchMark_Test.class
 lds\measures\epics\test_localRDF.class
 lds\measures\ldsd\LDSDTest_localRDF.class

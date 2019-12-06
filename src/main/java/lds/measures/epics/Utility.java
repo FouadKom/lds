@@ -19,11 +19,8 @@ import lds.engine.SimilarityCompareTask;
 import lds.engine.SimilarityCompareTaskRunnable;
 import lds.measures.LdSimilarityMeasure;
 import lds.measures.Measure;
-import lds.measures.ldsd.LDSD;
-import lds.measures.ldsd.LDSD_cw;
-import lds.measures.ldsd.LDSD_d;
-import lds.measures.ldsd.LDSD_dw;
-import lds.measures.ldsd.LDSD_iw;
+import static lds.measures.Measure.LDSD_i;
+import lds.measures.ldsd.*;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import lds.resource.LdResourcePair;
@@ -55,11 +52,39 @@ public class Utility {
         
         LdDataset dataset = (LdDataset) config.getParam("LdDatasetMain");
         boolean useIndex = (Boolean) config.getParam("useIndexes");
-        
+        String extendingMeasure = (String) config.getParam("extendingMeasure");
+                
         Conf ldsd_conf = new Conf();
         ldsd_conf.addParam("useIndexes", useIndex);
-        ldsd_conf.addParam("LdDatasetMain" , dataset);        
-        LDSD ldsd = new LDSD_cw(ldsd_conf);
+        ldsd_conf.addParam("LdDatasetMain" , dataset); 
+        
+        LDSD ldsd = null;
+        
+        switch (extendingMeasure) {
+            case "LDSD_d":
+                ldsd = new LDSD_d(ldsd_conf);
+                break;
+                
+            case "LDSD_dw":
+                ldsd = new LDSD_dw(ldsd_conf);
+                break;
+                
+            case "LDSD_i":
+                ldsd = new LDSD_i(ldsd_conf);
+                break;
+            
+            case "LDSD_iw":
+                ldsd = new LDSD_iw(ldsd_conf);
+                break;
+                
+            case "LDSD_cw":
+                ldsd = new LDSD_cw(ldsd_conf);
+                break;
+                
+            
+        }
+                
+        
         ldsd.loadIndexes();
         
         
@@ -106,7 +131,9 @@ public class Utility {
 //            }
 //            
 //        }
-           SearchTask[] threads = new SearchTask[a.size()];
+
+//To use multithread uncomment this part and comment the part after it
+           /*SearchTask[] threads = new SearchTask[a.size()];
            
            int i = 0;
            
@@ -123,32 +150,32 @@ public class Utility {
                }
            }catch(InterruptedException ie) {
                ie.printStackTrace();
-           }
+           }*/
         
-//        for(String fa : a){
-//           link_a = getLink(fa);
-//           direction_a = getDirection(fa);
-//           
-//           for (String fb : b) {
-//                link_b = getLink(fb);
-//                direction_b = getDirection(fb);
-//
-//                if(link_a.equals(link_b) && direction_a.equals(direction_b)){
-//
-////                    sim = checkFeatureSimilarity(getVertex(fa) , getVertex(fb) , config);
-//                    R r1 = LdResourceFactory.getInstance().uri(getVertex(fa)).create();
-//                    R r2 = LdResourceFactory.getInstance().uri(getVertex(fb)).create();
-//        
-//                    sim = ldsd.compare(r1 , r2);
-//
-//                    if( sim >= 0.5){
-//                        result.add(fa);
-//                        result.add(fb);
-//                    }
-//                }
-//            
-//            } 
-//        }
+        for(String fa : a){
+           link_a = getLink(fa);
+           direction_a = getDirection(fa);
+           
+           for (String fb : b) {
+                link_b = getLink(fb);
+                direction_b = getDirection(fb);
+
+                if(link_a.equals(link_b) && direction_a.equals(direction_b)){
+
+//                    sim = checkFeatureSimilarity(getVertex(fa) , getVertex(fb) , config);
+                    R r1 = LdResourceFactory.getInstance().uri(getVertex(fa)).create();
+                    R r2 = LdResourceFactory.getInstance().uri(getVertex(fb)).create();
+        
+                    sim = ldsd.compare(r1 , r2);
+
+                    if( sim >= 0.5){
+                        result.add(fa);
+                        result.add(fb);
+                    }
+                }
+            
+            } 
+        }
 
         ldsd.closeIndexes();
 //        ldMeasure.closeIndexes();

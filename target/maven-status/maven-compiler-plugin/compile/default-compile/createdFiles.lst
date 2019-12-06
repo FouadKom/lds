@@ -1,6 +1,5 @@
 lds\engine\SimilarityCompareTask.class
 lds\benchmark\Utility.class
-lds\LdManager\ontologies\OntologiesLdManager.class
 lds\measures\Measure.class
 lds\LdManager\Utility.class
 lds\measures\epics\Utility.class
@@ -22,6 +21,7 @@ lds\LdManager\ontologies\DBpediaLdManager.class
 lds\measures\lods\ontologies\O_DBpedia.class
 lds\LdManager\LdManagerBase.class
 lds\graph\LdResources.class
+lds\LdManager\ontologies\DBpediaOntologiesLdManager.class
 lds\resource\LdResourceFactory.class
 lds\indexing\LdIndexer.class
 lds\resource\LdResult.class
