@@ -60,7 +60,7 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
 //        }       
         
         Conf config = new Conf();
-        config.addParam("useIndexes", true);
+        config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSet);
 //        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
         
@@ -80,7 +80,7 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
         
         startTime = System.nanoTime();
         
-        engine.similarity(resourcesFilePath1 , false , false);
+//        engine.similarity(resourcesFilePath1 , false , false);
         
         //end timing
         endTime = System.nanoTime();

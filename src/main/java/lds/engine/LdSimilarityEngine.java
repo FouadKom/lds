@@ -79,7 +79,7 @@ public class LdSimilarityEngine {
        public List<LdResult> similarity(List<LdResourceTriple> resourceTriples , String resultsFilePath) throws InterruptedException, ExecutionException {
            
 //           ExecutorService executorService = Executors.newFixedThreadPool(resourcePairs.size());
-             ExecutorService executorService = Executors.newFixedThreadPool(10);
+             ExecutorService executorService = Executors.newFixedThreadPool(2);
 //            ExecutorService executorService = Executors.newCachedThreadPool();
 //            ExecutorService executorService = Executors.newCachedThreadPool(Executors.defaultThreadFactory());
 
