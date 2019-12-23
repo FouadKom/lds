@@ -95,9 +95,11 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
         
-        query_cmd.setCommandText("select (count(?subject) as ?count)\n"
+        String query = "select (count(?subject) as ?count)\n"
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {?subject  <" + property + "> <" + resource + ">}");
+                                    + "where {?subject  <" + property + "> <" + resource + ">}";
+        
+        query_cmd.setCommandText(query);
         
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
        

@@ -40,8 +40,10 @@ public class ws353Test {
     @Test
     public void ws353Test() throws Exception{  
         String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/ws353simrel/wordsim_DBpedia.txt"; 
+        if(! lds.benchmark.Utility.checkPath(outputFilePath) )
+            return;
         
-        Map<LdResourcePair , List<String>> finalResults = new HashMap<>();
+//        Map<LdResourcePair , List<String>> finalResults = new HashMap<>();
         
         LdDataset dataset = Util.getDBpediaDataset();
         
@@ -60,17 +62,23 @@ public class ws353Test {
         EPICS epics = null;
         String epicsVal = null;
         
+        FileWriter results_writer = new FileWriter(outputFilePath , true);
+        
+        results_writer.write("Pair | Benchmark | EPICS_LDSD_d | Duration | EPICS_LDSD_dw | Duration | EPICS_LDSD_i | Duration | EPICS_LDSD_iw | Duration | EPICS_LDSD_cw | Duration | PICSS | Duration");
+        results_writer.write(System.getProperty("line.separator"));  
+        
         List<LdResourceTriple> triples= LdBenchmark.readRowsFromWS353set(datsetpath);
+        
         for(LdResourceTriple triple: triples ){
-
+            String row = new String();
+            
             LdResourcePair pair= triple.getResourcePair();
             R r1 = pair.getFirstresource();
             R r2 = pair.getSecondresource();
             
             String benchMark = Double.toString(triple.getSimilarityResult());
             
-            List<String> values = new ArrayList<>();
-            values.add("Benchmark: " + benchMark + " | ");            
+            row = row + pair.toString('|') + " | " + benchMark + " | ";
             
             /////////////////////////////////EPICS_LDSD_d/////////////////////////////////////////////////////
             config.addParam("extendingMeasure", "LDSD_d");
@@ -87,7 +95,7 @@ public class ws353Test {
             System.out.println("EPICS with LDSD_d finished in " + duration + " second(s) ");
             System.out.println(); 
             
-            values.add("EPICS_LDSD_d: " + epicsVal + " duration: " + duration + " | ");
+            row = row + epicsVal +  " | " + duration + " | ";
             
             ////////////////////////////////EPICS_LDSD_dw//////////////////////////////////////////////////////
             config.addParam("extendingMeasure", "LDSD_dw");
@@ -103,8 +111,8 @@ public class ws353Test {
             duration = (endTime - startTime) / 1000000000 ;
             System.out.println("EPICS with LDSD_dw finished in " + duration + " second(s) ");
             System.out.println(); 
-            
-            values.add("EPICS_LDSD_dw: " + epicsVal + " duration: " + duration + " | ");            
+             
+            row = row + epicsVal +  " | " + duration + " | ";
             
             ////////////////////////////////EPICS_LDSD_i//////////////////////////////////////////////////////
             config.addParam("extendingMeasure", "LDSD_i");
@@ -121,7 +129,7 @@ public class ws353Test {
             System.out.println("EPICS with LDSD_i finished in " + duration + " second(s) ");
             System.out.println();
             
-            values.add("EPICS_LDSD_i: " + epicsVal + " duration: " + duration + " | ");
+            row = row + epicsVal +  " | " + duration + " | ";
             
             ///////////////////////////////EPICS_LDSD_iw////////////////////////////////////////////////////////
             config.addParam("extendingMeasure", "LDSD_iw");
@@ -138,7 +146,8 @@ public class ws353Test {
             System.out.println("EPICS with LDSD_iw finished in " + duration + " second(s) ");
             System.out.println(); 
            
-            values.add("EPICS_LDSD_iw: " + epicsVal + " duration: " + duration + " | ");
+//            values.add("EPICS_LDSD_iw: " + epicsVal + " duration: " + duration + " | ");
+            row = row + epicsVal +  " | " + duration + " | ";
             
             ///////////////////////////////EPICS_LDSD_cw///////////////////////////////////////////////////////
             config.addParam("extendingMeasure", "LDSD_cw");
@@ -155,7 +164,7 @@ public class ws353Test {
             System.out.println("EPICS with LDSD_cw finished in " + duration + " second(s) ");
             System.out.println(); 
             
-            values.add("EPICS_LDSD_cw: " + epicsVal + " duration: " + duration + " | ");
+            row = row + epicsVal +  " | " + duration + " | ";
             
             ///////////////////////////////PICSS////////////////////////////////////////////////////////
             startTime = System.nanoTime();
@@ -168,37 +177,16 @@ public class ws353Test {
             System.out.println("PICSS finished in " + duration + " second(s) ");
             System.out.println(); 
             
-            values.add("PICSS: " + picssVal + " duration: " + duration); 
-                  
-            finalResults.put(pair, values);
+            row = row + picssVal +  " | " + duration;
+            
+            //Write Results to the final file///////////////////////////////////////////////////////////
+            results_writer.write(row);
+            results_writer.write(System.getProperty("line.separator"));                   
         
         }
-        
-        picss.closeIndexes();
-        
-        
-        //Write Results to the final file///////////////////////////////////////////////////////////
-        if(! lds.benchmark.Utility.checkPath(outputFilePath) )
-            return;
-        
-        FileWriter results_writer = new FileWriter(outputFilePath , true);
-        
-        for(Map.Entry<LdResourcePair, List<String>> entry : finalResults.entrySet()){
-            results_writer.write(entry.getKey().toString('|'));
-            
-            for(String value: entry.getValue()){
-                results_writer.write(value);
-            }
-            
-            results_writer.write(System.getProperty("line.separator"));
-        }
-        
         
         results_writer.close();
-          
-        
-    
-        
+        picss.closeIndexes();
     }
     
     

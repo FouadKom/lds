@@ -3,14 +3,13 @@ package lds.engine;
 import test.utility.Util;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static lds.engine.Engine_Multithread_Test_HdtFiles_PICSS.resourcesFilePath1;
 import lds.measures.Measure;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import lds.resource.LdResourcePair;
 import static org.junit.Assert.*;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
@@ -18,7 +17,6 @@ import slib.utils.ex.SLIB_Ex_Critic;
 import slib.utils.i.Conf;
 
 public class Engine_Multithread_Test_DBpedia {
-	public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
 
 //	@Test
 //	public void runEngineOnSpecificLdMeasureTest() {        
@@ -29,73 +27,154 @@ public class Engine_Multithread_Test_DBpedia {
             
             LdDataset dataSetMain = Util.getDBpediaDataset();
             
-            Conf config = new Conf();
-            config.addParam("useIndexes", true);
-            config.addParam("LdDatasetMain" , dataSetMain);
-            config.addParam("resourcesCount" , 2350906);
-            
-            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(100));
+            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(20));
 
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();
             List<R> listOfResources2 = sp.getSecondList();
-            List<LdResourcePair> pairs = new ArrayList<>();
             
-//            List<R> listOfResources1 = new ArrayList<>();
-//            List<R> listOfResources2 = new ArrayList<>();
-//            List<ResourcePair> pairs = new ArrayList<>();
-//            
-//            
-//            listOfResources1.add(LdResourceFactory.getInstance().uri("http://dbpedia.org/resource/Frank_Whittle").create());
-//            listOfResources1.add(LdResourceFactory.getInstance().uri("http://dbpedia.org/resource/Franz_Joseph_I_of_Austria").create());
-//            listOfResources1.add(LdResourceFactory.getInstance().uri("http://dbpedia.org/resource/Frans_Hals").create());
-//            
-//            listOfResources2.add(LdResourceFactory.getInstance().uri("http://dbpedia.org/resource/Franz_Mertens").create());
-//            listOfResources2.add(LdResourceFactory.getInstance().uri("http://dbpedia.org/resource/Franz_Xaver_von_Baader").create());
-//            listOfResources2.add(LdResourceFactory.getInstance().uri("http://dbpedia.org/resource/Franz_Schubert").create());
-            
-            
-            
-            for(int i = 0 ; i < listOfResources1.size() ; i++){
-                LdResourcePair pair = new LdResourcePair(listOfResources1.get(i) , listOfResources2.get(i));
-                pairs.add(pair);
-            }
-            
+            Conf config = new Conf();
+            config.addParam("useIndexes", true);
+            config.addParam("LdDatasetMain" , dataSetMain);
             LdSimilarityEngine engine = new LdSimilarityEngine();
             
-            engine.load(Measure.PICSS, config);            
-            
-            startTime = System.nanoTime();
-            
-            Map<String , Double> results; 
-//            results = engine.similarity(pairs);
-//            engine.similarity2(pairs);
-//            for( Map.Entry<String,Double> entry : results.entrySet()){
-//            System.out.println( entry.getKey() + ":" + entry.getValue());
-//            }
-
-            //end timing
-            endTime = System.nanoTime();
-            duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("Comparing " + pairs.size() + " pairs from Dbpedia using multithreading finished in " + duration + " second(s) ");
-            System.out.println();
+            ///////////////////////LDSD_cw////////////////////////////////////////////////////////////////////////
+            double sum = 0;
+            engine.load(Measure.LDSD_cw, config);
             
             startTime = System.nanoTime();
             
             for(int i = 0 ; i < listOfResources1.size() ; i++){
-//                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
-                System.out.println(engine.similarity(listOfResources1.get(i) , listOfResources2.get(i)));
+               sum = sum + engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
             }
             
             //end timing
             endTime = System.nanoTime();
             duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("Comparing " + listOfResources1.size() + " pairs from Dbpedia without multithreading finished in " + duration + " second(s) ");
+            System.out.println("Comparing " + listOfResources1.size() + " pairs using LDSD_dw without indexes finished in " + duration + " second(s) ");
+            System.out.println("Sum comparing = " + sum);
             System.out.println();
             
             
             engine.close();
             
+            config.addParam("useIndexes", true);
+            
+            engine.load(Measure.LDSD_cw, config);
+            
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+                System.out.println(listOfResources1.get(i).getUri().stringValue() + " , " + listOfResources2.get(i).getUri().stringValue() + ": ");
+            }
+            
+            engine.close();
+            
+            engine.load(Measure.LDSD_cw, config);
+            
+            startTime = System.nanoTime();
+            sum = 0;
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                sum = sum + engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            }
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("Comparing " + listOfResources1.size() + " pairs using LDSD_dw with indexes finished in " + duration + " second(s) ");
+            System.out.println("Sum comparing = " + sum);
+            System.out.println();
+            
+            engine.close();
+            
+            ///////////////////////Resim////////////////////////////////////////////////////////////////////////   
+ /*           config.addParam("useIndexes", false);
+            engine.load(Measure.Resim, config);
+            
+            startTime = System.nanoTime();
+            
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            }
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("Comparing " + listOfResources1.size() + " pairs using Resim without indexing finished in " + duration + " second(s) ");
+            System.out.println();
+            
+            
+            engine.close();
+            
+            config.addParam("useIndexes", true);
+            engine.load(Measure.Resim, config);
+            
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            }
+            
+            engine.close();
+            
+            engine.load(Measure.Resim, config);
+            
+            startTime = System.nanoTime();
+            
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            }
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("Comparing " + listOfResources1.size() + " pairs using Resim with indexing finished in " + duration + " second(s) ");
+            System.out.println();
+            
+            engine.close();
+            ///////////////////////PICSS///////////////////////////////////////////////////////////////////////
+            config.addParam("resourcesCount" , 2350906);
+            config.addParam("useIndexes", false);
+            engine.load(Measure.PICSS, config);
+            
+            startTime = System.nanoTime();
+            
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            }
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("Comparing " + listOfResources1.size() + " pairs using PICSS without indexing finished in " + duration + " second(s) ");
+            System.out.println();
+            
+            
+            engine.close();
+            
+            config.addParam("useIndexes", true);
+            engine.load(Measure.PICSS, config);
+                        
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            }            
+            
+            engine.close();
+            
+            engine.load(Measure.PICSS, config);
+            
+            startTime = System.nanoTime();
+            
+            for(int i = 0 ; i < listOfResources1.size() ; i++){
+                engine.similarity(listOfResources1.get(i) , listOfResources2.get(i));
+            }
+            
+            //end timing
+            endTime = System.nanoTime();
+            duration = (endTime - startTime) / 1000000000 ;
+            System.out.println("Comparing " + listOfResources1.size() + " pairs using PICSS with indexing finished in " + duration + " second(s) ");
+            System.out.println();
+            
+            
+ */           engine.close();
+           
 
 	}
         

@@ -64,8 +64,8 @@ public class SimI_Test {
         System.out.println(simi.compare(r1, r2)); 
 
         simi.closeIndexes();
-          
     }
+
 
     
     

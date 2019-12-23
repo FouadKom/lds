@@ -19,8 +19,8 @@ import sc.research.ldq.LdDataset;
  *
  * @author Fouad Komeiha
  */
-//public class LdsdLdManager extends DistanceMeasuresLdManager {
-public class LdsdLdManager extends LdManagerBase{
+public class LdsdLdManager extends DistanceMeasuresLdManager {
+//public class LdsdLdManager extends LdManagerBase{
     
     //added from DistanceMeasuresLdManager - to be deleted
     private boolean useIndex;
@@ -36,18 +36,18 @@ public class LdsdLdManager extends LdManagerBase{
     protected LdIndexer countResourcesIndex;
     //-----------------------------------------------------
     
-//    public LdsdLdManager(LdDataset dataset, Boolean useIndexes) {
-//        super(dataset , useIndexes);
-//    }
-    
-    //added from DistanceMeasuresLdManager - to be deleted
     public LdsdLdManager(LdDataset dataset, Boolean useIndexes) {
-        super(dataset);
-        this.useIndex = useIndex;
+        super(dataset , useIndexes);
     }
     
+//    //added from DistanceMeasuresLdManager - to be deleted
+//    public LdsdLdManager(LdDataset dataset, Boolean useIndexes) {
+//        super(dataset);
+//        this.useIndex = useIndex;
+//    }
+//    
     //all methods are added from DistanceMeasuresLdManager - to be deleted
-    public void loadIndexes() throws Exception {
+/*    public void loadIndexes() throws Exception {
                 
         // TODO: specify an index directory
         String ingoingEdgesIndexFile = System.getProperty("user.dir") + "/Indexes/LDSD/ingoingEdges_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
@@ -241,5 +241,6 @@ public class LdsdLdManager extends LdManagerBase{
          return super.countResource();
     }
     //-----------------------------------------------------
+*/
     
 }
