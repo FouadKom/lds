@@ -1,9 +1,15 @@
 # lds
 **LDS** is a JAVA Library for the calculaton of **LOD** based semantic similarity. **LDS** implements similarity measures such as:
 
-* *LDSD:* Linked Data Semantic Distance
+* *LDSD:* Linked Data Semantic Distance, and its extensions:
+   * *TLDSD:* Typless Linked Data Semantic Distance
+   * *WLDSD:* Weighted Linked Data Semantic Distance
+   * *WTLDSD:* Weighted Typless Linked Data Semantic Distance
 
-* *Resim:* Resource Similarity
+* *Resim:* Resource Similarity, and its extensions:
+  * *TResim:* Typless Resource Similarity
+  * *WResim:* Weighted Resource Similarity
+  * *WTResim:* Weighted Typless Resource Similarity
 
 * *LODS:* Linked Open Data Similarity (simI submeasure only)
 
