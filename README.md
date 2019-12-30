@@ -15,8 +15,6 @@
 
 * *PICSS:* Partitioned Information Content Semantic Similarity
 
-In addition **LDS** implements several extensions for *LDSD* and *Resim*.
-
 ## Getting Started
 
 ### Prerequisites
