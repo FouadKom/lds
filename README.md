@@ -19,7 +19,7 @@ In addition **LDS** implements several extensions for *LDSD* and *Resim*.
 ### Installing
 
 ```
-git clone 
+git clone https://github.com/FouadKom/lds.git
 cd lds 
 mvn clean install -DskipTests
 ```
