@@ -18,7 +18,7 @@
 ## Getting Started
 
 ### Prerequisites
-[Apache Maven](https://maven.apache.org/) is needed for the instalation and build of the library.
+[Apache Maven](https://maven.apache.org/) is needed for the installation and build of the library.
 
 ### Installing
 
