@@ -5,24 +5,12 @@
  */
 package lds.measures.epics;
 
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileWriter;
-import java.io.IOException;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import lds.benchmark.LdBenchmark;
-import static lds.benchmark.LdBenchmark.*;
-import static lds.engine.Engine_Multithread_Test_HdtFiles_Resim.resourcesFilePath1;
 import lds.measures.picss.PICSS;
 import lds.resource.LdResourcePair;
 import lds.resource.LdResourceTriple;
-import lds.resource.LdResult;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
@@ -33,13 +21,13 @@ import test.utility.Util;
  *
  * @author Fouad Komeiha
  */
-public class ws353Test {
+public class rg65Test {
     
-    static String datsetpath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/wordsim-353.txt";
+static String datsetpath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65.txt";
     
     @Test
-    public void ws353Test() throws Exception{  
-        String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/ws353simrel/wordsim_DBpedia.csv"; 
+    public void rg65Test() throws Exception{  
+        String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/ws353simrel/rg_DBpedia.csv"; 
         if(! lds.benchmark.Utility.checkPath(outputFilePath) )
             return;
         
@@ -67,7 +55,7 @@ public class ws353Test {
         results_writer.write("Pair | Benchmark | EPICS_LDSD_d | Duration | EPICS_LDSD_dw | Duration | EPICS_LDSD_i | Duration | EPICS_LDSD_iw | Duration | EPICS_LDSD_cw | Duration | PICSS | Duration");
         results_writer.write(System.getProperty("line.separator"));  
         
-        List<LdResourceTriple> triples= LdBenchmark.readRowsFromBenchmarks(datsetpath , 0.0 , 10.0);
+        List<LdResourceTriple> triples= LdBenchmark.readRowsFromBenchmarks(datsetpath , 0.0 , 4.0);
         
         for(LdResourceTriple triple: triples ){
             String row = new String();
@@ -191,3 +179,4 @@ public class ws353Test {
     
     
 }
+

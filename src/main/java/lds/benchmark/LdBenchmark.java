@@ -39,7 +39,7 @@ public class LdBenchmark {
 
     }
     
-    public static List<LdResourceTriple> readRowsFromWS353set(String datasetPath) throws FileNotFoundException{
+    public static List<LdResourceTriple> readRowsFromBenchmarks(String datasetPath ,  double minBenchValue , double maxBenchValue) throws FileNotFoundException{
 //        String datsetpath = System.getProperty("user.dir") + "/src/test/resources/ws353simre/wordsim_similarity_goldstandard.txt";
 //        String benchMarkPath = System.getProperty("user.dir") + "/src/test/resources/wordsim_similarity_benchmark.csv";
         String baseURI = "http://dbpedia.org/resource/";
@@ -53,9 +53,10 @@ public class LdBenchmark {
   
         while (sc.hasNextLine()){
              String line[] = sc.nextLine().split("\\s+");
-             R r1 = new R(baseURI + line[0]);
-             R r2 = new R(baseURI + line[1]);
-             double simValue = Utility.normalizeValue(Double.parseDouble(line[2]) , 0.0 , 10.0);
+          
+             R r1 = new R(baseURI + line[0].substring(0, 1).toUpperCase() + line[0].substring(1));
+             R r2 = new R(baseURI + line[1].substring(0, 1).toUpperCase() + line[1].substring(1));
+             double simValue =  Utility.normalizeValue(Double.parseDouble(line[2]) , minBenchValue , maxBenchValue);
              
              LdResourceTriple triple = new LdResourceTriple(r1 , r2 ,  simValue);
              

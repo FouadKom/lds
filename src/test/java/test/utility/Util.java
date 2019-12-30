@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import static lds.engine.Engine_Multithread_Test_HdtFiles.dataSetDir;
 import static lds.engine.Engine_Multithread_Test_LocalRDF.dataSetDir;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
@@ -72,6 +73,23 @@ public class Util {
             }
 
             return dataset;
+    }
+    
+    public static LdDataset getDBpediaHDTDataset(String dataSetDir) {
+		
+            LdDataset dataSet = null;
+        
+            try {
+                    dataSet = LdDatasetFactory.getInstance()
+                                              .name("hdtDBpedia")
+                                              .file(dataSetDir)
+                                              .create();
+
+            } catch (Exception e) {
+                    fail(e.getMessage());
+            }
+
+            return dataSet;
     }
         
     public static List<R> getDbpediaResources(int limit) {
@@ -144,6 +162,42 @@ public class Util {
 
             return resources;
 
+    }
+    
+    public static List<R> getHDTResources(int limit , String datasetDir) {
+        List<R> resources = new ArrayList<>();
+        Resource resource;
+        LdDataset dataset = getDBpediaHDTDataset(datasetDir);
+        
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+        
+        int offset  = (int)(Math.random() * 5000 + 2077) ;
+        
+        try{
+            query_cmd.setCommandText("select ?resource where {\n" +
+                                     "?resource a ?o .\n" +
+                                     "filter(regex(?resource , \"http://dbpedia.org/resource/\", \"i\"))\n" +
+                                     "\n" +
+                                     "} limit " +  Integer.toString(limit) + "\n" +
+                                     "OFFSET " + Integer.toString(offset) );
+
+            ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+            while (resultSet.hasNext()) {
+                    QuerySolution qs = resultSet.nextSolution();
+                    resource = (Resource) qs.getResource("resource");
+                    resources.add(LdResourceFactory.getInstance().uri(resource.toString()).create());
+            }
+
+            }catch (Exception ex) {
+
+                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+            dataset.close();
+
+            return resources;
+        
     }
     
     public static List<R> getLocalResources(int limit , String datsetPath) {
