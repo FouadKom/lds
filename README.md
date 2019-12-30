@@ -24,7 +24,7 @@ cd lds
 mvn clean install -DskipTests
 ```
 ## Running the tests
-Tests were created for each implemented similarity measure and necessary data were queried from DBpedia.
+Tests were created for each implemented similarity measure.
 
 ### LDSD measure test
 
