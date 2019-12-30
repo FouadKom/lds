@@ -55,6 +55,7 @@ mvn test -Dtest=lds.measures.ldsd.PICSSTest
 ## Built With
 * [Java](https://www.java.com/download/)
 * [Apache Maven](https://maven.apache.org/)
+* [Semantic Measure Library (SML)](https://github.com/sharispe/slib/tree/dev/slib-sml)
 * [Apache Jena](https://jena.apache.org/)
 
 ## Licence
