@@ -24,7 +24,6 @@ public class PICSSTest_DBpedia_Mirror {
 
     @Test
     public void isPICSSWorksCorrectlyOnPaperExample() throws Exception{
-//    public static void main(String args[]) throws Exception{
 
         LdDataset dataset = Util.getDBpediaMirrorDataset();
 

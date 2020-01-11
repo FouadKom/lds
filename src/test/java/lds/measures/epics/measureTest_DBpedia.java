@@ -29,31 +29,33 @@ public class measureTest_DBpedia {
         String datasetDir2 = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
         
         LdDataset dataset = Util.getDBpediaDataset();
-        
+       
         LdDataset datasetSpecific  = LdDatasetFactory.getInstance()
                                                      .name("specificSet")
                                                      .file(datasetDir2)
                                                      .defaultGraph("http://specificSet/dataset")
                                                      .create();
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Four_Weddings_and_a_Funeral").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Beauty_and_the_Beast").create();
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Tiger").create();
+        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Cat").create();
                 
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906); 
+        config.addParam("resourcesCount" , 2350906);
+        config.addParam("extendingMeasure" , "LDSD_d");
         
-        PICSS picss = new PICSS(config);
+//        PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);
         
-        picss.loadIndexes();
+        
+//        picss.loadIndexes();
         epics.loadIndexes();
         
-        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
+//        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
         System.out.println("EPICS(r1 , r2) = " + epics.compare(r1, r2));
         
-        picss.closeIndexes();
+//        picss.closeIndexes();
         epics.closeIndexes();
         
     }

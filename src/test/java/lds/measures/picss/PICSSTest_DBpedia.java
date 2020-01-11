@@ -16,7 +16,7 @@ import test.utility.Util;
  *
  * @author Fouad Komeiha
  */
-public class PICSSTest_paperEvaluation_Test {
+public class PICSSTest_DBpedia {
     
     
     @Test
