@@ -22,9 +22,9 @@ import test.utility.Util;
  */
 public class measureTest_DBpedia {
     
-    @Test
-    public void runEngineOnSpecificLdMeasureTest() throws Exception{  
-//    public static void main(String args[]) throws Exception{
+//    @Test
+//    public void runEngineOnSpecificLdMeasureTest() throws Exception{  
+    public static void main(String args[]) throws Exception{
         
         String datasetDir2 = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
         
@@ -36,8 +36,8 @@ public class measureTest_DBpedia {
                                                      .defaultGraph("http://specificSet/dataset")
                                                      .create();
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Tiger").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Cat").create();
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Airplane").create();
+        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
                 
         Conf config = new Conf();
         config.addParam("useIndexes", false);
@@ -45,18 +45,18 @@ public class measureTest_DBpedia {
         config.addParam("resourcesCount" , 2350906);
         config.addParam("extendingMeasure" , "LDSD_d");
         
-//        PICSS picss = new PICSS(config);
+        PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);
         
         
-//        picss.loadIndexes();
-        epics.loadIndexes();
+        picss.loadIndexes();
+//        epics.loadIndexes();
         
 //        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
         System.out.println("EPICS(r1 , r2) = " + epics.compare(r1, r2));
         
-//        picss.closeIndexes();
-        epics.closeIndexes();
+        picss.closeIndexes();
+//        epics.closeIndexes();
         
     }
     
