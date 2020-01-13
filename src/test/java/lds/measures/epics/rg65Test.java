@@ -38,17 +38,17 @@ static String datsetpath = System.getProperty("user.dir") + "/src/test/resources
         double startTime , endTime , duration;
         
         Conf config = new Conf();
-        config.addParam("useIndexes", false);
+        config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataset);
         config.addParam("resourcesCount" , 2350906); 
         
         
         PICSS picss = new PICSS(config);
+        EPICS epics = new EPICS(config); 
         
         picss.loadIndexes();
+        epics.loadIndexes();
         
-               
-        EPICS epics = null;
         String epicsVal = null;
         
         FileWriter results_writer = new FileWriter(outputFilePath , true);
@@ -71,7 +71,7 @@ static String datsetpath = System.getProperty("user.dir") + "/src/test/resources
             
             String benchMark = Double.toString(triple.getSimilarityResult());
             
-            row = row + pair.toString() + " | " + benchMark + " | ";
+            row = row + pair.toString(' ') + " | " + benchMark + " | ";
             
             
             /////////////////////////////////EPICS_LDSD_d/////////////////////////////////////////////////////
@@ -235,6 +235,7 @@ static String datsetpath = System.getProperty("user.dir") + "/src/test/resources
         }
         
         picss.closeIndexes();
+        epics.closeIndexes();
     
     }
     

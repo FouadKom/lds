@@ -44,10 +44,11 @@ public class mc30Test {
         
         
         PICSS picss = new PICSS(config);
+        EPICS epics = new EPICS(config); 
         
         picss.loadIndexes();
-               
-        EPICS epics = null;
+        epics.loadIndexes();
+
         String epicsVal = null;
         
         FileWriter results_writer = new FileWriter(outputFilePath , true);
@@ -70,7 +71,7 @@ public class mc30Test {
             
             String benchMark = Double.toString(triple.getSimilarityResult());
             
-            row = row + pair.toString() + " | " + benchMark + " | ";
+            row = row + pair.toString(' ') + " | " + benchMark + " | ";
             
             
             /////////////////////////////////EPICS_LDSD_d/////////////////////////////////////////////////////
@@ -234,6 +235,7 @@ public class mc30Test {
         }
         
         picss.closeIndexes();
+        epics.closeIndexes();
     
     }
     

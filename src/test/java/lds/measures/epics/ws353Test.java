@@ -50,16 +50,18 @@ public class ws353Test {
         double startTime , endTime , duration;
         
         Conf config = new Conf();
-        config.addParam("useIndexes", false);
+        config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataset);
         config.addParam("resourcesCount" , 2350906); 
         
         
         PICSS picss = new PICSS(config);
+        EPICS epics = new EPICS(config); 
         
         picss.loadIndexes();
+        epics.loadIndexes();
                
-        EPICS epics = null;
+//        EPICS epics = null;
         String epicsVal = null;
         
         FileWriter results_writer = new FileWriter(outputFilePath , true);
@@ -71,8 +73,7 @@ public class ws353Test {
         
         List<LdResourceTriple> triples= LdBenchmark.readRowsFromBenchmarks(datsetpath , 0.0 , 10.0);
         
-        for(LdResourceTriple triple: triples ){
-            
+        for(LdResourceTriple triple: triples ){            
                 
             String row = new String();
             
@@ -82,7 +83,7 @@ public class ws353Test {
             
             String benchMark = Double.toString(triple.getSimilarityResult());
             
-            row = row + pair.toString() + " | " + benchMark + " | ";
+            row = row + pair.toString(' ') + " | " + benchMark + " | ";
             
             
             /////////////////////////////////EPICS_LDSD_d/////////////////////////////////////////////////////
@@ -246,6 +247,7 @@ public class ws353Test {
         }
         
         picss.closeIndexes();
+        epics.closeIndexes();
     
     }    
     
