@@ -10,7 +10,8 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexManager;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -22,17 +23,17 @@ import sc.research.ldq.LdDataset;
 public class DistanceMeasuresLdManager extends LdManagerBase{
     private boolean useIndex;
     
-    protected LdIndexer ingoingEdgesIndex;
-    protected LdIndexer outgoingEdgesIndex;
-    protected LdIndexer objectsIndex;
-    protected LdIndexer countShareCommonObjectsIndex;
-    protected LdIndexer countShareCommonSubjectsIndex;
-    protected LdIndexer countShareTyplessCommonObjectsIndex;
-    protected LdIndexer countShareTyplessCommonSubjectsIndex;
-    protected LdIndexer directlyConnectedIndex;
-    protected LdIndexer countResourcesIndex;
+    protected LdIndex ingoingEdgesIndex;
+    protected LdIndex outgoingEdgesIndex;
+    protected LdIndex objectsIndex;
+    protected LdIndex countShareCommonObjectsIndex;
+    protected LdIndex countShareCommonSubjectsIndex;
+    protected LdIndex countShareTyplessCommonObjectsIndex;
+    protected LdIndex countShareTyplessCommonSubjectsIndex;
+    protected LdIndex directlyConnectedIndex;
+    protected LdIndex countResourcesIndex;
     
-
+    protected LdIndexManager manager;
     
     
     public DistanceMeasuresLdManager(LdDataset dataset , boolean useIndex) {
@@ -42,7 +43,8 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     }
     
     public void loadIndexes() throws Exception {
-                
+        manager = LdIndexManager.getManager();
+        
         // TODO: specify an index directory
         String ingoingEdgesIndexFile = System.getProperty("user.dir") + "/Indexes/Distance_Measures/ingoingEdges_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String outgoingEdgesIndexFile = System.getProperty("user.dir") + "/Indexes/Distance_Measures/outgoingEdges_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
@@ -54,15 +56,15 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         String directlyConnectedIndexFile = System.getProperty("user.dir") + "/Indexes/Distance_Measures/directlyConnected_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String countResourcesIndexFile = System.getProperty("user.dir") + "/Indexes/All_Measures/countResources_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
 
-        ingoingEdgesIndex = new LdIndexer(ingoingEdgesIndexFile);
-        outgoingEdgesIndex = new LdIndexer(outgoingEdgesIndexFile);
-        objectsIndex = new LdIndexer(objectsIndexFile);
-        countShareCommonObjectsIndex = new LdIndexer(countShareCommonObjectsIndexFile);
-        countShareCommonSubjectsIndex = new LdIndexer(countShareCommonSubjectsIndexFile);
-        countShareTyplessCommonObjectsIndex = new LdIndexer(countShareTyplessCommonObjectsIndexFile);
-        countShareTyplessCommonSubjectsIndex = new LdIndexer(countShareTyplessCommonSubjectsIndexFile);
-        directlyConnectedIndex = new LdIndexer(directlyConnectedIndexFile);
-        countResourcesIndex = new LdIndexer(countResourcesIndexFile);
+        ingoingEdgesIndex = manager.loadIndex(ingoingEdgesIndexFile);
+        outgoingEdgesIndex = manager.loadIndex(outgoingEdgesIndexFile);
+        objectsIndex = manager.loadIndex(objectsIndexFile);
+        countShareCommonObjectsIndex = manager.loadIndex(countShareCommonObjectsIndexFile);
+        countShareCommonSubjectsIndex = manager.loadIndex(countShareCommonSubjectsIndexFile);
+        countShareTyplessCommonObjectsIndex = manager.loadIndex(countShareTyplessCommonObjectsIndexFile);
+        countShareTyplessCommonSubjectsIndex = manager.loadIndex(countShareTyplessCommonSubjectsIndexFile);
+        directlyConnectedIndex = manager.loadIndex(directlyConnectedIndexFile);
+        countResourcesIndex = manager.loadIndex(countResourcesIndexFile);
 
     }
 
@@ -70,15 +72,15 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public void closeIndexes(){
         if (useIndex) {
 
-            ingoingEdgesIndex.close();
-            outgoingEdgesIndex.close();
-            objectsIndex.close();
-            countShareCommonObjectsIndex.close();
-            countShareCommonSubjectsIndex.close();
-            directlyConnectedIndex.close();
-            countShareTyplessCommonObjectsIndex.close();
-            countShareTyplessCommonSubjectsIndex.close();
-            countResourcesIndex.close();
+            manager.closeIndex(ingoingEdgesIndex);
+            manager.closeIndex(outgoingEdgesIndex);
+            manager.closeIndex(objectsIndex);
+            manager.closeIndex(countShareCommonObjectsIndex);
+            manager.closeIndex(countShareCommonSubjectsIndex);
+            manager.closeIndex(directlyConnectedIndex);
+            manager.closeIndex(countShareTyplessCommonObjectsIndex);
+            manager.closeIndex(countShareTyplessCommonSubjectsIndex);
+            manager.closeIndex(countResourcesIndex);
 
         }
 
@@ -115,7 +117,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public synchronized List<String> getIngoingEdges(R a) {
 
         if (useIndex) {
-           return LdIndexer.getListFromIndex(dataset , ingoingEdgesIndex , a.getUri().stringValue(), baseClassPath + "getIngoingEdges" ,  a);
+           return ingoingEdgesIndex.getListFromIndex(dataset , a.getUri().stringValue(), baseClassPath + "getIngoingEdges" ,  a);
         }
         
         return super.getIngoingEdges(a);
@@ -126,7 +128,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public synchronized List<String> getOutgoingEdges(R a){
 
         if(useIndex){
-            return LdIndexer.getListFromIndex(dataset , outgoingEdgesIndex , a.getUri().stringValue(), baseClassPath + "getOutgoingEdges" , a);
+            return outgoingEdgesIndex.getListFromIndex(dataset , a.getUri().stringValue(), baseClassPath + "getOutgoingEdges" , a);
         }
         
         return super.getOutgoingEdges(a);
@@ -136,7 +138,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public int countObject(URI link , R a) {
 
         if (useIndex) {
-             return LdIndexer.getIntegerFromIndex(dataset , objectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() , baseClassPath + "countObject" , link , a);
+             return objectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue() , baseClassPath + "countObject" , link , a);
 
        }
         
@@ -147,7 +149,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public boolean isDirectlyConnected(URI link, R a, R b) {
 
          if (useIndex) {
-              return LdIndexer.getBooleanFromIndex(dataset , directlyConnectedIndex, a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), baseClassPath + "isDirectlyConnected" , link , a , b);
+              return directlyConnectedIndex.getBooleanFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), baseClassPath + "isDirectlyConnected" , link , a , b);
          }
          
          return super.isDirectlyConnected(link, a, b);
@@ -159,7 +161,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public int countShareCommonObjects(URI link, R a ) {
 
         if (useIndex) {
-            return LdIndexer.getIntegerFromIndex(dataset , countShareCommonObjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countShareCommonObjects" , link , a);
+            return countShareCommonObjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countShareCommonObjects" , link , a);
 
         }
         
@@ -171,7 +173,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public int countShareCommonObjects(URI link , R a, R b){
 
         if (useIndex) {
-            return LdIndexer.getIntegerFromIndex(dataset , countShareCommonObjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), baseClassPath + "countShareCommonObjects" , link , a , b);
+            return countShareCommonObjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue(), baseClassPath + "countShareCommonObjects" , link , a , b);
 
         }
         
@@ -183,7 +185,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public int countShareCommonSubjects(URI link, R a ) {
 
         if (useIndex) {
-             return LdIndexer.getIntegerFromIndex(dataset , countShareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countShareCommonSubjects" , link , a);
+             return countShareCommonSubjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countShareCommonSubjects" , link , a);
 
         }
         
@@ -195,7 +197,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     public int countShareCommonSubjects(URI link , R a, R b){
 
         if (useIndex) {
-            return LdIndexer.getIntegerFromIndex(dataset , countShareCommonSubjectsIndex , a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue() , baseClassPath + "countShareCommonSubjects" , link , a , b);
+            return countShareCommonSubjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue() + ":" + b.getUri().stringValue() , baseClassPath + "countShareCommonSubjects" , link , a , b);
 
 
       }
@@ -208,7 +210,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     @Override
     public int countShareTyplessCommonObjects(URI li, URI lj, R a, R b){
         if (useIndex) {
-            return LdIndexer.getIntegerFromIndex(dataset , countShareTyplessCommonObjectsIndex , a.getUri().stringValue()+ ":" + li.stringValue()+ ":" + lj.stringValue() + ":" + b.getUri().stringValue() , baseClassPath + "countShareTyplessCommonObjects" , li , lj , a , b);
+            return countShareTyplessCommonObjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + li.stringValue()+ ":" + lj.stringValue() + ":" + b.getUri().stringValue() , baseClassPath + "countShareTyplessCommonObjects" , li , lj , a , b);
 
         }
         
@@ -219,7 +221,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     @Override
     public int countShareTyplessCommonSubjects(URI li, URI lj, R a, R b){
         if (useIndex) {
-           return LdIndexer.getIntegerFromIndex(dataset , countShareTyplessCommonSubjectsIndex , a.getUri().stringValue()+ ":" + li.stringValue()+ ":" + lj.stringValue() + ":" + b.getUri().stringValue() , baseClassPath + "countShareTyplessCommonSubjects" , li , lj , a , b);
+           return countShareTyplessCommonSubjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + li.stringValue()+ ":" + lj.stringValue() + ":" + b.getUri().stringValue() , baseClassPath + "countShareTyplessCommonSubjects" , li , lj , a , b);
         }
         
       return super.countShareTyplessCommonSubjects(li , lj , a , b);
@@ -229,7 +231,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     @Override /////////////////////////////////////////////////// to be checked for correctness
     public int countResource(){
          if (useIndex) {
-               return LdIndexer.getIntegerFromIndex(dataset , countResourcesIndex, "resources" , baseClassPath + "countResource" );
+               return countResourcesIndex.getIntegerFromIndex(dataset , "resources" , baseClassPath + "countResource" );
          }
          
          return super.countResource();

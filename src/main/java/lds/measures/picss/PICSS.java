@@ -82,8 +82,9 @@ public class PICSS implements LdSimilarityMeasure{
 
 	if ((x + y + z) == 0)
             return 0;
-        
-	return (x / (x + y + z));
+//	return (x / (x + y + z));
+        double sim = (x / (x + y + z)) < 0 ? 0 : (x / (x + y + z));
+        return sim;
     }
     
     

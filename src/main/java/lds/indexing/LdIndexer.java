@@ -16,7 +16,7 @@ import sc.research.ldq.LdDataset;
 public class LdIndexer {
     
       String indexFilePath = "";
-	DB db = null;
+      DB db = null;
 
 	public LdIndexer(String filePath) throws Exception {
             this.indexFilePath = filePath;
@@ -38,6 +38,7 @@ public class LdIndexer {
             }
             else
                throw new Exception("Invalid Index filepath specified");
+            
         }
  
         

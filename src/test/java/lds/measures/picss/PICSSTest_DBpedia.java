@@ -26,7 +26,7 @@ public class PICSSTest_DBpedia {
         LdDataset dataset = Util.getDBpediaDataset();
                 
         Conf config = new Conf();
-        config.addParam("useIndexes", false);
+        config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataset);
         config.addParam("resourcesCount" , 2350906);
         

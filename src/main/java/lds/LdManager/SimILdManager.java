@@ -8,6 +8,8 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexManager;
 import lds.indexing.LdIndexer;
 import lds.measures.lods.ontologies.O;
 import lds.measures.lods.ontologies.O_DBpedia;
@@ -25,30 +27,31 @@ import sc.research.ldq.LdDataset;
 public class SimILdManager extends LdManagerBase{
     private boolean useIndex;
     
-    private LdIndexer ontologiesIndex;
-    private LdIndexer augmentedOntologiesIndex;
+    private LdIndex ontologiesIndex;
+    private LdIndex augmentedOntologiesIndex;
+    
+    private LdIndexManager manager;
 
     public SimILdManager(LdDataset dataset , boolean useIndex) {
         super(dataset);
         this.useIndex = useIndex;
     }
     
-        public void loadIndexes() throws Exception{
+    public void loadIndexes() throws Exception{
+        manager = LdIndexManager.getManager();
         
         String ontologiesIndexFile = System.getProperty("user.dir") + "/Indexes/LODS/SimI/simI_ontologies_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String augmentedOntologiesIndexFile = System.getProperty("user.dir") + "/Indexes/LODS/SimI/simI_augmented_ontologies_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         
-        ontologiesIndex = new LdIndexer(ontologiesIndexFile);
-        augmentedOntologiesIndex = new LdIndexer(augmentedOntologiesIndexFile);
-
+        ontologiesIndex = manager.loadIndex(ontologiesIndexFile);
+        augmentedOntologiesIndex = manager.loadIndex(augmentedOntologiesIndexFile);
             
     }
     
     public void closeIndexes(){
         if (useIndex) {
-            
-            ontologiesIndex.close();
-            
+            manager.closeIndex(ontologiesIndex);
+            manager.closeIndex(augmentedOntologiesIndex);
         }
         
     }
@@ -57,7 +60,7 @@ public class SimILdManager extends LdManagerBase{
     public List<O> getOntologies(R a) {
         
         if (useIndex) {
-            List<String> listOntologyPrefixes = LdIndexer.getListFromIndex(dataset , ontologiesIndex , a.getUri().stringValue() , baseClassPath + "getOntologiesPrefixes" , a);
+            List<String> listOntologyPrefixes = ontologiesIndex.getListFromIndex(dataset, a.getUri().stringValue() , baseClassPath + "getOntologiesPrefixes" , a);
         
             return Utility.getListOntologyFromPrefixes(listOntologyPrefixes);
         }
@@ -72,7 +75,7 @@ public class SimILdManager extends LdManagerBase{
    public List<O> getAugmentdOntologies(R a) {
         
         if (useIndex) {
-            List<String> listOntologyPrefixes = LdIndexer.getListFromIndex(dataset , augmentedOntologiesIndex , a.getUri().stringValue() , baseClassPath + "getAugmentdOntologiesPrefixes" , a);
+            List<String> listOntologyPrefixes = augmentedOntologiesIndex.getListFromIndex(dataset, a.getUri().stringValue() , baseClassPath + "getAugmentdOntologiesPrefixes" , a);
         
             return Utility.getListOntologyFromPrefixes(listOntologyPrefixes);
         }

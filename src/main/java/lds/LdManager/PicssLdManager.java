@@ -8,6 +8,8 @@ package lds.LdManager;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexManager;
 import lds.indexing.LdIndexer;
 
 import lds.resource.R;
@@ -20,12 +22,15 @@ import sc.research.ldq.LdDataset;
 public class PicssLdManager extends HybridMeasuresLdManager{
     
     private boolean useIndex;
+        
+    private LdIndex ingoingFeaturesIndex;
+    private LdIndex outgoingFeaturesIndex;
+    private LdIndex countIngoingFeaturesIndex;
+    private LdIndex countOutgoingFeaturesIndex;
+    private LdIndex countResourcesIndex;
     
-    private LdIndexer ingoingFeaturesIndex;
-    private LdIndexer outgoingFeaturesIndex;
-    private LdIndexer countIngoingFeaturesIndex;
-    private LdIndexer countOutgoingFeaturesIndex;
-    private LdIndexer countResourcesIndex; 
+    private LdIndexManager manager;
+    
      
     public PicssLdManager(LdDataset dataset , boolean useIndex) throws Exception {                
             super(dataset);
@@ -33,6 +38,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     }
     
     public void loadIndexes() throws Exception{
+        manager = LdIndexManager.getManager();
         
         String ingoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_ingoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String outgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_outgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
@@ -40,21 +46,35 @@ public class PicssLdManager extends HybridMeasuresLdManager{
         String countIngoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_countIngoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
 //        String countResourcesIndexFile = System.getProperty("user.dir") + "/Indexes/All_Measures/countResources_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         
-        ingoingFeaturesIndex = new LdIndexer(ingoingFeaturesIndexFile);
-        outgoingFeaturesIndex = new LdIndexer(outgoingFeaturesIndexFile);
-        countIngoingFeaturesIndex = new LdIndexer(countOutgoingFeaturesIndexFile);
-        countOutgoingFeaturesIndex = new LdIndexer(countIngoingFeaturesIndexFile);
-//        countResourcesIndex = new LdIndexer(countResourcesIndexFile);
+        ingoingFeaturesIndex = manager.loadIndex(ingoingFeaturesIndexFile);
+        outgoingFeaturesIndex = manager.loadIndex(outgoingFeaturesIndexFile);
+        countIngoingFeaturesIndex = manager.loadIndex(countOutgoingFeaturesIndexFile);
+        countOutgoingFeaturesIndex = manager.loadIndex(countIngoingFeaturesIndexFile);
+        
+//        ingoingFeaturesIndex = new LdIndexer(ingoingFeaturesIndexFile);
+//        outgoingFeaturesIndex = new LdIndexer(outgoingFeaturesIndexFile);
+//        countIngoingFeaturesIndex = new LdIndexer(countOutgoingFeaturesIndexFile);
+//        countOutgoingFeaturesIndex = new LdIndexer(countIngoingFeaturesIndexFile);
+        
+//        ingoingFeaturesIndex.load(ingoingFeaturesIndexFile);
+//        outgoingFeaturesIndex.load(outgoingFeaturesIndexFile);
+//        countIngoingFeaturesIndex.load(countOutgoingFeaturesIndexFile);
+//        countOutgoingFeaturesIndex.load(countIngoingFeaturesIndexFile);
+////        countResourcesIndex = new LdIndexer(countResourcesIndexFile);
             
     }
     
     public void closeIndexes(){
         if (useIndex) {
             
-            ingoingFeaturesIndex.close();
-            outgoingFeaturesIndex.close();
-            countIngoingFeaturesIndex.close();
-            countOutgoingFeaturesIndex.close();
+            manager.closeIndex(ingoingFeaturesIndex);
+            manager.closeIndex(outgoingFeaturesIndex);
+            manager.closeIndex(countIngoingFeaturesIndex);
+            manager.closeIndex(countOutgoingFeaturesIndex);            
+//            ingoingFeaturesIndex.close();
+//            outgoingFeaturesIndex.close();
+//            countIngoingFeaturesIndex.close();
+//            countOutgoingFeaturesIndex.close();
             
         }
         
@@ -78,7 +98,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     @Override
     public List<String> getIngoingFeatures(R a){
         if (useIndex) {
-              return LdIndexer.getListFromIndex(dataset , ingoingFeaturesIndex , a.getUri().stringValue() , baseClassPath + "getIngoingFeatures" , a );
+              return ingoingFeaturesIndex.getListFromIndex(dataset , a.getUri().stringValue() , baseClassPath + "getIngoingFeatures" , a );
         }
 
         return super.getIngoingFeatures(a);
@@ -88,7 +108,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     @Override
     public List<String> getOutgoingFeatures(R a){
        if (useIndex) {
-             return LdIndexer.getListFromIndex(dataset , outgoingFeaturesIndex , a.getUri().stringValue() , baseClassPath + "getOutgoingFeatures" , a );
+             return outgoingFeaturesIndex.getListFromIndex(dataset , a.getUri().stringValue() , baseClassPath + "getOutgoingFeatures" , a );
        }
 
        return super.getOutgoingFeatures(a);
@@ -98,7 +118,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     @Override
     public int getIngoingFeatureFrequency(String property, String resource) {
         if (useIndex) {
-             return LdIndexer.getIntegerFromIndex(dataset , countIngoingFeaturesIndex , property + ":" + resource , baseClassPath + "getIngoingFeatureFrequency" , property , resource );
+             return countIngoingFeaturesIndex.getIntegerFromIndex(dataset , property + ":" + resource , baseClassPath + "getIngoingFeatureFrequency" , property , resource );
        }
 
        return super.getIngoingFeatureFrequency(property , resource);
@@ -108,7 +128,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     @Override
     public int getOutgoingFeatureFrequency(String property, String resource) {
         if (useIndex) {
-             return LdIndexer.getIntegerFromIndex(dataset , countOutgoingFeaturesIndex , property + ":" + resource , baseClassPath + "getOutgoingFeatureFrequency" , property , resource );
+             return countOutgoingFeaturesIndex.getIntegerFromIndex(dataset , property + ":" + resource , baseClassPath + "getOutgoingFeatureFrequency" , property , resource );
        }
 
        return super.getOutgoingFeatureFrequency(property , resource);
@@ -117,7 +137,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     @Override /////////////////////////////////////////////////// to be checked for correctness
     public int countResource(){
          if (useIndex) {
-               return LdIndexer.getIntegerFromIndex(dataset , countResourcesIndex, "resources" , baseClassPath + "countResource" );
+               return countResourcesIndex.getIntegerFromIndex(dataset , "resources" , baseClassPath + "countResource" );
          }
          
          return super.countResource();
