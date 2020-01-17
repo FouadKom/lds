@@ -28,11 +28,11 @@ public class measureTest_DBpedia {
       
         LdDataset dataset = Util.getDBpediaDataset();
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Airplane").create();
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
                 
         Conf config = new Conf();
-        config.addParam("useIndexes", true);
+        config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataset);
         config.addParam("resourcesCount" , 2350906);
         config.addParam("extendingMeasure" , "LDSD_d");
@@ -42,13 +42,13 @@ public class measureTest_DBpedia {
         
         
         picss.loadIndexes();
-        epics.loadIndexes();
+//        epics.loadIndexes();
         
-        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
+//        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
         System.out.println("EPICS(r1 , r2) = " + epics.compare(r1, r2));
         
         picss.closeIndexes();
-        epics.closeIndexes();
+//        epics.closeIndexes();
         
     }
     
