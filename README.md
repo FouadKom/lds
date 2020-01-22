@@ -1,19 +1,19 @@
 # lds
 **LDS** (Linked Data Similarity) is a JAVA Library for the calculaton of **LOD** based semantic similarity. **LDS** implements similarity measures such as:
 
-* *LDSD:* Linked Data Semantic Distance, and its extensions:
-   * *TLDSD:* Typeless Linked Data Semantic Distance
-   * *WLDSD:* Weighted Linked Data Semantic Distance
-   * *WTLDSD:* Weighted Typeless Linked Data Semantic Distance
+* *LDSD:* Linked Data Semantic Distance [1], and its extensions:
+   * *TLDSD:* Typeless Linked Data Semantic Distance [2]
+   * *WLDSD:* Weighted Linked Data Semantic Distance [2]
+   * *WTLDSD:* Weighted Typeless Linked Data Semantic Distance [2]
 
-* *Resim:* Resource Similarity, and its extensions:
-  * *TResim:* Typeless Resource Similarity
-  * *WResim:* Weighted Resource Similarity
-  * *WTResim:* Weighted Typeless Resource Similarity
+* *Resim:* Resource Similarity [3], and its extensions:
+  * *TResim:* Typeless Resource Similarity [2]
+  * *WResim:* Weighted Resource Similarity [2]
+  * *WTResim:* Weighted Typeless Resource Similarity [2]
 
-* *LODS:* Linked Open Data Similarity (simI submeasure only)
+* *LODS:* Linked Open Data Similarity (simI submeasure only) [4]
 
-* *PICSS:* Partitioned Information Content Semantic Similarity
+* *PICSS:* Partitioned Information Content Semantic Similarity [5]
 
 ## Getting Started
 
@@ -60,3 +60,12 @@ mvn test -Dtest=lds.measures.ldsd.PICSSTest
 * [Apache Jena](https://jena.apache.org/)
 
 ## Licence
+
+## References:
+[1] Passant, Alexandre. “Measuring Semantic Distance on Linking Data and Using it for Resources Recommendations.” AAAI Spring Symposium: Linked Data Meets Artificial Intelligence (2010).
+
+[2] Alfarhood, Sultan. “Exploiting Semantic Distance in Linked Open Data for Recommendation.” (2017).
+
+[3] Piao, Guangyuan and John G. Breslin. “Measuring semantic distance for linked open data-enabled recommender systems.” SAC '16 (2016).
+
+[4] Cheniki, Nasredine, Abdelkader Belkhir, Yacine Sam and Nizar Messai. “LODS: A Linked Open Data Based Similarity Measure.” 2016 IEEE 25th International Conference on Enabling Technologies: Infrastructure for Collaborative Enterprises (WETICE) (2016): 229-234.
