@@ -37,19 +37,19 @@ mvn test -Dtest=lds.measures.ldsd.LDSDTest
 ### Resim measure test
  
 ```
-mvn test -Dtest=lds.measures.ldsd.ResimTest
+mvn test -Dtest=lds.measures.resim.ResimTest
 ```
 
 ### LODS (simI submeasure) test
 
 ```
-mvn test -Dtest=lds.measures.ldsd.LODSTest
+mvn test -Dtest=lds.measures.LODS.SimI_Test
 ```
 
 ### PICSS measure test
 
 ```
-mvn test -Dtest=lds.measures.ldsd.PICSSTest
+mvn test -Dtest=lds.measures.picss.PICSSTest
 ```
 
 ## Built With
