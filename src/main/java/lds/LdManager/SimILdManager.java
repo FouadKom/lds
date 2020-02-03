@@ -24,7 +24,7 @@ import sc.research.ldq.LdDataset;
  *
  * @author Fouad Komeiha
  */
-public class SimILdManager extends LdManagerBase{
+public class SimILdManager extends FeaturesMeasuresLdManager{
     private boolean useIndex;
     
     private LdIndex ontologiesIndex;

@@ -25,19 +25,17 @@ import test.utility.Util;
  *
  * @author Fouad Komeiha
  */
-public class LDSD_EngineTest {
-    public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/sparql.rdf";
+public class LDSDTest {
+    public static final String datasetDir = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
     
     @Test
-    public void runEngineOnSpecificLdMeasureTest() throws Exception{
-    
-//    public static void main(String args[]) throws Exception{
+    public void LDSDTest() throws Exception{
         
         LdDataset dataSetMain = null;
         LdDataset dataSetSpecific = null;
         
         try {
-            dataSetSpecific = LdDatasetFactory.getInstance().name("LDSD_example").file(dataSetDir)
+            dataSetSpecific = LdDatasetFactory.getInstance().name("LDSD_example").file(datasetDir)
                                 .defaultGraph("http://graphLDSD/dataset").create();
 
         } catch (Exception e) {
@@ -48,21 +46,29 @@ public class LDSD_EngineTest {
         dataSetMain = Util.getDBpediaDataset();
                 
         Conf config = new Conf();
+        
+        //using indexes for calculation, change to false of no data indexing is wanted
         config.addParam("useIndexes", true);
+        
+        //specifying the main dataset that will be used for querying, in our case DBpedia
         config.addParam("LdDatasetMain" , dataSetMain);
+        
+        //specifiying the specific dataset that is used to calculate weights for links
         config.addParam("LdDatasetSpecific" , dataSetSpecific);
+        
+        //providing thw weighting method that will calculate weights for links 
         config.addParam("WeightMethod", WeightMethod.ITW);
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Johnny_Cash").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("June_Carter_Cash").create();
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
+        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Pack_(2010_film)").create();
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
-        
+        //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
+        //LDSD similarity calculation
         engine.load(Measure.LDSD_cw , config);
         System.out.println( engine.similarity(r1 , r2) );
-        System.out.println( engine.similarity(r1 , r1) );
-        System.out.println( engine.similarity(r2 , r2) );
+        //ends calculation for the chosen similaarity and closes all indexes if created
         engine.close();
         
         

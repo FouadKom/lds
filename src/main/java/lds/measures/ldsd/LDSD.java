@@ -4,16 +4,16 @@ import java.util.Set;
 
 import org.openrdf.model.URI;
 
-import lds.measures.LdSimilarityMeasure;
 import lds.LdManager.LdsdLdManager;
 import lds.measures.weight.Weight;
 import lds.measures.weight.WeightMethod;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 
-public abstract class LDSD implements LdSimilarityMeasure {
+public abstract class LDSD implements LdSimilarity {
     protected Set<URI> edges;
     protected LdsdLdManager LDSDLDLoader;
     protected LdsdLdManager SpecificLDSDLDLoader;
@@ -243,7 +243,7 @@ public abstract class LDSD implements LdSimilarityMeasure {
     
     
     @Override
-    public LdSimilarityMeasure getMeasure(){
+    public LdSimilarity getMeasure(){
         return this;
     }
 

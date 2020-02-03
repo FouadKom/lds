@@ -10,15 +10,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lds.measures.LdSimilarityMeasure;
 import lds.resource.R;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class LODS implements LdSimilarityMeasure{
+public class LODS implements LdSimilarity{
     private boolean useIndeses;
     private List<O> ontologyList;
     private boolean dataAugmentation;
@@ -95,7 +95,7 @@ public class LODS implements LdSimilarityMeasure{
     }
 
     @Override
-    public LdSimilarityMeasure getMeasure() {
+    public LdSimilarity getMeasure() {
         return this;
     }
     

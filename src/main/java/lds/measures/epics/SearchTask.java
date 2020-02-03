@@ -8,12 +8,12 @@ package lds.measures.epics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
-import lds.measures.LdSimilarityMeasure;
 import static lds.measures.epics.Utility.getDirection;
 import static lds.measures.epics.Utility.getLink;
 import static lds.measures.epics.Utility.getVertex;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import lds.measures.LdSimilarity;
 
 /**
  *
@@ -23,10 +23,10 @@ public class SearchTask extends Thread{
     private String feature;
     private List<String> list;
     private List<String> result;
-    private LdSimilarityMeasure measure;
+    private LdSimilarity measure;
     
     
-    public SearchTask(LdSimilarityMeasure measure , String feature , List<String> list , List<String> result){
+    public SearchTask(LdSimilarity measure , String feature , List<String> list , List<String> result){
         this.feature = feature;
         this.list = list;
         this.result = result;

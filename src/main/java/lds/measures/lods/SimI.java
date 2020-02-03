@@ -13,16 +13,16 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.SimILdManager;
-import lds.measures.LdSimilarityMeasure;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class SimI implements LdSimilarityMeasure {
+public class SimI implements LdSimilarity {
     private boolean useIndeses;
     private List<O> ontologyList;
     private List<O> commonOntologies;
@@ -193,7 +193,7 @@ public class SimI implements LdSimilarityMeasure {
     }
 
     @Override
-    public LdSimilarityMeasure getMeasure() {
+    public LdSimilarity getMeasure() {
         return this;
     }
     

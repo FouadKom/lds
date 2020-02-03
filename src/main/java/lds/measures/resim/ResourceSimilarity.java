@@ -11,17 +11,17 @@ import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.ResimLdManager;
-import lds.measures.LdSimilarityMeasure;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public abstract class ResourceSimilarity implements LdSimilarityMeasure {
+public abstract class ResourceSimilarity implements LdSimilarity {
     protected Set<URI> edges;
     protected ResimLdManager resimLDLoader;
     protected ResimLdManager SpecificResimLdLoader;
@@ -286,7 +286,7 @@ public abstract class ResourceSimilarity implements LdSimilarityMeasure {
     }*/
     
     @Override
-    public LdSimilarityMeasure getMeasure(){
+    public LdSimilarity getMeasure(){
         return this;
     }
     

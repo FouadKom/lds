@@ -7,10 +7,10 @@ package lds.engine;
 
 import java.lang.reflect.Constructor;
 import lds.indexing.LdIndexer;
-import lds.measures.LdSimilarityMeasure;
 import lds.measures.Measure;
 import lds.resource.R;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
@@ -18,7 +18,7 @@ import slib.utils.i.Conf;
  */
 public class SimilarityCompareTaskRunnable extends Thread{
     
-    private LdSimilarityMeasure measure;
+    private LdSimilarity measure;
     private R resource1;
     private R resource2;
     private String sim;
@@ -26,7 +26,7 @@ public class SimilarityCompareTaskRunnable extends Thread{
 
     
     
-    public SimilarityCompareTaskRunnable(LdSimilarityMeasure measure , R  r1 , R r2 , LdIndexer resultsIndex) throws Exception{
+    public SimilarityCompareTaskRunnable(LdSimilarity measure , R  r1 , R r2 , LdIndexer resultsIndex) throws Exception{
         this.measure = measure;
         this.resource1 = r1;
         this.resource2 = r2;
@@ -37,12 +37,12 @@ public class SimilarityCompareTaskRunnable extends Thread{
     
 //    public SimilarityCompareTaskRunnable(Measure measureName, Conf config  , R  r1 , R r2 , LdIndexer index){
 //        Class<?> measureClass;
-//        LdSimilarityMeasure ldMeasure = null;
+//        LdSimilarity ldMeasure = null;
 //        try {
 //
 //            measureClass = Class.forName(Measure.getPath(measureName));
 //            Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
-//            ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
+//            ldMeasure = (LdSimilarity) measureConstructor.newInstance(config);
 //            this.measure = ldMeasure;
 //
 //        } 

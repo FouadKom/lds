@@ -19,18 +19,18 @@ import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import lds.benchmark.Utility;
 import lds.indexing.LdIndexer;
-import lds.measures.LdSimilarityMeasure;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
 import lds.resource.R;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 
 
 //public class LdSimilarityEngine extends slib.sml.sm.core.engine.SM_Engine {
 public class LdSimilarityEngine {
     
-        private LdSimilarityMeasure measure;
+        private LdSimilarity measure;
         private Measure measureName;
         private Conf config;
         private LdIndexer resultsIndex;
@@ -42,11 +42,11 @@ public class LdSimilarityEngine {
             this.measureName = measureName;
             
             Class<?> measureClass;
-            LdSimilarityMeasure ldMeasure = null;
+            LdSimilarity ldMeasure = null;
             try {
                     measureClass = Class.forName(Measure.getPath(measureName));
                     Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
-                    ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
+                    ldMeasure = (LdSimilarity) measureConstructor.newInstance(config);
                     this.measure = ldMeasure;
 
                     ldMeasure.loadIndexes();

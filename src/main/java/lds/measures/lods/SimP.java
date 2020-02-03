@@ -5,15 +5,15 @@
  */
 package lds.measures.lods;
 
-import lds.measures.LdSimilarityMeasure;
 import lds.resource.R;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class SimP implements LdSimilarityMeasure{
+public class SimP implements LdSimilarity{
     
     public SimP(Conf config) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
@@ -35,7 +35,7 @@ public class SimP implements LdSimilarityMeasure{
     }
 
     @Override
-    public LdSimilarityMeasure getMeasure() {
+    public LdSimilarity getMeasure() {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

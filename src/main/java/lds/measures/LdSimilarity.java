@@ -6,7 +6,7 @@ import slib.graph.model.graph.G;
 
 
 
-public interface LdSimilarityMeasure {
+public interface LdSimilarity {
     
 	public double compare(R a, R b) ;
 //        public double compare(R a , R b , int w1 , int w2);
@@ -14,6 +14,6 @@ public interface LdSimilarityMeasure {
         public void closeIndexes();
         public void loadIndexes() throws Exception;
         
-        public LdSimilarityMeasure getMeasure();
+        public LdSimilarity getMeasure();
 
 }

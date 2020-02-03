@@ -11,29 +11,29 @@ import java.util.concurrent.Callable;
 import lds.LdManager.LdManagerBase;
 import lds.benchmark.LdBenchmark;
 import lds.indexing.LdIndexer;
-import lds.measures.LdSimilarityMeasure;
 import lds.measures.Measure;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
  * @author Fouad Komeiha
  */
 public class SimilarityCompareTask implements Callable<String> {
-    private LdSimilarityMeasure measure;
+    private LdSimilarity measure;
     private LdResourceTriple triple;
     private String resultsFilePath = null;
     
-    public SimilarityCompareTask(LdSimilarityMeasure measure , LdResourceTriple triple){
+    public SimilarityCompareTask(LdSimilarity measure , LdResourceTriple triple){
         this.measure = measure;
         this.triple = triple;
     }
     
-    public SimilarityCompareTask(LdSimilarityMeasure measure , LdResourceTriple triple , String resultsFilePath){
+    public SimilarityCompareTask(LdSimilarity measure , LdResourceTriple triple , String resultsFilePath){
         this.measure = measure;
         this.triple = triple;
         this.resultsFilePath = resultsFilePath;
@@ -41,12 +41,12 @@ public class SimilarityCompareTask implements Callable<String> {
     
     /*public SimilarityCompareTask(Measure measureName, Conf config  , R  r1 , R r2){
         Class<?> measureClass;
-        LdSimilarityMeasure ldMeasure = null;
+        LdSimilarity ldMeasure = null;
         try {
             
             measureClass = Class.forName(Measure.getPath(measureName));
             Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
-            ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
+            ldMeasure = (LdSimilarity) measureConstructor.newInstance(config);
             this.measure = ldMeasure;
 
         } 

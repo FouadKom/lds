@@ -10,16 +10,16 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.PicssLdManager;
-import lds.measures.LdSimilarityMeasure;
 import lds.resource.R;
 import sc.research.ldq.*;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class EPICS implements LdSimilarityMeasure{
+public class EPICS implements LdSimilarity{
     private PicssLdManager ldManager;
     private boolean useIndeses;
     private int NumberOfResources;
@@ -142,7 +142,7 @@ public class EPICS implements LdSimilarityMeasure{
     }
     
     @Override
-    public LdSimilarityMeasure getMeasure(){
+    public LdSimilarity getMeasure(){
         return this;
     }
     

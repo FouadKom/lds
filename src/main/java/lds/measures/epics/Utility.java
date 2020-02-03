@@ -17,7 +17,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import lds.engine.SimilarityCompareTask;
 import lds.engine.SimilarityCompareTaskRunnable;
-import lds.measures.LdSimilarityMeasure;
 import lds.measures.Measure;
 import static lds.measures.Measure.LDSD_i;
 import lds.measures.ldsd.*;
@@ -26,6 +25,7 @@ import lds.resource.R;
 import lds.resource.LdResourcePair;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import lds.measures.LdSimilarity;
 
 /**
  *
@@ -82,45 +82,41 @@ public class Utility {
                 break;
                 
             
-        }
-                
+        }                
         
         ldsd.loadIndexes();
         
-        
-        /*Class<?> measureClass;
-        LdSimilarityMeasure ldMeasure = null;
-        try {
-                measureClass = Class.forName(Measure.getPath(measureName));
-                Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
-                ldMeasure = (LdSimilarityMeasure) measureConstructor.newInstance(config);
-//                    this.measure = ldMeasure;
-                ldMeasure.loadIndexes();
-
-
-        } 
-        catch (Exception e) {
-                e.printStackTrace();
-        }*/
        
-//        HashMap<String, String> map_a = new HashMap();
-//        HashMap<String, String> map_b = new HashMap();
-//        
+        HashMap<String, String> map_a = new HashMap();
+        HashMap<String, String> map_b = new HashMap();
+        
 //        for(String fa : a){
 //           node_a = getVertex(fa);
 //           link_a = getLink(fa);
 //           direction_a = getDirection(fa);
 //           map_a.put(node_a , link_a + "|" + direction_a);
 //        }
-//        
-//        for(String fb : b){
-//           node_b = getVertex(fb);
-//           link_b = getLink(fb);
-//           direction_b = getDirection(fb);
-//           map_b.put(node_b , link_b + "|" + direction_b);
-//        }
-//        
-//        
+        
+        for(String fb : b){
+           node_b = getVertex(fb);
+           link_b = getLink(fb);
+           direction_b = getDirection(fb);
+           map_b.put(node_b , link_b + "|" + direction_b);
+        }
+        
+        for(String fa : a){
+           node_a = getVertex(fa);
+           link_a = getLink(fa);
+           direction_a = getDirection(fa);
+           
+           if(map_b.containsKey(node_a)){
+               
+           }
+               
+            
+        }
+        
+        
 //        for (Entry entry : map_a.entrySet()) {
 //            String f = entry.getValue().toString();
 //            
@@ -132,27 +128,29 @@ public class Utility {
 //            
 //        }
 
-//To use multithread uncomment this part and comment the part after it
-           /*SearchTask[] threads = new SearchTask[a.size()];
-           
-           int i = 0;
-           
-           for(String fa: a){
-                threads[i] = new SearchTask(ldsd.getMeasure() , fa , b , result);
-                threads[i].start();
-                
-                i++;
+       //To use multithread uncomment this part and comment the part after it
+       /*SearchTask[] threads = new SearchTask[a.size()];
+
+       int i = 0;
+
+       for(String fa: a){
+            threads[i] = new SearchTask(ldsd.getMeasure() , fa , b , result);
+            threads[i].start();
+
+            i++;
+       }
+
+       try{
+           for(int j = 0 ; j < i ; j++){
+               threads[j].join();
            }
+       }catch(InterruptedException ie) {
+           ie.printStackTrace();
+       }*/
+       //////////////////////////////////////////////////////////////////////
            
-           try{
-               for(int j = 0 ; j < i ; j++){
-                   threads[j].join();
-               }
-           }catch(InterruptedException ie) {
-               ie.printStackTrace();
-           }*/
-        
-        for(String fa : a){
+        //To use singlethread uncomment this part and comment the part before it
+        /*for(String fa : a){
            link_a = getLink(fa);
            direction_a = getDirection(fa);
            
@@ -162,7 +160,6 @@ public class Utility {
 
                 if(link_a.equals(link_b) && direction_a.equals(direction_b)){
 
-//                    sim = checkFeatureSimilarity(getVertex(fa) , getVertex(fb) , config);
                     R r1 = LdResourceFactory.getInstance().uri(getVertex(fa)).create();
                     R r2 = LdResourceFactory.getInstance().uri(getVertex(fb)).create();
         
@@ -175,38 +172,14 @@ public class Utility {
                 }
             
             } 
-        }
+        }*/
+        ///////////////////////////////////////////////////////////////////////
 
         ldsd.closeIndexes();
-//        ldMeasure.closeIndexes();
         return result;
         
     }
     
-//    public static double checkFeatureSimilarity(String a , String b , Conf config) throws Exception{
-//        
-//        LdDataset dataset = (LdDataset) config.getParam("LdDatasetMain");
-//        boolean useIndex = (Boolean) config.getParam("useIndexes");
-//        
-//        Conf ldsd_conf = new Conf();
-//        ldsd_conf.addParam("useIndexes", useIndex);
-//        ldsd_conf.addParam("LdDatasetMain" , dataset);
-//        
-//        double sim = 0;
-//        LDSD ldsd = new LDSD_d(ldsd_conf);
-//        ldsd.loadIndexes();
-//        
-//        
-//        R r1 = LdResourceFactory.getInstance().uri(a).create();
-//        R r2 = LdResourceFactory.getInstance().uri(b).create();
-//        
-//        sim = ldsd.compare(r1 , r2);
-//        ldsd.closeIndexes();
-//        
-//        return sim;
-//        
-//        
-//    }
     
     public static List<String> commonFeatures(List<String> a, List<String> b){
         List<String> result = new ArrayList<>(a);
