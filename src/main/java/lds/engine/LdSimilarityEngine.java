@@ -18,7 +18,7 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import lds.benchmark.Utility;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexer_;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
 import lds.resource.R;
@@ -33,7 +33,7 @@ public class LdSimilarityEngine {
         private LdSimilarity measure;
         private Measure measureName;
         private Conf config;
-        private LdIndexer resultsIndex;
+        private LdIndexer_ resultsIndex;
         
 
 	public void load(Measure measureName, Conf config){
@@ -137,7 +137,7 @@ public class LdSimilarityEngine {
            int i = 0;
            
            String resultsIndexFile = System.getProperty("user.dir") + "/Indexes/" + measureName.toString() + "_MultiThreading_Results/results_index.db";
-           resultsIndex = new LdIndexer(resultsIndexFile);
+           resultsIndex = new LdIndexer_(resultsIndexFile);
            
            SimilarityCompareTaskRunnable[] threads = new SimilarityCompareTaskRunnable[resourcePairs.size()];
            

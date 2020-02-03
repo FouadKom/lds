@@ -8,8 +8,8 @@ package lds.LdManager;
 
 import java.util.List;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexManager;
 import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexer_;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -30,7 +30,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
     private LdIndex typlessCommonObjectsIndex;
     private LdIndex typlessCommonSubjectsIndex;        
 
-    private LdIndexManager manager;
+    private LdIndexer manager;
 
     public ResimLdManager(LdDataset dataset , boolean useIndex) throws Exception {                
             super(dataset , useIndex);
@@ -44,7 +44,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
 
         super.loadIndexes();
         
-        manager = LdIndexManager.getManager();
+        manager = LdIndexer.getManager();
         
         // TODO: specify an index directory
         String sameAsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_sameAs_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";

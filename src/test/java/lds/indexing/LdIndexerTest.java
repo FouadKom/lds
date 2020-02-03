@@ -11,7 +11,7 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexer_;
 import static org.hamcrest.CoreMatchers.*;
 
 public class LdIndexerTest {
@@ -26,10 +26,10 @@ public class LdIndexerTest {
 		//final File tempIndexFile = tempFolder.newFile("test.txt");
 		
 		// TOFIX: File is empty exception with temp files generated in tmp file of the VM
-		//LdIndexer index = new LdIndexer(tempIndexFile.getAbsolutePath());
+		//LdIndexer index = new LdIndexer_(tempIndexFile.getAbsolutePath());
 		
 		File tempIndexFile = new File("/tmp/test.db");
-		LdIndexer index = new LdIndexer(tempIndexFile.getAbsolutePath());
+		LdIndexer_ index = new LdIndexer_(tempIndexFile.getAbsolutePath());
 
 		List<String> list = new ArrayList<String>();
 		//list.add("dbp:Paris");

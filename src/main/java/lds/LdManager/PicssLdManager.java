@@ -9,8 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexManager;
 import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexer_;
 
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
@@ -29,7 +29,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     private LdIndex countOutgoingFeaturesIndex;
     private LdIndex countResourcesIndex;
     
-    private LdIndexManager manager;
+    private LdIndexer manager;
     
      
     public PicssLdManager(LdDataset dataset , boolean useIndex) throws Exception {                
@@ -38,7 +38,7 @@ public class PicssLdManager extends HybridMeasuresLdManager{
     }
     
     public void loadIndexes() throws Exception{
-        manager = LdIndexManager.getManager();
+        manager = LdIndexer.getManager();
         
         String ingoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_ingoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String outgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_outgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
@@ -51,16 +51,16 @@ public class PicssLdManager extends HybridMeasuresLdManager{
         countIngoingFeaturesIndex = manager.loadIndex(countOutgoingFeaturesIndexFile);
         countOutgoingFeaturesIndex = manager.loadIndex(countIngoingFeaturesIndexFile);
         
-//        ingoingFeaturesIndex = new LdIndexer(ingoingFeaturesIndexFile);
-//        outgoingFeaturesIndex = new LdIndexer(outgoingFeaturesIndexFile);
-//        countIngoingFeaturesIndex = new LdIndexer(countOutgoingFeaturesIndexFile);
-//        countOutgoingFeaturesIndex = new LdIndexer(countIngoingFeaturesIndexFile);
+//        ingoingFeaturesIndex = new LdIndexer_(ingoingFeaturesIndexFile);
+//        outgoingFeaturesIndex = new LdIndexer_(outgoingFeaturesIndexFile);
+//        countIngoingFeaturesIndex = new LdIndexer_(countOutgoingFeaturesIndexFile);
+//        countOutgoingFeaturesIndex = new LdIndexer_(countIngoingFeaturesIndexFile);
         
 //        ingoingFeaturesIndex.load(ingoingFeaturesIndexFile);
 //        outgoingFeaturesIndex.load(outgoingFeaturesIndexFile);
 //        countIngoingFeaturesIndex.load(countOutgoingFeaturesIndexFile);
 //        countOutgoingFeaturesIndex.load(countIngoingFeaturesIndexFile);
-////        countResourcesIndex = new LdIndexer(countResourcesIndexFile);
+////        countResourcesIndex = new LdIndexer_(countResourcesIndexFile);
             
     }
     

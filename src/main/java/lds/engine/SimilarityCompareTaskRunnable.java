@@ -6,7 +6,7 @@
 package lds.engine;
 
 import java.lang.reflect.Constructor;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexer_;
 import lds.measures.Measure;
 import lds.resource.R;
 import slib.utils.i.Conf;
@@ -22,11 +22,11 @@ public class SimilarityCompareTaskRunnable extends Thread{
     private R resource1;
     private R resource2;
     private String sim;
-    private LdIndexer resultsIndex;
+    private LdIndexer_ resultsIndex;
 
     
     
-    public SimilarityCompareTaskRunnable(LdSimilarity measure , R  r1 , R r2 , LdIndexer resultsIndex) throws Exception{
+    public SimilarityCompareTaskRunnable(LdSimilarity measure , R  r1 , R r2 , LdIndexer_ resultsIndex) throws Exception{
         this.measure = measure;
         this.resource1 = r1;
         this.resource2 = r2;
@@ -35,7 +35,7 @@ public class SimilarityCompareTaskRunnable extends Thread{
     }
 
     
-//    public SimilarityCompareTaskRunnable(Measure measureName, Conf config  , R  r1 , R r2 , LdIndexer index){
+//    public SimilarityCompareTaskRunnable(Measure measureName, Conf config  , R  r1 , R r2 , LdIndexer_ index){
 //        Class<?> measureClass;
 //        LdSimilarity ldMeasure = null;
 //        try {

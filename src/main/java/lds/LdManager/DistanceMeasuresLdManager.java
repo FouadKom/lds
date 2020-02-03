@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexManager;
+import lds.indexing.LdIndexer;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -33,7 +33,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     protected LdIndex directlyConnectedIndex;
     protected LdIndex countResourcesIndex;
     
-    protected LdIndexManager manager;
+    protected LdIndexer manager;
     
     
     public DistanceMeasuresLdManager(LdDataset dataset , boolean useIndex) {
@@ -43,7 +43,7 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     }
     
     public void loadIndexes() throws Exception {
-        manager = LdIndexManager.getManager();
+        manager = LdIndexer.getManager();
         
         // TODO: specify an index directory
         String ingoingEdgesIndexFile = System.getProperty("user.dir") + "/Indexes/Distance_Measures/ingoingEdges_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
