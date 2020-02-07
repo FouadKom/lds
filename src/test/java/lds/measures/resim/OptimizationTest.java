@@ -35,13 +35,8 @@ public class OptimizationTest {
         ResourceSimilarity resim = new Resim(configSim);
         resim_o.loadIndexes();
         resim.loadIndexes();
-        
-        System.out.println(datasetMain.getPrefixes().getNsPrefixURI("dbpedia"));
-        
-//        System.out.println("Indexes Loaded, Pausing code");
-//        Thread.sleep(4000);
          
-        /*startTime = System.nanoTime(); 
+       startTime = System.nanoTime(); 
         
         System.out.println(resim_o.compare(r1, r2));  
         
@@ -62,6 +57,6 @@ public class OptimizationTest {
         System.out.println();
         
         resim.closeIndexes();
-        resim_o.closeIndexes();*/
+        resim_o.closeIndexes();
     }
 }
