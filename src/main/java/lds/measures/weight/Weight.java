@@ -53,7 +53,7 @@ public class Weight {
     
     public void closeIndexes(){
         if(useIndex)
-            weightsIndex.close();
+           manager.closeIndex(weightsIndex);
     }
     
     public double linkWeight(URI l , R a , R b) {
