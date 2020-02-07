@@ -18,7 +18,8 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadFactory;
 import java.util.concurrent.TimeUnit;
 import lds.benchmark.Utility;
-import lds.indexing.LdIndexer_;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexer;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
 import lds.resource.R;
@@ -33,7 +34,8 @@ public class LdSimilarityEngine {
         private LdSimilarity measure;
         private Measure measureName;
         private Conf config;
-        private LdIndexer_ resultsIndex;
+        private LdIndex resultsIndex;
+        private LdIndexer manager;
         
 
 	public void load(Measure measureName, Conf config){
@@ -135,15 +137,14 @@ public class LdSimilarityEngine {
        //calcuate the similariy for a list of pairs using multithreading
        public void similarity2(List<LdResourcePair> resourcePairs) throws Exception{
            int i = 0;
-           
+           manager = LdIndexer.getManager();
            String resultsIndexFile = System.getProperty("user.dir") + "/Indexes/" + measureName.toString() + "_MultiThreading_Results/results_index.db";
-           resultsIndex = new LdIndexer_(resultsIndexFile);
+           resultsIndex = manager.loadIndex(resultsIndexFile);
            
            SimilarityCompareTaskRunnable[] threads = new SimilarityCompareTaskRunnable[resourcePairs.size()];
            
            for(LdResourcePair pair: resourcePairs){
                 threads[i] = new SimilarityCompareTaskRunnable(measure.getMeasure() , pair.getFirstresource() , pair.getSecondresource() , resultsIndex);
-//                threads[i] = new SimilarityCompareTaskRunnable(this.measure , pair.getFirstresource() , pair.getSecondresource() , resultsIndex);
                 threads[i].start();
                 
                 i++;

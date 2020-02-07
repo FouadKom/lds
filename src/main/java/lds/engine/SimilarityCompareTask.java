@@ -10,7 +10,7 @@ import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
 import lds.LdManager.LdManagerBase;
 import lds.benchmark.LdBenchmark;
-import lds.indexing.LdIndexer_;
+import lds.indexing.LdIndexer;
 import lds.measures.Measure;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;

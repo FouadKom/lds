@@ -10,7 +10,6 @@ import java.util.ArrayList;
 import java.util.List;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
-import lds.indexing.LdIndexer_;
 import lds.measures.lods.ontologies.O;
 import lds.measures.lods.ontologies.O_DBpedia;
 import lds.measures.lods.ontologies.O_Schema;

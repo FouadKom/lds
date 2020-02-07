@@ -9,7 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lds.indexing.LdIndexer_;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexer;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
@@ -30,7 +31,8 @@ public class WikiDataLdManager {
     
     private String baseClassPath = "lds.LdManager.ontologies.WikiDataLdManager.";
     
-    private LdIndexer_ conceptsIndex;
+    private LdIndex conceptsIndex;
+    private LdIndexer manager;
                       
     
     public WikiDataLdManager(LdDataset dataSetInitial , boolean useIndex) {
@@ -53,7 +55,7 @@ public class WikiDataLdManager {
     
     public List<String> getConcepts(R a , boolean dataAugmentation){
         if(useIndex){
-             return LdIndexer_.getListFromIndex(dataSetInitial , conceptsIndex , a.getUri().stringValue() , baseClassPath + "getConcepts" , dataSetInitial , a , dataAugmentation);
+             return conceptsIndex.getListFromIndex(dataSetInitial , a.getUri().stringValue() , baseClassPath + "getConcepts" , dataSetInitial , a , dataAugmentation);
         }
         
         return this.getConcepts(dataSetInitial , a , dataAugmentation);
@@ -242,13 +244,16 @@ public class WikiDataLdManager {
     }
 
     public void loadIndexes() throws Exception {
+        
+        manager = LdIndexer.getManager();
+        
         String conceptsIndexFile = System.getProperty("user.dir") + "/Indexes/Ontologies/DBpedia/concepts_index_" + dataSetInitial.getName().toLowerCase().replace(" ", "_") + ".db";
-        conceptsIndex = new LdIndexer_(conceptsIndexFile);
+        conceptsIndex = manager.loadIndex(conceptsIndexFile);
     }
 
     public void closeIndexes() {
          if (useIndex) {
-            conceptsIndex.close();
+            manager.closeIndex(conceptsIndex);
         }
         
     }

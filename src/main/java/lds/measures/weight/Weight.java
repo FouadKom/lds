@@ -8,7 +8,8 @@ package lds.measures.weight;
 
 import java.util.Set;
 import lds.LdManager.LdManager;
-import lds.indexing.LdIndexer_;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexer;
 import lds.resource.R;
 import org.openrdf.model.URI;
 
@@ -20,7 +21,8 @@ public class Weight {
     private static WeightMethod method;
     private static LdManager datasetLoader;
     private static LdManager specificClassLoader;   
-    private static LdIndexer_ weightsIndex;
+    private static LdIndex weightsIndex;
+    private static LdIndexer manager;
     private static boolean useIndex;
     
     private String baseClassPath = "lds.measures.weight.Weight.";
@@ -42,8 +44,9 @@ public class Weight {
     
     
     public void loadIndexes() throws Exception {
+        manager = LdIndexer.getManager();
         String weightsIndexFile = System.getProperty("user.dir") + "/Indexes/Weights/weight_index.db";
-        weightsIndex = new LdIndexer_(weightsIndexFile);
+        weightsIndex = manager.loadIndex(weightsIndexFile);
         
                
     }
@@ -57,12 +60,12 @@ public class Weight {
         double weight = 0;
         if (useIndex) {
             if(this.method == WeightMethod.RSLAW){
-                weight = LdIndexer_.getDoubleFromIndex(weightsIndex , l.stringValue() , baseClassPath + "calculateWeights_RSLAW" , a , b);
+                weight = weightsIndex.getDoubleFromIndex(l.stringValue() , baseClassPath + "calculateWeights_RSLAW" , a , b);
                 
 
             }
             else if(this.method == WeightMethod.ITW){
-                weight = LdIndexer_.getDoubleFromIndex(weightsIndex , a.getUri().toString()+ ":" + l.stringValue()+ ":" + b.getUri().toString()  , baseClassPath + "calculateWeights_ITW" , a , b);
+                weight = weightsIndex.getDoubleFromIndex(a.getUri().toString()+ ":" + l.stringValue()+ ":" + b.getUri().toString()  , baseClassPath + "calculateWeights_ITW" , a , b);
             }
             
      
@@ -165,7 +168,7 @@ public class Weight {
         Set<URI> edges = datasetLoader.getEdges(a, b);
         
         if(useIndex){
-            min = LdIndexer_.getDoubleFromIndex(weightsIndex , "minWeight:" + a.getUri().stringValue() + ":" + b.getUri().stringValue() , "lds.measures.resim.Weight.calculateWeights_ITW" , a , b);
+            min = weightsIndex.getDoubleFromIndex("minWeight:" + a.getUri().stringValue() + ":" + b.getUri().stringValue() , "lds.measures.resim.Weight.calculateWeights_ITW" , a , b);
         }
         
         else{
@@ -188,7 +191,7 @@ public class Weight {
         double max = 0, weight = 0;
         
         if(useIndex){
-            max = LdIndexer_.getDoubleFromIndex(weightsIndex , "maxWeight:" + a.getUri().stringValue() + ":" + b.getUri().stringValue() , "lds.measures.resim.Weight.calculateWeights_ITW" , a , b);
+            max = weightsIndex.getDoubleFromIndex("maxWeight:" + a.getUri().stringValue() + ":" + b.getUri().stringValue() , "lds.measures.resim.Weight.calculateWeights_ITW" , a , b);
         }
         else{
             for(URI edge:datasetLoader.getEdges(a, b)){

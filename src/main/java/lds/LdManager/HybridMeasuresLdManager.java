@@ -7,7 +7,6 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import lds.indexing.LdIndexer_;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;

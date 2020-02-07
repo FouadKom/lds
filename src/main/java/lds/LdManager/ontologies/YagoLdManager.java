@@ -6,7 +6,8 @@
 package lds.LdManager.ontologies;
 
 import java.util.List;
-import lds.indexing.LdIndexer_;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexer;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 
@@ -17,7 +18,8 @@ import sc.research.ldq.LdDataset;
 public class YagoLdManager extends DBpediaOntologiesLdManager {
     
     private boolean useIndex;
-    private LdIndexer_ conceptsIndex;
+    private LdIndex conceptsIndex;
+    private LdIndexer manager;
     private LdDataset dataSetInitial;
     
     public YagoLdManager(LdDataset dataSetInitial , boolean useIndex) throws Exception {
@@ -28,15 +30,16 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
     }
     
     public void loadIndexes() throws Exception {
+        manager = LdIndexer.getManager();
         String conceptsIndexFile = System.getProperty("user.dir") + "/Indexes/Ontologies/Yago/concepts_index_" + dataSetInitial.getName().toLowerCase().replace(" ", "_") + ".db";
-        conceptsIndex = new LdIndexer_(conceptsIndexFile);
+        conceptsIndex = manager.loadIndex(conceptsIndexFile);
              
             
     }
     
     public void closeIndexes(){
         if (useIndex) {
-            conceptsIndex.close();
+            manager.closeIndex(conceptsIndex);
         }
         
     }
@@ -45,7 +48,7 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
     @Override
     public List<String> getConcepts(R a , List<String> namespacesInitial , List<String> namespacesAugmented , boolean dataAugmentation) {
         if(useIndex){
-             return LdIndexer_.getListFromIndex(dataSetInitial , conceptsIndex , a.getUri().stringValue() , baseClassPath + "getConcepts"  , a , namespacesInitial , namespacesAugmented , dataAugmentation);
+             return conceptsIndex.getListFromIndex(dataSetInitial , a.getUri().stringValue() , baseClassPath + "getConcepts"  , a , namespacesInitial , namespacesAugmented , dataAugmentation);
         }
         
         return super.getConcepts(a , namespacesInitial , namespacesAugmented , dataAugmentation);

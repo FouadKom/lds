@@ -3,15 +3,12 @@ package lds.indexing;
 import static org.junit.Assert.*;
 
 import java.io.File;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-
 import org.junit.Rule;
 import org.junit.Test;
 import org.junit.rules.TemporaryFolder;
 
-import lds.indexing.LdIndexer_;
 import static org.hamcrest.CoreMatchers.*;
 
 public class LdIndexerTest {
@@ -27,9 +24,9 @@ public class LdIndexerTest {
 		
 		// TOFIX: File is empty exception with temp files generated in tmp file of the VM
 		//LdIndexer index = new LdIndexer_(tempIndexFile.getAbsolutePath());
-		
+		LdIndexer manager = LdIndexer.getManager();
 		File tempIndexFile = new File("/tmp/test.db");
-		LdIndexer_ index = new LdIndexer_(tempIndexFile.getAbsolutePath());
+		LdIndex index = manager.loadIndex(tempIndexFile.getAbsolutePath());
 
 		List<String> list = new ArrayList<String>();
 		//list.add("dbp:Paris");
@@ -39,7 +36,7 @@ public class LdIndexerTest {
 		index.close();
 
 		//
-		index.reload();
+		index.load();
 		List<String> result = index.getList("Paris");
 		index.close();
 		tempIndexFile.delete();
