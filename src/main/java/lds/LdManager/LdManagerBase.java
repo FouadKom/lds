@@ -374,7 +374,7 @@ public class LdManagerBase implements LdManager {
         @Override
         public  int countSubject(R a){
             
-            Literal count = null;
+            int count = 0;
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -385,9 +385,9 @@ public class LdManagerBase implements LdManager {
             if (resultSet.hasNext()) {
                 
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                count = qs.getLiteral("count").getInt();
                 // dataset.close();
-                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                return count;
 
             }
 
@@ -399,11 +399,11 @@ public class LdManagerBase implements LdManager {
         @Override
        public  int countObject(R a){
             
-            Literal count = null;
+            int count = 0;
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-            query_cmd.setCommandText("select (count(?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> ?property ?object ."
+            query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> ?property ?object ."
                     + " filter(isuri(?object)) }");
             
 
@@ -411,9 +411,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                count = qs.getLiteral("count").getInt();
                 // dataset.close();
-                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                return count;
 
             }
 
@@ -425,7 +425,7 @@ public class LdManagerBase implements LdManager {
        
       @Override
       public  int countObject(URI link , R a) {
-            Literal count = null;
+            int count = 0;
             
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -436,9 +436,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                count = qs.getLiteral("count").getInt();
                 // dataset.close();
-                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                return count;
 
             }
 
@@ -450,7 +450,7 @@ public class LdManagerBase implements LdManager {
 
         @Override
         public  int countShareCommonObjects(URI link, R a) {
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object . "
@@ -461,9 +461,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                     QuerySolution qs = resultSet.nextSolution();
-                    count = (Literal) qs.getLiteral("count");
+                    count = qs.getLiteral("count").getInt();
                     // dataset.close();
-                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                    return count;
 
             }
                 
@@ -475,7 +475,7 @@ public class LdManagerBase implements LdManager {
 
         @Override
         public  int countShareCommonSubjects(URI link, R a) {
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> <" + a.getUri() + ">. "
@@ -487,9 +487,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                     QuerySolution qs = resultSet.nextSolution();
-                    count = (Literal) qs.getLiteral("count");
+                    count = qs.getLiteral("count").getInt();
                     // dataset.close();
-                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                    return count;
 
             }
                 
@@ -499,7 +499,7 @@ public class LdManagerBase implements LdManager {
         
         @Override
         public  int countShareCommonObjects(URI link, R a , R b){
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(distinct ?object) as ?count) " 
@@ -512,9 +512,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                     QuerySolution qs = resultSet.nextSolution();
-                    count = (Literal) qs.getLiteral("count");
+                    count = qs.getLiteral("count").getInt();
                     // dataset.close();
-                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                    return count;
 
             }
 
@@ -524,7 +524,7 @@ public class LdManagerBase implements LdManager {
         
         @Override
         public  int countShareCommonSubjects(URI link , R a , R b){
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " 
@@ -537,9 +537,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
 			QuerySolution qs = resultSet.nextSolution();
-			count = (Literal) qs.getLiteral("count");
+			count = qs.getLiteral("count").getInt();
                         // dataset.close();
-                        return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                        return count;
 
             }
     
@@ -551,7 +551,7 @@ public class LdManagerBase implements LdManager {
         
         @Override
         public  int countShareTyplessCommonObjects(URI link1 , URI link2 , R a) {
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(?subject) as ?count) " 
@@ -565,9 +565,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                     QuerySolution qs = resultSet.nextSolution();
-                    count = (Literal) qs.getLiteral("count");
+                    count = qs.getLiteral("count").getInt();
                     // dataset.close();
-                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                    return count;
 
             }
             
@@ -580,7 +580,7 @@ public class LdManagerBase implements LdManager {
 
         @Override
         public  int countShareTyplessCommonSubjects(URI link1 , URI link2 , R a) {
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(?object) as ?count) " 
@@ -594,9 +594,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                     QuerySolution qs = resultSet.nextSolution();
-                    count = (Literal) qs.getLiteral("count");
+                    count = qs.getLiteral("count").getInt();
                     // dataset.close();
-                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                    return count;
 
             }
             
@@ -607,7 +607,7 @@ public class LdManagerBase implements LdManager {
 
         @Override
         public  int countShareTyplessCommonObjects(URI link1 , URI link2 , R a , R b) {
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + 
@@ -620,9 +620,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                     QuerySolution qs = resultSet.nextSolution();
-                    count = (Literal) qs.getLiteral("count");
+                    count = qs.getLiteral("count").getInt();
                     // dataset.close();
-                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                    return count;
 
             }
 
@@ -632,7 +632,7 @@ public class LdManagerBase implements LdManager {
 
         @Override
         public  int countShareTyplessCommonSubjects(URI link1 , URI link2 , R a , R b) {
-            Literal count = null;
+            int count = 0;
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + 
@@ -645,9 +645,9 @@ public class LdManagerBase implements LdManager {
 
             if (resultSet.hasNext()) {
                     QuerySolution qs = resultSet.nextSolution();
-                    count = (Literal) qs.getLiteral("count");
+                    count = qs.getLiteral("count").getInt();
                     // dataset.close();
-                    return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                    return count;
 
             }
 
@@ -698,7 +698,7 @@ public class LdManagerBase implements LdManager {
 
     @Override
     public  int countResource() {
-        Literal count = null;
+        int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
         query_cmd.setCommandText("select (count(distinct ?s) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
@@ -713,9 +713,9 @@ public class LdManagerBase implements LdManager {
 
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                count = qs.getLiteral("count").getInt();
                 // dataset.close();
-                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                return count;
 
         }
         

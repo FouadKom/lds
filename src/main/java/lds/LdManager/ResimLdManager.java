@@ -84,7 +84,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         }
 
     }
-         
+       
          
         
     @Override
@@ -96,7 +96,7 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
 
        }
 
-       count = super.countSubject(link , a);
+      count = super.countSubject(link , a);
       return count;
     }
 

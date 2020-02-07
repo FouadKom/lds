@@ -146,6 +146,17 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
     }
     
     @Override
+    public int countObject(R a) {
+
+        if (useIndex) {
+             return objectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue() , baseClassPath + "countObject" , a);
+
+       }
+        
+       return super.countObject(a);
+    }
+    
+    @Override
     public boolean isDirectlyConnected(URI link, R a, R b) {
 
          if (useIndex) {

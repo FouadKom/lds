@@ -106,7 +106,6 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-            dataset.close();
 //          return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
@@ -130,7 +129,6 @@ public class HybridMeasuresLdManager extends LdManagerBase{
        if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-            dataset.close();
 //            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
