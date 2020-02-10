@@ -9,6 +9,7 @@ import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 import test.utility.Util;
@@ -20,7 +21,8 @@ import test.utility.Util;
 public class OptimizationTest {
     public static final String resourcesFilePath = System.getProperty("user.dir") + "/src/test/resources/OptimTest/facebook_book_resources_Resim.txt";
     
-    public static void main(String args[]) throws Exception{
+    @Test
+    public void OptimizationTest() throws Exception{ 
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Pack_(2010_film)").create();
         

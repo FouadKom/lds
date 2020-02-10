@@ -9,6 +9,7 @@ import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
+import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
@@ -20,7 +21,8 @@ import slib.utils.i.Conf;
 public class OptimizationTest_localRdf {
     
     
-    public static void main(String args[]) throws Exception{
+    @Test
+    public void OptimizationTest() throws Exception{ 
         LdDataset dataSet = null;
 
 		R r1 = new R("http://www.example.org#Fish");
