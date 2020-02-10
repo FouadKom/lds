@@ -65,7 +65,7 @@ public class ResimTest {
         engine.close();
         
         //TResim similarity calculation
-        engine.load(Measure.Resim , configSim);
+        engine.load(Measure.TResim , configSim);
         
         System.out.println( engine.similarity(r1 , r2) ); 
         

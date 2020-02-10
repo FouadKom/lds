@@ -5,6 +5,8 @@
  */
 package lds.measures.ldsd;
 
+import lds.engine.LdSimilarityEngine;
+import lds.measures.Measure;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
@@ -16,6 +18,7 @@ import test.utility.Util;
  * @author Fouad Komeiha
  */
 public class OptimizationTest {
+    public static final String resourcesFilePath = System.getProperty("user.dir") + "/src/test/resources/OptimTest/facebook_book_resources_LDSD.txt";
     
     public static void main(String args[]) throws Exception{
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
@@ -29,7 +32,7 @@ public class OptimizationTest {
         configSim.addParam("LdDatasetMain" , datasetMain);
         configSim.addParam("useIndexes" , true);
         
-        LDSDO ldsd_o = new LDSD_cwO(configSim);
+        /*LDSDO ldsd_o = new LDSD_cwO(configSim);
         LDSD ldsd = new LDSD_cw(configSim);
         ldsd_o.loadIndexes();
         ldsd.loadIndexes();
@@ -55,7 +58,35 @@ public class OptimizationTest {
         System.out.println();
         
         ldsd.closeIndexes();
-        ldsd_o.closeIndexes();
+        ldsd_o.closeIndexes();*/
+        
+        LdSimilarityEngine engine = new LdSimilarityEngine();
+
+        engine.load(Measure.LDSD_cwO  ,configSim);
+        
+        startTime = System.nanoTime(); 
+        
+        engine.similarity(resourcesFilePath , false , false);
+        
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000 ;
+        System.out.println("LDSD_cwO finished in " + duration + " second(s)");
+        System.out.println();
+        
+        engine.close();
+        
+        engine.load(Measure.LDSD_cw  ,configSim);
+        
+        startTime = System.nanoTime(); 
+        
+        engine.similarity(resourcesFilePath , false , false);
+        
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000 ;
+        System.out.println("LDSD_cw finished in " + duration + " second(s)");
+        System.out.println();
+        
+        engine.close();
     }
     
 }

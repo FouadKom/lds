@@ -11,6 +11,7 @@ package lds.measures;
  */
 public enum Measure {
     Resim ,
+    ResimO ,
     TResim ,
     WResim ,
     WTResim ,
@@ -19,6 +20,7 @@ public enum Measure {
     LDSD_i ,
     LDSD_iw ,
     LDSD_cw ,
+    LDSD_cwO ,
     TLDSD_cw ,
     WLDSD_cw ,
     WTLDSD_cw ,
@@ -29,6 +31,9 @@ public enum Measure {
     public static String getPath(Measure measure){
         if(measure == Resim){
             return "lds.measures.resim.Resim" ;
+        }
+        if(measure == ResimO){
+            return "lds.measures.resim.ResimO" ;
         }
         if(measure == TResim){
             return "lds.measures.resim.TResim" ;
@@ -53,6 +58,9 @@ public enum Measure {
         }
         if(measure == LDSD_cw){
             return "lds.measures.ldsd.LDSD_cw" ;
+        }
+        if(measure == LDSD_cwO){
+            return "lds.measures.ldsd.LDSD_cwO" ;
         }
         if(measure == TLDSD_cw){
             return "lds.measures.ldsd.TLDSD_cw" ;
