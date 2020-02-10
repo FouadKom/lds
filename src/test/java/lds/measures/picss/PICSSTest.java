@@ -28,7 +28,7 @@ public class PICSSTest {
                 
         Conf config = new Conf();
         //using indexes for calculation, change to false of no data indexing is wanted
-        config.addParam("useIndexes", true);
+        config.addParam("useIndexes", false);
         
         //specifying the main dataset that will be used for querying, in our case DBpedia
         config.addParam("LdDatasetMain" , dataset);
@@ -36,8 +36,8 @@ public class PICSSTest {
         //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
         config.addParam("resourcesCount" , 2350906);
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Bob_Dylan").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Ronnie_Hawkins").create();
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
+        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Pack_(2010_film)").create();
         
         
         //Initialzie the engine class object
