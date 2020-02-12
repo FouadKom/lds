@@ -3,11 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.ldsd;
+package lds.measures.picss;
 
-import lds.engine.LdSimilarityEngine;
-import lds.measures.Measure;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
@@ -19,11 +16,13 @@ import test.utility.Util;
  * @author Fouad Komeiha
  */
 public class OptimizationTest {
-        
+    
     @Test
     public void OptimizationTest() throws Exception{ 
+
         R r1 = new R("http://dbpedia.org/resource/The_Noah");
         R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
+        
         double startTime , endTime , duration;
         
         LdDataset datasetMain = Util.getDBpediaDataset();
@@ -31,16 +30,17 @@ public class OptimizationTest {
         Conf configSim = new Conf();            
         
         configSim.addParam("LdDatasetMain" , datasetMain);
+        configSim.addParam("resourcesCount" , 2350906);
         configSim.addParam("useIndexes" , true);
         
-        LDSDO ldsd_o = new LDSD_cwO(configSim);
-        LDSD ldsd = new LDSD_cw(configSim);
-        ldsd_o.loadIndexes();
-        ldsd.loadIndexes();
-                
+        PICSSO picss_o = new PICSSO(configSim);
+        PICSS picss = new PICSS(configSim);
+        picss_o.loadIndexes();
+        picss.loadIndexes();
+         
         startTime = System.nanoTime(); 
         
-        System.out.println(ldsd_o.compare(r1, r2));  
+        System.out.println(picss_o.compare(r1, r2));  
         
         //end timing
         endTime = System.nanoTime();
@@ -48,19 +48,16 @@ public class OptimizationTest {
         System.out.println("finished in " + duration + " second(s)");
         System.out.println();
         
-        startTime = System.nanoTime(); 
+        startTime = System.nanoTime();
         
-        System.out.println(ldsd.compare(r1, r2));
+        System.out.println(picss.compare(r1, r2));
         
         //end timing
         endTime = System.nanoTime();
         duration = (endTime - startTime) / 1000000000 ;
         System.out.println("finished in " + duration + " second(s)");
-        System.out.println();
         
-        ldsd.closeIndexes();
-        ldsd_o.closeIndexes();
-        
+
     }
     
 }

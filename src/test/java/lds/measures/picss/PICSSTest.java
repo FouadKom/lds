@@ -7,7 +7,6 @@ package lds.measures.picss;
 
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
@@ -36,8 +35,8 @@ public class PICSSTest {
         //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
         config.addParam("resourcesCount" , 2350906);
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Bob_Dylan").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Ronnie_Hawkins").create();
+        R r1 = new R("http://dbpedia.org/resource/Bob_Dylan");
+        R r2 = new R("http://dbpedia.org/resource/Ronnie_Hawkins");
         
         
         //Initialzie the engine class object

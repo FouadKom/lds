@@ -32,13 +32,16 @@ public class R {
 	}
         
         public String getNamespace() {
-		return this.nameSpace;
+            if(nameSpace == null)
+                nameSpace = uri.getNamespace();
+		
+            return this.nameSpace;
 	}
         
-        public String getSuffix(){
+        public String getLocalName(){
             if(suffix == null){
                 
-               suffix = uri.getLocalName().toString();
+               suffix = uri.getLocalName();
                       
             }
             
@@ -52,6 +55,9 @@ public class R {
 		
 	}
 
-
+        @Override
+        public String toString(){
+            return uri.stringValue();
+        }
 
 }

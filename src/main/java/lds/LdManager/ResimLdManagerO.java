@@ -78,7 +78,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
     @Override
     public List<String> getSubjects(R a) {
         if(useIndex){
-            return subjectsIndex.getListFromIndex(dataset , a.getUri().stringValue() , baseClassPath + "getSubjects" , a );
+            return subjectsIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getSubjects" , a );
         }
         
         return super.getSubjects(a);
@@ -89,7 +89,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
     @Override
     public List<String> getSameAsResources(R a) {
         if(useIndex){
-            return sameAsIndex.getListFromIndex(dataset , a.getUri().stringValue() , baseClassPath + "getSameAsResources" , a );
+            return sameAsIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getSameAsResources" , a );
         }
         
         return super.getSameAsResources(a);       
@@ -99,7 +99,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
     @Override
     public int countPropertyOccurrence(URI link){
         if(useIndex){
-            return propertyOccurrenceIndex.getIntegerFromIndex(dataset , link.stringValue() , baseClassPath + "countPropertyOccurrence", link);
+            return propertyOccurrenceIndex.getIntegerFromIndex(dataset , Utility.createKey(link) , baseClassPath + "countPropertyOccurrence", link);
         }
         
         return super.countPropertyOccurrence(link);
@@ -110,7 +110,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
     @Override
     public int countShareCommonSubjects(URI link , R a){
         if(useIndex){
-           return countShareCommonSubjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countShareCommonSubjects" , link , a);
+           return countShareCommonSubjectsIndex.getIntegerFromIndex(dataset , Utility.createKey(a , link), baseClassPath + "countShareCommonSubjects" , link , a);
         }
         
         return super.countShareCommonSubjects(link, a);
@@ -120,7 +120,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
         List<String> sameAs_resources_a = getSameAsResources(a);
         if(sameAs_resources_a == null)
             return false;
-        else if(sameAs_resources_a.contains(b.getUri().stringValue()))
+        else if(sameAs_resources_a.contains(Utility.compressValue(b)))
             return true;
         
         return false;
@@ -158,7 +158,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
         
         for(String subjects: subjects_a){
             String string[] =  subjects.split("\\|");
-            if(string[1].equals(l.stringValue()))
+            if(string[1].equals(Utility.compressValue(l)))
                 count++;
             
         }

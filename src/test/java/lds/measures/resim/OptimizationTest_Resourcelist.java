@@ -3,12 +3,10 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.ldsd;
+package lds.measures.resim;
 
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
-import lds.resource.LdResourceFactory;
-import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
@@ -18,12 +16,12 @@ import test.utility.Util;
  *
  * @author Fouad Komeiha
  */
-public class OptimizationTest {
-        
+public class OptimizationTest_Resourcelist {
+    public static final String resourcesFilePath = System.getProperty("user.dir") + "/src/test/resources/OptimTest/facebook_book_resources_Resim.txt";
+    
     @Test
     public void OptimizationTest() throws Exception{ 
-        R r1 = new R("http://dbpedia.org/resource/The_Noah");
-        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
+        
         double startTime , endTime , duration;
         
         LdDataset datasetMain = Util.getDBpediaDataset();
@@ -31,36 +29,34 @@ public class OptimizationTest {
         Conf configSim = new Conf();            
         
         configSim.addParam("LdDatasetMain" , datasetMain);
-        configSim.addParam("useIndexes" , true);
+        configSim.addParam("useIndexes" , false);
         
-        LDSDO ldsd_o = new LDSD_cwO(configSim);
-        LDSD ldsd = new LDSD_cw(configSim);
-        ldsd_o.loadIndexes();
-        ldsd.loadIndexes();
-                
-        startTime = System.nanoTime(); 
-        
-        System.out.println(ldsd_o.compare(r1, r2));  
-        
-        //end timing
-        endTime = System.nanoTime();
-        duration = (endTime - startTime) / 1000000000 ;
-        System.out.println("finished in " + duration + " second(s)");
-        System.out.println();
+        LdSimilarityEngine engine = new LdSimilarityEngine();
+
+        engine.load(Measure.ResimO  ,configSim);
         
         startTime = System.nanoTime(); 
         
-        System.out.println(ldsd.compare(r1, r2));
+        engine.similarity(resourcesFilePath , false , false);
         
-        //end timing
         endTime = System.nanoTime();
         duration = (endTime - startTime) / 1000000000 ;
-        System.out.println("finished in " + duration + " second(s)");
+        System.out.println("ResimO finished in " + duration + " second(s)");
         System.out.println();
         
-        ldsd.closeIndexes();
-        ldsd_o.closeIndexes();
+        engine.close();
         
+        engine.load(Measure.Resim  ,configSim);
+        
+        startTime = System.nanoTime(); 
+        
+        engine.similarity(resourcesFilePath , false , false);
+        
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000 ;
+        System.out.println("Resim finished in " + duration + " second(s)");
+        System.out.println();
+        
+        engine.close();
     }
-    
 }

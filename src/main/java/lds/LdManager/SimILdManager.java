@@ -6,17 +6,12 @@
 
 package lds.LdManager;
 
-import java.util.ArrayList;
+
 import java.util.List;
+import lds.LdManager.ontologies.Ontology;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
-import lds.indexing.LdIndexer_;
 import lds.measures.lods.ontologies.O;
-import lds.measures.lods.ontologies.O_DBpedia;
-import lds.measures.lods.ontologies.O_Schema;
-import lds.measures.lods.ontologies.O_Umbel;
-import lds.measures.lods.ontologies.O_WikiData;
-import lds.measures.lods.ontologies.O_Yago;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 
@@ -62,10 +57,10 @@ public class SimILdManager extends FeaturesMeasuresLdManager{
         if (useIndex) {
             List<String> listOntologyPrefixes = ontologiesIndex.getListFromIndex(dataset, a.getUri().stringValue() , baseClassPath + "getOntologiesPrefixes" , a);
         
-            return Utility.getListOntologyFromPrefixes(listOntologyPrefixes);
+            return Ontology.getListOntologyFromPrefixes(listOntologyPrefixes);
         }
 
-        return Utility.getListOntologyFromPrefixes(super.getOntologiesPrefixes(a));
+        return Ontology.getListOntologyFromPrefixes(super.getOntologiesPrefixes(a));
         
     }
     
@@ -77,10 +72,10 @@ public class SimILdManager extends FeaturesMeasuresLdManager{
         if (useIndex) {
             List<String> listOntologyPrefixes = augmentedOntologiesIndex.getListFromIndex(dataset, a.getUri().stringValue() , baseClassPath + "getAugmentdOntologiesPrefixes" , a);
         
-            return Utility.getListOntologyFromPrefixes(listOntologyPrefixes);
+            return Ontology.getListOntologyFromPrefixes(listOntologyPrefixes);
         }
 
-        return Utility.getListOntologyFromPrefixes(super.getAugmentdOntologiesPrefixes(a));
+        return Ontology.getListOntologyFromPrefixes(super.getAugmentdOntologiesPrefixes(a));
         
     }
     

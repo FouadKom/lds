@@ -245,7 +245,7 @@ public class LdBenchmark {
         Scanner scanner = new Scanner(new File(filePath));
         
         while (scanner.hasNext()) {
-              List<String> line = parseLine(scanner.nextLine() , '|' , '"');
+              List<String> line = parseLine(scanner.nextLine() , ',' , ' ');
               
               if(line.isEmpty())
                   continue;

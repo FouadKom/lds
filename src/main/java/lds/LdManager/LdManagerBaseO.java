@@ -45,8 +45,8 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = qs.getResource("subject").getURI();
-            String property = qs.getResource("property").getURI();
+            String resource = Utility.compressValue(qs.getResource("subject"));
+            String property = Utility.compressValue(qs.getResource("property"));
             commonSubjects.add(resource+"|"+property);
 
         }
@@ -72,7 +72,7 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = qs.getResource("object").getURI();
+            String resource = Utility.compressValue(qs.getResource("object"));
             sameAsresources.add(resource);
 
         }
@@ -119,9 +119,9 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = qs.getResource("object").getURI();
-            String property1 = qs.getResource("property1").getURI();
-            String property2 = qs.getResource("property2").getURI();
+            String resource = Utility.compressValue(qs.getResource("object"));
+            String property1 = Utility.compressValue(qs.getResource("property1"));
+            String property2 = Utility.compressValue(qs.getResource("property2"));
             commonObjects.add(resource+"|"+property1+"|"+property2);
 
         }
@@ -145,9 +145,9 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = qs.getResource("subject").getURI();
-            String property1 = qs.getResource("property1").getURI();
-            String property2 = qs.getResource("property2").getURI();
+            String resource = Utility.compressValue(qs.getResource("subject"));
+            String property1 = Utility.compressValue(qs.getResource("property1"));
+            String property2 = Utility.compressValue(qs.getResource("property2"));
             commonSubjects.add(resource+"|"+property1+"|"+property2);
         }
 
@@ -183,7 +183,7 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            edge = qs.getResource("property").toString().trim();
+            edge = Utility.compressValue(qs.getResource("property"));
             edges.add(edge);
         }
 
@@ -212,8 +212,8 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            object = qs.getResource("object").getURI();
-            property = qs.getResource("property").getURI();
+            object = Utility.compressValue(qs.getResource("object"));
+            property = Utility.compressValue(qs.getResource("property"));
             objects.add(object+"|"+property);
             // dataset.close();
         }

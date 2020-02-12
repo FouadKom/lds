@@ -11,6 +11,7 @@ import java.util.concurrent.ExecutionException;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import static org.junit.Assert.fail;
+import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
@@ -22,19 +23,12 @@ import test.utility.Util;
  */
 public class writingResults_Test {
     public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
-    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
+//    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
+    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/mashups-resources.csv";
     
-    
-    public static void main(String args[]) throws Exception{
-//        LdDataset dataSet = null;
-//        
-//        try {
-//            dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir)
-//                    .defaultGraph("http://graphResim/dataset").create();
-//
-//        } catch (Exception e) {
-//                fail(e.getMessage());
-//        }
+    @Test
+    public void test() throws Exception{
+//    public static void main(String args[]) throws Exception{
 
         LdDataset dataSet = Util.getDBpediaDataset();
         
@@ -44,7 +38,7 @@ public class writingResults_Test {
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSet);
 
-        engine.load(Measure.LDSD_d , config);
+        engine.load(Measure.Resim, config);
         
         engine.similarity(resourcesFileCsv , false , false);
         

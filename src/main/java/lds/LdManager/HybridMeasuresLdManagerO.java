@@ -7,22 +7,20 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
-import lds.indexing.LdIndexer_;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Literal;
 import sc.research.ldq.LdDataset;
 
 /**
  *
- * @author Fouad Komeiha
+ * @author Fouad komeiha
  */
-public class HybridMeasuresLdManager extends LdManagerBase{
-    protected String baseClassPath = "lds.LdManager.HybridMeasuresLdManager.";
+public class HybridMeasuresLdManagerO extends LdManagerBaseO {
+    protected String baseClassPath = "lds.LdManager.HybridMeasuresLdManagerO.";
     
-    public HybridMeasuresLdManager(LdDataset dataset) {
+    public HybridMeasuresLdManagerO(LdDataset dataset) {
         super(dataset);
     }
 
@@ -34,7 +32,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         ParameterizedSparqlString query_cmd = dataset.prepareQuery(); 
 
-        query_cmd.setCommandText("select distinct ?property ?subject\n"
+        query_cmd.setCommandText("select distinct ?property ?subject\n "
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
                                     + "where {?subject ?property <" + a.getUri() + ">  }");
 
@@ -43,8 +41,8 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                subject = qs.getResource("subject").getURI();
-                edge = qs.getResource("property").getURI();
+                subject = Utility.compressValue(qs.getResource("subject"));
+                edge = Utility.compressValue(qs.getResource("property"));
                 features.add(edge + "|" + subject + "|" + "In");
 
         }
@@ -65,9 +63,9 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-        query_cmd.setCommandText("select distinct ?property ?object\n"
+        query_cmd.setCommandText("select distinct ?property ?object\n "
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {<" + a.getUri() + "> ?property ?object."
+                                    + "where {<" + a.getUri() + "> ?property ?object. "
                                     + "filter isuri(?object)}");
 
 
@@ -75,8 +73,8 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                object = qs.getResource("object").getURI();
-                edge = qs.getResource("property").getURI();
+                object = Utility.compressValue(qs.getResource("object"));
+                edge = Utility.compressValue(qs.getResource("property"));
                 features.add(edge + "|" +  object + "|" + "Out");
 
         }
@@ -97,7 +95,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         
         String query = "select (count(?subject) as ?count)\n"
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {?subject  <" + property + "> <" + resource + ">}";
+                                    + "where {?subject  <" + Utility.decompressValue(property) + "> <" + Utility.decompressValue(resource) + ">}";
         
         query_cmd.setCommandText(query);
         
@@ -106,7 +104,6 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-//          return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
 
@@ -122,15 +119,16 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         
        query_cmd.setCommandText("select (count(?object) as ?count)\n"
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {<" + resource + ">  <" + property + "> ?object. "
+                                    + "where {<" + Utility.decompressValue(resource) + ">  <" + Utility.decompressValue(property) + "> ?object. "
                                     + "filter isuri(?object)}");
-       
+               
+
        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+       
        
        if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-//            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
 
@@ -139,7 +137,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
     }
     
-    @Override
+    
     public  int countResource() {
         int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
@@ -157,17 +155,10 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
                 count =  qs.getLiteral("count").getInt();
-                // dataset.close();
-//                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
-        
 
-        // dataset.close();
         return count;
         
     }
-    
-
-    
 }

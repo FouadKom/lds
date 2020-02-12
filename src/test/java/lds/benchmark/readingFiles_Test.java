@@ -16,16 +16,21 @@ import lds.resource.LdResourceTriple;
  * @author Fouad Komeiha
  */
 public class readingFiles_Test {
-    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/Test.csv";
+    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/mashups-resources.csv";
     public static final String resourcesFileText = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
     
     public static void main(String args[]) throws FileNotFoundException, IOException{
-        List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFileText , false);
-        for(LdResourceTriple triple : triples){
-            System.out.println(triple.toString('|') +"\n");
-        }
-        
-        triples = LdBenchmark.readListFromFile(resourcesFileText , false);
+//        List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFileText , false);
+//        for(LdResourceTriple triple : triples){
+//            System.out.println(triple.toString('|') +"\n");
+//        }
+//        
+//        triples = LdBenchmark.readListFromFile(resourcesFileText , false);
+//        for(LdResourceTriple triple : triples){
+//            System.out.println(triple.toString('|') +"\n");
+//        }
+
+        List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFileCsv ,false);
         for(LdResourceTriple triple : triples){
             System.out.println(triple.toString('|') +"\n");
         }

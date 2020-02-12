@@ -70,7 +70,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     @Override
     public List<String> getEdges(R a) { 
         if(useIndex){
-            return edgesIndex.getListFromIndex(dataset , a.getUri().stringValue() , baseClassPath + "getEdges" , a);
+            return edgesIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getEdges" , a);
         }
         
         return super.getEdges(a);
@@ -79,7 +79,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     @Override
     public List<String> getObjects(R a){
         if(useIndex){
-            return objectsIndex.getListFromIndex(dataset , a.getUri().stringValue() , baseClassPath + "getObjects" , a );            
+            return objectsIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getObjects" , a );            
         }
         
         return super.getObjects(a);
@@ -88,7 +88,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     @Override
     public List<String> getCommonObjects(R a , R b){
         if(useIndex){
-           return commonObjectsIndex.getListFromIndex(dataset , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getCommonObjects" , a , b);
+           return commonObjectsIndex.getListFromIndex(dataset , Utility.createKey(a , b) , baseClassPath + "getCommonObjects" , a , b);
         }
         
         return super.getCommonObjects(a, b);
@@ -97,7 +97,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     @Override
     public List<String> getCommonSubjects(R a , R b){
         if(useIndex){
-           return commonSubjectsIndex.getListFromIndex(dataset , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getCommonSubjects" , a , b);
+           return commonSubjectsIndex.getListFromIndex(dataset , Utility.createKey(a , b) , baseClassPath + "getCommonSubjects" , a , b);
         }
         
        return super.getCommonSubjects(a, b);
@@ -106,7 +106,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     @Override
     public int countShareCommonObjects(URI link , R a){
         if(useIndex){
-            return countShareCommonObjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countShareCommonObjects" , link , a);
+            return countShareCommonObjectsIndex.getIntegerFromIndex(dataset , Utility.createKey(a , link), baseClassPath + "countShareCommonObjects" , link , a);
         }
         
         return super.countShareCommonObjects(link, a);        
@@ -125,7 +125,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
             edges_a.addAll(edges_b);
         
             edges_a.forEach((edge) -> {
-                URI e = factory.getURI(edge);
+                URI e = factory.getURI(Utility.decompressValue(edge));
                 if(!edges.contains(e))
                     edges.add(e);
             });
@@ -165,7 +165,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
         
         for(String objects: objects_a){
             String string[] =  objects.split("\\|");
-            if(string[1].equals(l.stringValue()))
+            if(string[1].equals(Utility.compressValue(l)))
                 count++;
             
         }
@@ -179,7 +179,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
         if(objects == null)
             return false;
         
-        else if(objects.contains(b.getUri().stringValue()+"|"+l.stringValue()))
+        else if(objects.contains(Utility.compressValue(b)+"|"+Utility.compressValue(l)))
             return true;
         
         return false;
@@ -187,7 +187,8 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     
     public int countCommonObjects(URI link, R a , R b){
         int count = 0;
-        List<String> commonObjects = getCommonObjects(a , b);
+        List<String> commonObjects = getCommonObjects(a , b);        
+        String l = Utility.compressValue(link);
         
         if(commonObjects == null || commonObjects.contains("-1"))
             return count;
@@ -197,7 +198,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
             String property1 = string[1];
             String property2 = string[2];
             
-            if(property1.equals(link.stringValue()) && property2.equals(link.stringValue()))
+            if(property1.equals(l) && property2.equals(l))
                 count++;
         }           
     
@@ -207,6 +208,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     public int countShareCommonObjects(URI l, R a, R b) {
         int count = 0;
         List<String> commonObjects = getCommonObjects(a , b);
+        String link = Utility.compressValue(l);
         
         if(commonObjects == null || commonObjects.contains("-1"))
             return count;
@@ -216,7 +218,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
             String property1 = string[1];
             String property2 = string[2];
             
-            if(property1.equals(l.stringValue()) && property2.equals(l.stringValue()))
+            if(property1.equals(link) && property2.equals(link))
                 count++;
         }           
     
@@ -235,7 +237,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
             String property1 = string[1];
             String property2 = string[2];
             
-            if(property1.equals(li.stringValue()) && property2.equals(lj.stringValue()))
+            if(property1.equals(Utility.compressValue(li)) && property2.equals(Utility.compressValue(lj)))
                 count++;
         }           
     
@@ -245,7 +247,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     public int countShareCommonSubjects(URI l, R a, R b) {
         int count = 0;
         List<String> commonSubjects = getCommonSubjects(a , b);
-        
+        String link = Utility.compressValue(l);
         if(commonSubjects == null || commonSubjects.contains("-1"))
             return count;
         
@@ -254,7 +256,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
             String property1 = string[1];
             String property2 = string[2];
             
-            if(property1.equals(l.stringValue()) && property2.equals(l.stringValue()))
+            if(property1.equals(link) && property2.equals(link))
                 count++;
         }           
     
@@ -273,7 +275,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
             String property1 = string[1];
             String property2 = string[2];
             
-            if(property1.equals(li.stringValue()) && property2.equals(lj .stringValue()))
+            if(property1.equals(Utility.compressValue(li)) && property2.equals(Utility.compressValue(lj)))
                 count++;
         }           
     
@@ -284,6 +286,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
     public int countCommonSubjects(URI link, R a , R b){
         int count = 0;
         List<String> commonSubjects = getCommonSubjects(a , b);
+        String l = Utility.compressValue(link);
         
         if(commonSubjects == null || commonSubjects.contains("-1"))
             return count;
@@ -294,7 +297,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
             String property1 = string[1];
             String property2 = string[2];
             
-            if(property1.equals(link.stringValue()) && property2.equals(link.stringValue()))
+            if(property1.equals(l) && property2.equals(l))
                 count++;
         }           
     

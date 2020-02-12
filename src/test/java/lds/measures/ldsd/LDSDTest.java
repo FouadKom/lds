@@ -5,17 +5,12 @@
  */
 package lds.measures.ldsd;
 
-import lds.LdManager.LdsdLdManager;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
-import static lds.measures.ldsd.LDSDTest_localRDF.dataSetDir;
-import lds.measures.weight.Weight;
 import lds.measures.weight.WeightMethod;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
@@ -59,8 +54,8 @@ public class LDSDTest {
         //providing thw weighting method that will calculate weights for links 
         config.addParam("WeightMethod", WeightMethod.ITW);
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Pack_(2010_film)").create();
+        R r1 = new R("http://dbpedia.org/resource/The_Noah");
+        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
