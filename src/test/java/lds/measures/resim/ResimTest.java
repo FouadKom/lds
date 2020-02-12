@@ -29,8 +29,9 @@ public class ResimTest {
     @Test
     public void ResimTest() throws Exception{ 
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Pack_(2010_film)").create();
+             
+        R r1 = new R("http://dbpedia.org/resource/The_Noah");
+        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
         
         Conf configSim = new Conf();

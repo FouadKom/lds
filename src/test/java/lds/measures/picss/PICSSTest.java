@@ -36,8 +36,8 @@ public class PICSSTest {
         //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
         config.addParam("resourcesCount" , 2350906);
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Pack_(2010_film)").create();
+        R r1 = new R("http://dbpedia.org/resource/The_Noah");
+        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
         
         //Initialzie the engine class object

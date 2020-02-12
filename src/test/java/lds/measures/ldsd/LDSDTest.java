@@ -55,8 +55,8 @@ public class LDSDTest {
         //providing thw weighting method that will calculate weights for links 
         config.addParam("WeightMethod", WeightMethod.ITW);
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Noah").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("The_Pack_(2010_film)").create();
+        R r1 = new R("http://dbpedia.org/resource/The_Noah");
+        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
