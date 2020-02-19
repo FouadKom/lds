@@ -138,10 +138,11 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
         List<String> subjects = new ArrayList<>();
         
         for(String item: list){
+//            System.out.println(item);
             String string[] =  item.split("\\|");
             String subject = string[0];
 
-            if(subjects.isEmpty() || ! subjects.contains(subject))
+            if(subjects.isEmpty() || ! subjects.contains(subject) )
                 subjects.add(subject);
         }
         
@@ -152,13 +153,15 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
     public int countSubject(URI l, R a) {
         List<String> subjects_a = getSubjects(a);
         int count = 0;
+        String uri = Utility.compressValue(l);
         
         if(subjects_a == null)
             return count;
         
         for(String subjects: subjects_a){
-            String string[] =  subjects.split("\\|");
-            if(string[1].equals(Utility.compressValue(l)))
+//            System.out.println(subjects);
+            String string[] =  subjects.split("\\|" , 2);
+            if(string[1].equals(uri))
                 count++;
             
         }

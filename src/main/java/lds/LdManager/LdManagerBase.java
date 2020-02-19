@@ -454,7 +454,7 @@ public class LdManagerBase implements LdManager {
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object . "
-                                                                                       + "?subject <" + link + "> ?object ."
+                                                                                     + "?subject <" + link + "> ?object ."
                                                                                      + "filter(?subject != <" + a.getUri() + ">)}");
             
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());

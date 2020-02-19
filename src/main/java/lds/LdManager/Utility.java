@@ -65,10 +65,13 @@ public class Utility {
 
     public static String compressValue(Resource resource) {
         String prefix = Ontology.getPrefixFromNamespace(resource.getNameSpace());
-        if(! prefix.equals(resource.getNameSpace()))
-            return prefix + resource.getLocalName();
+        if(prefix.equals(resource.getNameSpace()) || prefix.equals(resource.getURI()) || ! prefix.contains(":"))
+            return resource.getURI();
         
-        return resource.getURI();
+        
+        return prefix + resource.getLocalName();
+        
+        
     }
     
     public static String compressValue(R r) {
@@ -77,10 +80,12 @@ public class Utility {
     
     public static String compressValue(URI uri) {
         String prefix = Ontology.getPrefixFromNamespace(uri);
-        if(! prefix.equals(uri.getNamespace()))
-            return prefix + uri.getLocalName();
         
-        return uri.toString();
+        if(prefix.equals(uri.getNamespace()) || prefix.equals(uri.stringValue()) || ! prefix.contains(":"))
+            return uri.toString();
+        
+        return prefix + uri.getLocalName();       
+        
     }
 
     public static String decompressValue(String value) {

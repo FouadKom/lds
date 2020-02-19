@@ -74,6 +74,12 @@ public class SimI implements LdSimilarity {
         for (O commonOntology : commonOntologies) {
             List<String> o_concepts = commonOntology.getConcepts(a);
             
+//            System.out.println("Concepts from for Resource " + a.toString() + " from ontology " + commonOntology);
+//            for(String concept : o_concepts){
+//                System.out.println(concept);
+//            }
+//            System.out.println();
+
             String ontologyName = commonOntology.toString();
 
             if(ontologyName.contains("DBpedia") && !o_concepts.isEmpty())
@@ -83,6 +89,14 @@ public class SimI implements LdSimilarity {
                 concepts.put(commonOntology.toString() , o_concepts);
         }
         
+//        System.out.println("Concepts of Resource " + a.toString() + " are:");
+//        for(Map.Entry<String , List<String>> entry: concepts.entrySet()){
+//            for(String concept: entry.getValue()){
+//                System.out.println(concept);
+//            }
+//        }
+//        System.out.println();
+
         return concepts;
 
     }
@@ -100,14 +114,17 @@ public class SimI implements LdSimilarity {
         
         for (O commonOntology : commonOntologies) {
             String ontologyName = commonOntology.toString();
+            
             if(ontologyName.contains("DBpedia"))
                 ontologyName = "DBpedia";
+            
             List<String> concepts_a_O = concepts_a.get(ontologyName);
             List<String> concepts_b_O = concepts_b.get(ontologyName);
+            
             score = score + Utility.TverskySimilarity_mod(concepts_a_O, concepts_b_O);
         }
         
-        return score/concepts_a.size();
+        return score/commonOntologies.size();
         
     }
     

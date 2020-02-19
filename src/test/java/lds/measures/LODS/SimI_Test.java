@@ -32,7 +32,7 @@ public class SimI_Test {
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSetMain);
-        config.addParam("dataAugmentation" , true);
+        config.addParam("dataAugmentation" , false);
 
         
         List<O> ontologyList = new ArrayList<>();

@@ -76,6 +76,7 @@ public abstract class ResourceSimilarity implements LdSimilarity {
         if(useIndeses){
             resimLDLoader.loadIndexes();
             
+            
             if(SpecificResimLdLoader != null && weight != null){
                 SpecificResimLdLoader.loadIndexes();
                 weight.loadIndexes();

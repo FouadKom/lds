@@ -116,6 +116,44 @@ public class LdIndex {
             }
             return result;
     }
+    
+    public String generateRandomKey(int keySize){
+        int tries = 0;
+        int maxTries = 4;
+        String key = Utility.getAlphaNumericString(keySize);
+        
+        while( getValue(key) != null && getList(key) != null && tries != maxTries) {
+            key = Utility.getAlphaNumericString(keySize);
+            tries++;
+        }
+        
+        if(tries == maxTries){
+            keySize++;
+            return generateRandomKey(keySize);
+        }
+        
+        return key;
+        
+    }
+    
+    public String generateRandomKey(int keySize , int maxTries){
+        int tries = 0;
+        String key = Utility.getAlphaNumericString(keySize);
+        
+        while( getValue(key) != null && getList(key) != null && tries != maxTries) {
+            key = Utility.getAlphaNumericString(keySize);
+            tries++;
+        }
+        
+        if(tries == maxTries){
+            keySize++;
+            return generateRandomKey(keySize , maxTries);
+        }
+        
+        return key;
+        
+    }
+    
 
     public List<String> getListFromIndex(LdDataset dataset, String key , String methodPath , Object... args) {
 

@@ -86,206 +86,74 @@ public class Ontology {
     }
 
     public static String getPrefixFromNamespace(URI uri) {
-        return Ontology.getPrefixFromNamespace(uri.getNamespace().trim());
+        return Ontology.getPrefixFromNamespace(uri.getNamespace());
     }
 
     public static String getPrefixFromNamespace(String uri) {
         prepareIndexes();
         
+        if(uri.charAt(uri.length()-1) != '/'){
+               return uri;         
+        }
+                    
         String prefix = prefixIndex.getValue(uri);
         if(prefix != null && prefix.contains(":") ){            
             return prefix;
         }
         
-        String p = Utility.getAlphaNumericString(4);
+        String p = prefixIndex.generateRandomKey(4);
         
-//        while(prefixIndex.getValue(p) != null){
-//            p = Utility.getAlphaNumericString(6);
-//        }
-//        
-        
-        prefixIndex.addValue(uri, p+":");
         nameSpaceIndex.addValue(p , uri);
+        prefixIndex.addValue(uri, p+":");
         return p+":";
 
-//         return uri;
-         
-        /*switch (uri) {
-            case "http://dbpedia.org/resource/":
-                prefixIndex.addValue("http://dbpedia.org/resource/", "dbpedia:");
-                return "dbpedia:";
-            case "http://dbpedia.org/ontology/":
-                prefixIndex.addValue("http://dbpedia.org/ontology/", "dbo:");
-                return "dbo:";
-            case "http://dbpedia.org/property/":
-                prefixIndex.addValue("http://dbpedia.org/property/", "dbp:");
-                return "dbp:";
-            case "http://en.wikipedia.org/wiki/" :
-                prefixIndex.addValue("http://en.wikipedia.org/wiki/", "wiki:");
-                return "wiki:";
-            case "http://xmlns.com/foaf/0.1/" :
-                prefixIndex.addValue("http://xmlns.com/foaf/0.1/", "foaf:");
-                return "foaf:";
-            case "http://www.w3.org/1999/02/22-rdf-syntax-ns#":
-                prefixIndex.addValue("http://www.w3.org/1999/02/22-rdf-syntax-ns#", "rdf:");
-                return "rdf:";
-            case "http://www.w3.org/ns/rdfa#":
-                prefixIndex.addValue("http://www.w3.org/ns/rdfa#", "rdfa:");
-                return "rdfa:";
-            case "http://www.openlinksw.com/virtrdf-data-formats#":
-                prefixIndex.addValue("http://www.openlinksw.com/virtrdf-data-formats#", "rdfdf:");
-                return "rdfdf:";
-            case "http://www.w3.org/2000/01/rdf-schema#":
-                prefixIndex.addValue("http://www.w3.org/2000/01/rdf-schema#", "rdfs:");
-                return "rdfs:";
-            case "http://www.w3.org/2002/07/owl#":
-                prefixIndex.addValue("http://www.w3.org/2002/07/owl#", "dbo:");
-                return "owl:";
-            case "http://www.w3.org/XML/1998/namespace":
-                prefixIndex.addValue("http://www.w3.org/XML/1998/namespace", "xml:");
-                return "xml:";
-            case "http://www.w3.org/2001/XMLSchema#":
-                prefixIndex.addValue("http://www.w3.org/2001/XMLSchema#", "xsd:");
-                return "xsd:";
-            case "http://purl.org/dc/terms/":
-                prefixIndex.addValue("http://purl.org/dc/terms/", "dc:");
-                return "dc:";
-            case "http://purl.org/linguistics/gold/":
-                prefixIndex.addValue("http://purl.org/linguistics/gold/", "gold:");
-                return "gold:";
-            case "http://www.w3.org/ns/prov#"  :
-                prefixIndex.addValue("http://www.w3.org/ns/prov#", "prov:");
-                return "prov:";
-            case "http://www.w3.org/ns/ldp#" :
-                prefixIndex.addValue("http://www.w3.org/ns/ldp#", "ldp:");
-                return "ldp:";
-            case "http://dbpedia.org/class/yago/":
-                prefixIndex.addValue("http://dbpedia.org/class/yago/", "dbo:");
-                return "yago:";
-            case "http://www.wikidata.org/entity/":
-                prefixIndex.addValue("http://www.wikidata.org/entity/", "wikidata:");
-                return "wikidata:";
-            case "http://schema.org/":
-                prefixIndex.addValue("http://schema.org/", "schema:");
-                return "schema:";
-            case "http://www.w3.org/2006/vcard/ns#" :
-                prefixIndex.addValue("http://www.w3.org/2006/vcard/ns#", "vcard:");
-                return "vcard:";
-            case "http://rdf.freebase.com/ns/" :
-                prefixIndex.addValue("http://rdf.freebase.com/ns/", "freebase:");
-                return "freebase:";
-            default:
-                String p = Utility.getAlphaNumericString(6);
-                prefixIndex.addValue(uri, p+":");
-                nameSpaceIndex.addValue(p , uri);
-                return p+":";
-//                return uri;
-        }*/
     }
 
     public static String getNamespaceFromPrefix(String prefix) {
-        prepareIndexes();
         
         String namespace = nameSpaceIndex.getValue(prefix);
-        if(namespace != null && namespace.contains("http")){
+        if(namespace != null){
                return namespace;       
         }
         
         return prefix;
-        
-        /*switch (prefix) {
-            case "dbpedia" :
-                nameSpaceIndex.addValue("dbpedia", "http://dbpedia.org/resource/");
-                return "http://dbpedia.org/resource/";
-            case "dbo":
-                nameSpaceIndex.addValue("dbo", "http://dbpedia.org/ontology/");
-                return "http://dbpedia.org/ontology/";
-            case "dbp":
-                nameSpaceIndex.addValue("dbp", "http://dbpedia.org/property/");
-                return "http://dbpedia.org/property/";
-            case "wiki" :
-                nameSpaceIndex.addValue("wiki", "http://en.wikipedia.org/wiki/");
-                return "http://en.wikipedia.org/wiki/";
-            case "foaf" :
-                nameSpaceIndex.addValue("foaf", "http://xmlns.com/foaf/0.1/");
-                return "http://xmlns.com/foaf/0.1/";
-            case "rdf":
-                nameSpaceIndex.addValue("rdf", "http://www.w3.org/1999/02/22-rdf-syntax-ns#");
-                return "http://www.w3.org/1999/02/22-rdf-syntax-ns#";
-            case "rdfa":
-                nameSpaceIndex.addValue("rdfa", "http://www.w3.org/ns/rdfa#");
-                return "http://www.w3.org/ns/rdfa#";
-            case "rdfdf":
-                nameSpaceIndex.addValue("rdfdf", "http://www.openlinksw.com/virtrdf-data-formats#");
-                return "http://www.openlinksw.com/virtrdf-data-formats#";
-            case "rdfs":
-                nameSpaceIndex.addValue("rdfs", "http://www.w3.org/2000/01/rdf-schema#");
-                return "http://www.w3.org/2000/01/rdf-schema#";
-            case "owl":
-                nameSpaceIndex.addValue("owl", "http://www.w3.org/2002/07/owl#");
-                return "http://www.w3.org/2002/07/owl#";
-            case "xml":
-                nameSpaceIndex.addValue("xml", "http://www.w3.org/XML/1998/namespace");
-                return "http://www.w3.org/XML/1998/namespace";
-            case "xsd":
-                nameSpaceIndex.addValue("xsd", "http://www.w3.org/2001/XMLSchema#");
-                return "http://www.w3.org/2001/XMLSchema#";
-            case "dc":
-                nameSpaceIndex.addValue("dc", "http://purl.org/dc/terms/");
-                return "http://purl.org/dc/terms/";
-            case "gold":
-                nameSpaceIndex.addValue("gold", "http://purl.org/linguistics/gold/");
-                return "http://purl.org/linguistics/gold/";
-            case "prov"  :
-                nameSpaceIndex.addValue("prov", "http://www.w3.org/ns/prov#");
-                return "http://www.w3.org/ns/prov#";
-            case "ldp" :
-                nameSpaceIndex.addValue("ldp", "http://www.w3.org/ns/ldp#");
-                return "http://www.w3.org/ns/ldp#";
-            case "yago":
-                nameSpaceIndex.addValue("yago", "http://dbpedia.org/resource/");
-                return "http://dbpedia.org/class/yago/";
-            case "wikidata":
-                nameSpaceIndex.addValue("wikidata", "http://www.wikidata.org/entity/");
-                return "http://www.wikidata.org/entity/";
-            case "schema":
-                nameSpaceIndex.addValue("schema", "http://schema.org/");
-                return "http://schema.org/";
-            case "vcard":
-                nameSpaceIndex.addValue("vcard", "http://www.w3.org/2006/vcard/ns#");
-                return "http://www.w3.org/2006/vcard/ns#";
-            case "freebase":
-                nameSpaceIndex.addValue("freebase", "http://rdf.freebase.com/ns/");
-                return "http://rdf.freebase.com/ns/";    
-            default:
-                
-                return prefix;
-        }*/
     }
     
     public static void prepareIndexes(){
         manager = LdIndexer.getManager();
-        File prefixIndexFile = new File(prefixIndexPath);
-        File nameSpaceIndexFile = new File(namespaceIndexPath);
         
         try {
-            if(! prefixIndexFile.exists()){
-                prefixIndex = manager.loadIndex(prefixIndexPath);
-//                updatePrefixIndex();
-            }
-            else
-                prefixIndex = manager.loadIndex(prefixIndexPath);
-
-            if(! nameSpaceIndexFile.exists()){
-                nameSpaceIndex = manager.loadIndex(namespaceIndexPath);
-//                updateNameSpaceIndex();
-            }
-            else
-                nameSpaceIndex = manager.loadIndex(namespaceIndexPath);
+        prefixIndex = manager.loadIndex(prefixIndexPath); 
+        nameSpaceIndex = manager.loadIndex(namespaceIndexPath);
         } 
         catch (Exception ex) {
                 Logger.getLogger(Ontology.class.getName()).log(Level.SEVERE, null, ex);
         }
+        
+        
+        /*File prefixIndexFile = new File(prefixIndexPath);
+        File nameSpaceIndexFile = new File(namespaceIndexPath);
+        
+        try {
+            if(prefixIndexFile.exists()){
+                prefixIndex = manager.loadIndex(prefixIndexPath);               
+            }
+            else {
+                prefixIndex = manager.loadIndex(prefixIndexPath);
+                updatePrefixIndex();
+            }
+
+            if(nameSpaceIndexFile.exists()){
+                nameSpaceIndex = manager.loadIndex(namespaceIndexPath);                
+            }
+            else {
+                nameSpaceIndex = manager.loadIndex(namespaceIndexPath);
+                updateNameSpaceIndex();
+            }
+        } 
+        catch (Exception ex) {
+                Logger.getLogger(Ontology.class.getName()).log(Level.SEVERE, null, ex);
+        }*/
     }
     
     public static void updatePrefixIndex(){
