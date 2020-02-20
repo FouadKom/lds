@@ -107,7 +107,7 @@ public class SimI implements LdSimilarity {
             score = score + Utility.TverskySimilarity_mod(concepts_a_O, concepts_b_O);
         }
         
-        return score/concepts_a.size();
+        return score/commonOntologies.size();
         
     }
     
