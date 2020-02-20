@@ -90,36 +90,37 @@ public class Ontology {
     }
 
     public static String getPrefixFromNamespace(String uri) {
-        prepareIndexes();
         
-        if(uri.charAt(uri.length()-1) != '/'){
-               return uri;         
-        }
+//        if(! uri.endsWith("/") || ! uri.endsWith("#")){
+//               return uri;         
+//        }
                     
         String prefix = prefixIndex.getValue(uri);
+        
         if(prefix != null && prefix.contains(":") ){            
             return prefix;
         }
         
-        String p = prefixIndex.generateRandomKey(4);
+        prefix = prefixIndex.generateRandomKey(4);
         
-        nameSpaceIndex.addValue(p , uri);
-        prefixIndex.addValue(uri, p+":");
-        return p+":";
+        nameSpaceIndex.addValue(prefix , uri);
+        prefixIndex.addValue(uri, prefix + ":");
+        return prefix + ":";
 
     }
 
     public static String getNamespaceFromPrefix(String prefix) {
         
         String namespace = nameSpaceIndex.getValue(prefix);
+        
         if(namespace != null){
                return namespace;       
         }
         
-        return prefix;
+        return prefix + ":";
     }
     
-    public static void prepareIndexes(){
+    public static void loadIndexes(){
         manager = LdIndexer.getManager();
         
         try {
@@ -154,6 +155,11 @@ public class Ontology {
         catch (Exception ex) {
                 Logger.getLogger(Ontology.class.getName()).log(Level.SEVERE, null, ex);
         }*/
+    }
+    
+    public static void closeIndexes(){
+        manager.closeIndex(prefixIndex);
+        manager.closeIndex(nameSpaceIndex);
     }
     
     public static void updatePrefixIndex(){

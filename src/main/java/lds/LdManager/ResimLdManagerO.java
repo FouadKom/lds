@@ -7,6 +7,7 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import lds.LdManager.ontologies.Ontology;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
 import lds.resource.R;

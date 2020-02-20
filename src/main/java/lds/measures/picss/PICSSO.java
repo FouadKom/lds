@@ -8,6 +8,7 @@ package lds.measures.picss;
 
 import java.util.List;
 import lds.LdManager.PicssLdManagerO;
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import sc.research.ldq.*;
 import slib.utils.i.Conf;
@@ -51,11 +52,14 @@ public class PICSSO implements LdSimilarity{
     
     @Override
     public double compare(R a, R b) {
+        //load prefixes and namespaces index
+        Ontology.loadIndexes();
+        
 	double sim = 0;
 
         sim= PICSS(a , b);
 
-
+        Ontology.closeIndexes();
         return sim;
 
     }

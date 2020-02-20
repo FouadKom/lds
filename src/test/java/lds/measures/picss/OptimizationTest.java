@@ -21,7 +21,7 @@ public class OptimizationTest {
     public void OptimizationTest() throws Exception{ 
 
         R r1 = new R("http://dbpedia.org/resource/Paris");
-        R r2 = new R("http://dbpedia.org/resource/New_York");
+        R r2 = new R("http://dbpedia.org/resource/London");
         
         double startTime , endTime , duration;
         
@@ -31,7 +31,7 @@ public class OptimizationTest {
         
         configSim.addParam("LdDatasetMain" , datasetMain);
         configSim.addParam("resourcesCount" , 2350906);
-        configSim.addParam("useIndexes" , true);
+        configSim.addParam("useIndexes" , false);
         
         PICSSO picss_o = new PICSSO(configSim);
         PICSS picss = new PICSS(configSim);

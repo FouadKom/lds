@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.ResimLdManager;
 import lds.LdManager.ResimLdManagerO;
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -87,6 +88,9 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
 
     @Override
     public double compare(R a, R b) {
+        //load prefixes Index
+        Ontology.loadIndexes();
+        
         double sim = 0;
         try {
 
@@ -97,12 +101,15 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
+        Ontology.closeIndexes();
         return sim;
     }
     
     
     public double compare(R a, R b , int w1 , int w2) {
+        //load prefixes and namespaces index
+        Ontology.loadIndexes();
+        
         double sim = 0;
         try {
                 sim = Resim(a, b , w1 , w2);
@@ -112,7 +119,7 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
+        Ontology.closeIndexes();
         return sim;
     }
 

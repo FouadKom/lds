@@ -47,8 +47,6 @@ public class LdManagerBaseO {
             QuerySolution qs = resultSet.nextSolution();
             String resource = Utility.compressValue(qs.getResource("subject"));
             String property = Utility.compressValue(qs.getResource("property"));
-//            String resource = qs.getResource("subject").getURI();
-//            String property = qs.getResource("property").getURI();
             commonSubjects.add(resource+"|"+property);
 
         }

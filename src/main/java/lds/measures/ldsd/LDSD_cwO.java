@@ -5,6 +5,7 @@
  */
 package lds.measures.ldsd;
 
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import slib.utils.i.Conf;
@@ -21,7 +22,12 @@ public class LDSD_cwO extends LDSDO{
 
     @Override
     public double compare(R a, R b) {
+        
+        //load prefixes and namespaces index
+        Ontology.loadIndexes();
         edges = LDSDLDLoader.getEdges(a, b);
+        
+        Ontology.closeIndexes();
         return LDSD_cw_sim(a, b);
     }
     
