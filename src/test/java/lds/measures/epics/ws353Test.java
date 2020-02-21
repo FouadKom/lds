@@ -52,7 +52,8 @@ public class ws353Test {
         Conf config = new Conf();
         config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906); 
+        config.addParam("resourcesCount" , 2350906);
+        config.addParam("threadsNumber", 5);
         
         
         PICSS picss = new PICSS(config);

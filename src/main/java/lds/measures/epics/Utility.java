@@ -5,24 +5,19 @@
  */
 package lds.measures.epics;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
+import java.util.concurrent.TimeUnit;
 import lds.engine.SimilarityCompareTask;
 import lds.engine.SimilarityCompareTaskRunnable;
 import lds.measures.Measure;
-import static lds.measures.Measure.LDSD_i;
 import lds.measures.ldsd.*;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import lds.resource.LdResourcePair;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
@@ -47,8 +42,8 @@ public class Utility {
     
     public static List<String> similarFeatures(List<String> a, List<String> b , Conf config) throws Exception {
         List<String> result = new ArrayList<>();
-        String node_a , node_b ,link_a , link_b , direction_a , direction_b;
-        double sim;
+        
+        int threadNum = 0; 
         
         LdDataset dataset = (LdDataset) config.getParam("LdDatasetMain");
         boolean useIndex = (Boolean) config.getParam("useIndexes");
@@ -84,73 +79,14 @@ public class Utility {
             
         }                
         
-        ldsd.loadIndexes();
+        ldsd.loadIndexes();     
         
-       
-        HashMap<String, String> map_a = new HashMap();
-        HashMap<String, String> map_b = new HashMap();
-        
-//        for(String fa : a){
-//           node_a = getVertex(fa);
-//           link_a = getLink(fa);
-//           direction_a = getDirection(fa);
-//           map_a.put(node_a , link_a + "|" + direction_a);
-//        }
-        
-        for(String fb : b){
-           node_b = getVertex(fb);
-           link_b = getLink(fb);
-           direction_b = getDirection(fb);
-           map_b.put(node_b , link_b + "|" + direction_b);
-        }
-        
+              
+        if(config.getParam("threadsNumber") == null || (Integer)config.getParam("threadsNumber") == 1 ){
+        //To use singlethread uncomment this parts and comment the parts after it
+        String link_a , link_b , direction_a , direction_b;
+        double sim;
         for(String fa : a){
-           node_a = getVertex(fa);
-           link_a = getLink(fa);
-           direction_a = getDirection(fa);
-           
-           if(map_b.containsKey(node_a)){
-               
-           }
-               
-            
-        }
-        
-        
-//        for (Entry entry : map_a.entrySet()) {
-//            String f = entry.getValue().toString();
-//            
-//            
-//            if(map_b.containsValue(f)){
-//                String node_1 = entry.getKey().toString();
-//                
-//            }
-//            
-//        }
-
-       //To use multithread uncomment this part and comment the part after it
-       /*SearchTask[] threads = new SearchTask[a.size()];
-
-       int i = 0;
-
-       for(String fa: a){
-            threads[i] = new SearchTask(ldsd.getMeasure() , fa , b , result);
-            threads[i].start();
-
-            i++;
-       }
-
-       try{
-           for(int j = 0 ; j < i ; j++){
-               threads[j].join();
-           }
-       }catch(InterruptedException ie) {
-           ie.printStackTrace();
-       }*/
-       //////////////////////////////////////////////////////////////////////
-           
-        //To use singlethread uncomment this part and comment the part before it
-        /*for(String fa : a){
            link_a = getLink(fa);
            direction_a = getDirection(fa);
            
@@ -172,11 +108,73 @@ public class Utility {
                 }
             
             } 
-        }*/
-        ///////////////////////////////////////////////////////////////////////
+        }
+       }
+       ///////////////////////////////////////////////////////////////////////        
 
-        ldsd.closeIndexes();
-        return result;
+       //To use multithread runnable uncomment this part and comment the parts after it
+       /*SearchTask[] threads = new SearchTask[a.size()];
+
+       int i = 0;
+
+       for(String fa: a){
+            threads[i] = new SearchTask(ldsd.getMeasure() , fa , b , result);
+            threads[i].start();
+
+            i++;
+       }
+
+       try{
+           for(int j = 0 ; j < i ; j++){
+               threads[j].join();
+           }
+       }catch(InterruptedException ie) {
+           ie.printStackTrace();
+       }*/
+       //////////////////////////////////////////////////////////////////////
+       
+       
+       //To use multithread callable uncomment this part and comment the parts before it   
+       else if(config.getParam("threadsNumber") != null) {          
+            
+        threadNum = (Integer) config.getParam("threadsNumber");
+       
+        ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
+       
+        List<Callable<List<String>>> lst = new ArrayList<>();
+
+        for(String fa: a){
+            
+            lst.add(new SearchTask_(ldsd.getMeasure() , fa , b));
+            
+        }
+
+        List<Future<List<String>>> tasks = executorService.invokeAll(lst);
+
+        executorService.shutdown();
+        try {
+            if (!executorService.awaitTermination(10, TimeUnit.HOURS)) {
+                executorService.shutdownNow();
+            }
+        } catch (InterruptedException ex) {
+            executorService.shutdownNow();
+            Thread.currentThread().interrupt();
+        }
+
+        for(Future<List<String>> task : tasks)
+        {
+
+            if(task.isDone()){
+                result.addAll(task.get());
+            }
+
+        }
+        
+       }
+       //////////////////////////////////////////////////////////////////////
+           
+       ldsd.closeIndexes();
+       return result;
         
     }
     
@@ -205,9 +203,8 @@ public class Utility {
     }	 
     
 	
-    // Function that matches input str with 
-    // given wildcard pattern 
-    static boolean strmatch(String str, String pattern, int n, int m) 
+    // Function that matches input str with a given wildcard pattern 
+   /* static boolean strmatch(String str, String pattern, int n, int m) 
     { 
             // empty pattern can only match with 
             // empty string 
@@ -260,8 +257,6 @@ public class Utility {
             } 
 
             return lookup[n][m]; 
-    } 
-
-
+    } */
      
 }

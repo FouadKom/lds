@@ -40,7 +40,8 @@ public class mc30Test {
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906); 
+        config.addParam("resourcesCount" , 2350906);
+        config.addParam("threadsNumber", 5);
         
         
         PICSS picss = new PICSS(config);
