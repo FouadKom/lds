@@ -22,10 +22,8 @@ import test.utility.Util;
  */
 public class OptimizationTest {
         
-//    @Test
-//    public void OptimizationTest() throws Exception{
-    
-    public static void main(String args[]) throws Exception{
+    @Test
+    public void OptimizationTest() throws Exception{
    
         R r1 = new R("http://dbpedia.org/resource/Bob_Dylan");
         R r2 = new R("http://dbpedia.org/resource/Ronnie_Hawkins");

@@ -5,6 +5,7 @@
  */
 package lds.measures.epics;
 
+import lds.LdManager.EpicsLdManager;
 import lds.measures.picss.PICSS;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;

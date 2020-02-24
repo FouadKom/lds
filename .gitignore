@@ -2,6 +2,7 @@
 
 # ignore all index files
 *.db
+/Indexes/*
 
 #ignoring hdtFiles
 *.hdt

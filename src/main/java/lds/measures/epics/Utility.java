@@ -12,6 +12,7 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
+import lds.LdManager.EpicsLdManager;
 import lds.engine.SimilarityCompareTask;
 import lds.engine.SimilarityCompareTaskRunnable;
 import lds.measures.Measure;
@@ -81,34 +82,34 @@ public class Utility {
         
         ldsd.loadIndexes();     
         
-              
+        //To use single thread uncomment this part and comment the parts after it    
         if(config.getParam("threadsNumber") == null || (Integer)config.getParam("threadsNumber") == 1 ){
-        //To use singlethread uncomment this parts and comment the parts after it
-        String link_a , link_b , direction_a , direction_b;
-        double sim;
-        for(String fa : a){
-           link_a = getLink(fa);
-           direction_a = getDirection(fa);
-           
-           for (String fb : b) {
-                link_b = getLink(fb);
-                direction_b = getDirection(fb);
+            //To use singlethread uncomment this parts and comment the parts after it
+            String link_a , link_b , direction_a , direction_b;
+            double sim;
+            for(String fa : a){
+               link_a = getLink(fa);
+               direction_a = getDirection(fa);
 
-                if(link_a.equals(link_b) && direction_a.equals(direction_b)){
+               for (String fb : b) {
+                    link_b = getLink(fb);
+                    direction_b = getDirection(fb);
 
-                    R r1 = LdResourceFactory.getInstance().uri(getVertex(fa)).create();
-                    R r2 = LdResourceFactory.getInstance().uri(getVertex(fb)).create();
-        
-                    sim = ldsd.compare(r1 , r2);
+                    if(link_a.equals(link_b) && direction_a.equals(direction_b)){
 
-                    if( sim >= 0.5){
-                        result.add(fa);
-                        result.add(fb);
+                        R r1 = LdResourceFactory.getInstance().uri(getVertex(fa)).create();
+                        R r2 = LdResourceFactory.getInstance().uri(getVertex(fb)).create();
+
+                        sim = ldsd.compare(r1 , r2);
+
+                        if( sim >= 0.5){
+                            result.add(fa);
+                            result.add(fb);
+                        }
                     }
-                }
-            
-            } 
-        }
+
+                } 
+            }
        }
        ///////////////////////////////////////////////////////////////////////        
 
@@ -134,44 +135,45 @@ public class Utility {
        //////////////////////////////////////////////////////////////////////
        
        
-       //To use multithread callable uncomment this part and comment the parts before it   
+       //To use multithread callable uncomment this part and comment the parts before and after it   
        else if(config.getParam("threadsNumber") != null) {          
             
-        threadNum = (Integer) config.getParam("threadsNumber");
-       
-        ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
-       
-        List<Callable<List<String>>> lst = new ArrayList<>();
+            threadNum = (Integer) config.getParam("threadsNumber");
 
-        for(String fa: a){
-            
-            lst.add(new SearchTask_(ldsd.getMeasure() , fa , b));
-            
-        }
+            ExecutorService executorService = Executors.newFixedThreadPool(threadNum);
 
-        List<Future<List<String>>> tasks = executorService.invokeAll(lst);
+            List<Callable<List<String>>> lst = new ArrayList<>();
 
-        executorService.shutdown();
-        try {
-            if (!executorService.awaitTermination(10, TimeUnit.HOURS)) {
+            for(String fa: a){
+
+                lst.add(new SearchTask_(ldsd.getMeasure() , fa , b));
+
+            }
+
+            List<Future<List<String>>> tasks = executorService.invokeAll(lst);
+
+            executorService.shutdown();
+            try {
+                if (!executorService.awaitTermination(10, TimeUnit.HOURS)) {
+                    executorService.shutdownNow();
+                }
+            } catch (InterruptedException ex) {
                 executorService.shutdownNow();
-            }
-        } catch (InterruptedException ex) {
-            executorService.shutdownNow();
-            Thread.currentThread().interrupt();
-        }
-
-        for(Future<List<String>> task : tasks)
-        {
-
-            if(task.isDone()){
-                result.addAll(task.get());
+                Thread.currentThread().interrupt();
             }
 
-        }
+            for(Future<List<String>> task : tasks)
+            {
+
+                if(task.isDone()){
+                    result.addAll(task.get());
+                }
+
+            }
         
        }
        //////////////////////////////////////////////////////////////////////
+       
            
        ldsd.closeIndexes();
        return result;
