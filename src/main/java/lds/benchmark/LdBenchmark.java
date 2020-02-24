@@ -219,7 +219,44 @@ public class LdBenchmark {
 
         return remainingList;
         
-    }        
+    }
+    
+    public static List<LdResourceTriple> readListFromFile(String initialfilePath , char separator  , char quote , boolean skipCalculated) throws FileNotFoundException, IOException{
+        if(! Utility.checkFile(initialfilePath))
+            return null;
+
+        Map<String , LdResourceTriple> mainList = new HashMap<>();
+        Map<String , LdResourceTriple> resultsList = new HashMap<>();
+        
+        String resultsFilePath = null;
+        
+        List<LdResourceTriple> remainingList = new ArrayList<>();            
+
+        if(initialfilePath.endsWith(".csv")){
+            mainList = readListFromCsvFile(initialfilePath , separator , quote);
+            resultsFilePath = initialfilePath.replace(".csv", "_Results.csv");
+
+        }
+
+        else if(initialfilePath.endsWith(".txt")){
+            mainList = readListFromTextFile(initialfilePath);
+            resultsFilePath = initialfilePath.replace(".txt", "_Results.csv");
+        }
+        
+      
+        if(skipCalculated && Utility.checkFile(resultsFilePath)){
+            resultsList = readListFromCsvFile(resultsFilePath);
+        }
+        
+        remainingList = getRemainingTriples(mainList , resultsList);
+
+        mainList = null;
+        resultsList = null;
+        
+
+        return remainingList;
+        
+    } 
         
     
     public static Map<String , LdResourceTriple> readListFromTextFile(String filePath) throws FileNotFoundException, IOException{
@@ -245,7 +282,46 @@ public class LdBenchmark {
         Scanner scanner = new Scanner(new File(filePath));
         
         while (scanner.hasNext()) {
-              List<String> line = parseLine(scanner.nextLine() , ',' , ' ');
+              List<String> line = parseLine(scanner.nextLine() , ',' , '"');
+              
+              if(line.isEmpty())
+                  continue;
+              
+              R firstResource = new R(line.get(0).trim());
+              R secondResource = new R(line.get(1).trim());
+              double result = -1;
+              String value = null;
+              if(line.size() == 3){
+                 value = line.get(2);
+                 
+                 if(value != null || !value.isEmpty())
+                    result = Double.parseDouble(line.get(2));
+                 
+                 else 
+                    result = -1;
+              }
+              
+              LdResourceTriple triple = new LdResourceTriple(firstResource , secondResource , result);
+
+              resourceList.put(firstResource.getUri().toString() + secondResource.getUri().toString() , triple);
+              
+              
+
+        }
+        scanner.close();
+        
+        return resourceList;
+    
+    }
+    
+    public static Map<String , LdResourceTriple> readListFromCsvFile(String filePath , char separator , char quote) throws FileNotFoundException, IOException{
+        
+        Map<String , LdResourceTriple> resourceList = new HashMap<>();
+        
+        Scanner scanner = new Scanner(new File(filePath));
+        
+        while (scanner.hasNext()) {
+              List<String> line = parseLine(scanner.nextLine() , separator , quote);
               
               if(line.isEmpty())
                   continue;

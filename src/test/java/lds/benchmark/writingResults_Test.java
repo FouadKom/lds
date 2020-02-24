@@ -24,7 +24,7 @@ import test.utility.Util;
 public class writingResults_Test {
     public static final String dataSetDir = System.getProperty("user.dir") + "/src/test/resources/data.rdf";
 //    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
-    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/mashups-resources.csv";
+    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/missing_resources_2.csv";
     
     @Test
     public void test() throws Exception{

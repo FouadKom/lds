@@ -205,6 +205,50 @@ public class LdSimilarityEngine {
            
        }
        
+       //calculate the similatiy for a list of generated pairs from a file contatining list of resources and write the result to a new file
+       public void similarity(String resourcesFilePath , char separator  , char quote , boolean useMultiThreading , boolean skipCalculated) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
+           
+           double startTime , endTime , duration = 0;
+                             
+           List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFilePath ,separator , quote , skipCalculated);
+           
+           if(triples == null)
+               return;
+           
+           String resultsFilePath = LdBenchmark.getResultFilePath(resourcesFilePath);
+           
+           LdResult result = null;
+           
+           double similarityResult = 0;
+           
+           if(useMultiThreading)
+               similarity(triples , resultsFilePath);
+           
+           else{
+               for(LdResourceTriple triple : triples){
+
+                   if(triple.getSimilarityResult() < 0){
+
+                       startTime = System.nanoTime();
+
+                       similarityResult = measure.compare(triple.getResourcePair().getFirstresource() , triple.getResourcePair().getSecondresource());
+
+                       endTime = System.nanoTime();
+                       duration = (endTime - startTime) / 1000000000 ;
+
+                       triple.setSimilarityResult(similarityResult);
+                       
+                       result = new LdResult(triple , duration);
+                       
+                       LdBenchmark.writeResultsToFile(result , resultsFilePath);
+                   }              
+
+               }
+           }
+
+           
+       }
+       
         
         
 
