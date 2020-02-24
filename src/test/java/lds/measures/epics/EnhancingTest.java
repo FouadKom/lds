@@ -6,8 +6,11 @@
 package lds.measures.epics;
 
 import lds.LdManager.EpicsLdManager;
+import lds.resource.LdResourceFactory;
 import lds.resource.R;
+import org.junit.Test;
 import sc.research.ldq.LdDataset;
+import slib.utils.i.Conf;
 import test.utility.Util;
 
 /**
@@ -15,18 +18,49 @@ import test.utility.Util;
  * @author Fouad Komeiha
  */
 public class EnhancingTest {
-    public static void main(String args[]) throws Exception{
-        LdDataset datasetMain = Util.getDBpediaDataset();
+    
+    
+    @Test
+    public void OptimizationTest() throws Exception{
         
-        R r1 = new R("http://dbpedia.org/resource/Paris");        
+        LdDataset dataset = Util.getDBpediaDataset();
         
-        EpicsLdManager manager =  new EpicsLdManager(datasetMain , false);
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
+        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
         
-        manager.loadIndexes();
+        double startTime , endTime , duration;
         
-        manager.getFeatures(r1);
+        Conf config = new Conf();
+        config.addParam("useIndexes", false);
+        config.addParam("LdDatasetMain" , dataset);
+        config.addParam("resourcesCount" , 2350906);
+        config.addParam("extendingMeasure" , "LDSD_dw");
         
-        manager.closeIndexes();
+        EPICS epics = new EPICS(config);
+        EPICSE epics_e = new EPICSE(config);
+        
+        epics.loadIndexes();
+        
+        startTime = System.nanoTime(); 
+        
+        System.out.println(epics.compare(r1, r2));  
+        
+        //end timing
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000 ;
+        System.out.println("finished in " + duration + " second(s)");
+        System.out.println();
+        
+        startTime = System.nanoTime();
+        
+        System.out.println(epics_e.compare(r1, r2));
+        
+        //end timing
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000 ;
+        System.out.println("finished in " + duration + " second(s)");
+        
+        epics.closeIndexes();
         
         
     }
