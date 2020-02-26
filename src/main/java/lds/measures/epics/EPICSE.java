@@ -82,15 +82,15 @@ public class EPICSE implements LdSimilarity{
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
         
-        LdIndex featuresIndex_a = ldManager.loadFeaturesIndex(a);
+        /*LdIndex featuresIndex_a = ldManager.loadFeaturesIndex(a);
         LdIndex featuresIndex_b = ldManager.loadFeaturesIndex(b);
         
         List<String> similar_features = UtilityE.similarFeatures(features_a , features_b , featuresIndex_b , config);        
         
         ldManager.closeFeaturesIndex(featuresIndex_a);
-        ldManager.closeFeaturesIndex(featuresIndex_b);
+        ldManager.closeFeaturesIndex(featuresIndex_b);*/
         
-//        List<String> similar_features = UtilityE.similarFeatures(a , b , features_a, features_b , config);
+        List<String> similar_features = UtilityE.similarFeatures(a , b , features_a, features_b , config);
         
         features_a.removeAll(similar_features);
         features_b.removeAll(similar_features);
@@ -112,7 +112,6 @@ public class EPICSE implements LdSimilarity{
     
     private double PIC(List<String> F) {
 	double s = 0.0;
-//        int N = ldManager.countResource();
         
 	for (String f : F) {
             

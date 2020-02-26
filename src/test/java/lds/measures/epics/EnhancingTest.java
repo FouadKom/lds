@@ -5,6 +5,8 @@
  */
 package lds.measures.epics;
 
+import java.io.File;
+import java.util.Date;
 import lds.LdManager.EpicsLdManager;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
@@ -25,8 +27,8 @@ public class EnhancingTest {
         
         LdDataset dataset = Util.getDBpediaDataset();
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
+        R r1 = new R("http://dbpedia.org/resource/Automobile");
+        R r2 = new R("http://dbpedia.org/resource/Car");
         
         double startTime , endTime , duration;
         

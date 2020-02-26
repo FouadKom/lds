@@ -9,6 +9,8 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -17,9 +19,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
-import static lds.measures.epics.UtilityE2.getDirection;
-import static lds.measures.epics.UtilityE2.getLink;
-import static lds.measures.epics.UtilityE2.getVertex;
+import static lds.measures.epics.Utility.getDirection;
+import static lds.measures.epics.Utility.getLink;
+import static lds.measures.epics.Utility.getVertex;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 
@@ -48,24 +50,24 @@ public class EpicsLdManager extends PicssLdManager{
         IngoingStrings = getIngoingFeatures(a);
         OutgoingStrings = getOutgoingFeatures(a);
         
-        /*try{
+        try{
             writeValues(IngoingStrings , a);
             writeValues(OutgoingStrings , a);
         }
         catch(IOException e){
             
-        }*/
+        }
         
         Optional.ofNullable(IngoingStrings).ifPresent(features_a::addAll);
         Optional.ofNullable(OutgoingStrings).ifPresent(features_a::addAll);
                    
-        Map<String , List<String>> map = createFeaturesMap(features_a);
+        /*Map<String , List<String>> map = createFeaturesMap(features_a);
         
         featuresMapIndex = loadFeaturesIndex(a);
         
         featuresMapIndex.addMap(map);
         
-        closeFeaturesIndex(featuresMapIndex);
+        closeFeaturesIndex(featuresMapIndex);*/
         
         return features_a;
     }
@@ -102,7 +104,7 @@ public class EpicsLdManager extends PicssLdManager{
     }
     
 
-    public String createDirectory(R a , String fileName ) throws IOException{
+    private String createDirectory(R a , String fileName ) throws IOException{
                
         String directory = getPath(a , fileName);
         
@@ -130,7 +132,7 @@ public class EpicsLdManager extends PicssLdManager{
         }
     }
     
-    public static String getPath(String path , String fileName){
+    private static String getPath(String path , String fileName){
         String s =  path + "/" + fileName;
         
         int len = s.length();
@@ -168,7 +170,7 @@ public class EpicsLdManager extends PicssLdManager{
     }
     
     
-    public void writeValues(List<String> features , R a) throws IOException{  
+    private void writeValues(List<String> features , R a) throws IOException{  
         String directory = null;
         
         for(String f : features){
@@ -188,7 +190,16 @@ public class EpicsLdManager extends PicssLdManager{
 
             try {
                 if(directory != null){
-                    FileWriter writer = new FileWriter(directory);
+                    File file = new File(directory);
+                    long lstModified = file.lastModified();
+                    Date date = new Date();
+                    long currentTime = date.getTime();
+                    
+                    if(currentTime - lstModified <= 8.64e+7 && file.length() > 0)
+                        //file is new and no need to re-write
+                        return;
+                    
+                    FileWriter writer = new FileWriter(directory);                    
                     writer.write(value);
                     writer.write(System.getProperty("line.separator"));
                     writer.close();
@@ -231,7 +242,6 @@ public class EpicsLdManager extends PicssLdManager{
 
                if(key.equals(link_a+"|"+direction_a)){
                    nodes.add(node_a);
-                   list.remove(feature2);
                }
            }
 
