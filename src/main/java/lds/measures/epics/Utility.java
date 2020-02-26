@@ -12,16 +12,11 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
-import lds.LdManager.EpicsLdManager;
-import lds.engine.SimilarityCompareTask;
-import lds.engine.SimilarityCompareTaskRunnable;
-import lds.measures.Measure;
 import lds.measures.ldsd.*;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
-import lds.measures.LdSimilarity;
 
 /**
  *

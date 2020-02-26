@@ -40,6 +40,16 @@ public class EnhancingTest {
         EPICSE epics_e = new EPICSE(config);
         
         epics.loadIndexes();
+        epics_e.loadIndexes();        
+        
+        startTime = System.nanoTime();
+        
+        System.out.println(epics_e.compare(r1, r2));
+        
+        //end timing
+        endTime = System.nanoTime();
+        duration = (endTime - startTime) / 1000000000 ;
+        System.out.println("finished in " + duration + " second(s)");
         
         startTime = System.nanoTime(); 
         
@@ -51,16 +61,10 @@ public class EnhancingTest {
         System.out.println("finished in " + duration + " second(s)");
         System.out.println();
         
-        startTime = System.nanoTime();
         
-        System.out.println(epics_e.compare(r1, r2));
-        
-        //end timing
-        endTime = System.nanoTime();
-        duration = (endTime - startTime) / 1000000000 ;
-        System.out.println("finished in " + duration + " second(s)");
         
         epics.closeIndexes();
+        epics_e.closeIndexes();
         
         
     }

@@ -9,8 +9,17 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import lds.indexing.LdIndex;
+import lds.indexing.LdIndexer;
+import static lds.measures.epics.UtilityE2.getDirection;
+import static lds.measures.epics.UtilityE2.getLink;
+import static lds.measures.epics.UtilityE2.getVertex;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 
@@ -21,9 +30,12 @@ import sc.research.ldq.LdDataset;
 public class EpicsLdManager extends PicssLdManager{
     
     private static final String baseDirectory = System.getProperty("user.dir") + "\\Indexes\\EPICS";
+    private boolean useIndex;    
+    private LdIndexer manager;
     
     public EpicsLdManager(LdDataset dataset, boolean useIndex) throws Exception {
         super(dataset, useIndex);
+        this.useIndex = useIndex;
     }
     
     @Override
@@ -31,23 +43,64 @@ public class EpicsLdManager extends PicssLdManager{
         List<String> IngoingStrings = new ArrayList<>();
         List<String> OutgoingStrings = new ArrayList<>();
         List<String> features_a = new ArrayList<>();
+        LdIndex featuresMapIndex = null;
         
         IngoingStrings = getIngoingFeatures(a);
         OutgoingStrings = getOutgoingFeatures(a);
         
-        try{
+        /*try{
             writeValues(IngoingStrings , a);
             writeValues(OutgoingStrings , a);
         }
         catch(IOException e){
             
-        }
+        }*/
         
         Optional.ofNullable(IngoingStrings).ifPresent(features_a::addAll);
         Optional.ofNullable(OutgoingStrings).ifPresent(features_a::addAll);
+                   
+        Map<String , List<String>> map = createFeaturesMap(features_a);
+        
+        featuresMapIndex = loadFeaturesIndex(a);
+        
+        featuresMapIndex.addMap(map);
+        
+        closeFeaturesIndex(featuresMapIndex);
         
         return features_a;
     }
+    
+    @Override
+    public void loadIndexes() throws Exception{
+        super.loadIndexes();
+        manager = LdIndexer.getManager();
+    }
+    
+    
+    public LdIndex loadFeaturesIndex(R a) { 
+        LdIndex featuresMapIndex = null;
+        try {
+            
+            featuresMapIndex = manager.loadIndex(getIndexPath(a)); 
+            
+        } 
+        catch (Exception ex) {
+            Logger.getLogger(EpicsLdManager.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        
+        return featuresMapIndex;
+    }
+    
+    @Override
+    public void closeIndexes(){
+        super.closeIndexes();       
+        
+    }
+    
+    public void closeFeaturesIndex(LdIndex featuresMapIndex) {
+        manager.closeIndex(featuresMapIndex);
+    }
+    
 
     public String createDirectory(R a , String fileName ) throws IOException{
                
@@ -77,8 +130,8 @@ public class EpicsLdManager extends PicssLdManager{
         }
     }
     
-    public static String getPath(R a , String fileName ){
-        String s =  a.toString() + "/" + fileName;
+    public static String getPath(String path , String fileName){
+        String s =  path + "/" + fileName;
         
         int len = s.length();
         
@@ -102,6 +155,16 @@ public class EpicsLdManager extends PicssLdManager{
         sb.append(".txt");
         
         return sb.toString();
+        
+    }
+    
+    
+    public static String getPath(R a , String fileName ){
+        return getPath(a.toString() , fileName);
+    }
+    
+    public static String getIndexPath(R a){
+        return getPath(a.getNamespace() , a.getLocalName()).replace(".txt" , ".db");       
     }
     
     
@@ -143,7 +206,40 @@ public class EpicsLdManager extends PicssLdManager{
             
         }
         
-    }    
+    }
+    
+    
+    private Map<String , List<String>> createFeaturesMap(List<String> features){
+        List<String> list = features;
+        String link_a , node_a , direction_a;
+        Map<String , List<String>> map = new HashMap<>();
+        List<String> nodes = new ArrayList<>();
+        
+        for(String feature : list){
+           link_a = getLink(feature);
+           direction_a = getDirection(feature);
+           node_a = getVertex(feature);
+
+           String key = link_a+"|"+direction_a;
+
+           nodes.add(node_a);
+
+           for(String feature2 : list){
+               link_a = getLink(feature2);
+               direction_a = getDirection(feature2);
+               node_a = getVertex(feature2);
+
+               if(key.equals(link_a+"|"+direction_a)){
+                   nodes.add(node_a);
+                   list.remove(feature2);
+               }
+           }
+
+           map.put(key, nodes);            
+        }
+        
+        return map;
+    }
     
     
 }

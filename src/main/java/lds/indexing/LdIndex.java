@@ -7,6 +7,7 @@ package lds.indexing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -59,6 +60,13 @@ public class LdIndex {
     public void close() {
 	db.close();
     }
+    
+    public void addMap(Map<String, List<String>> map) {
+       for(Map.Entry<String, List<String>> entry : map.entrySet()){
+           addList(entry.getKey() , entry.getValue());
+       }
+    }
+    
     
     public  void addList(String key, List<String> values) {
 
@@ -311,5 +319,7 @@ public class LdIndex {
         String methodName = Utility.getMethodName(methodPath);
         Utility.executeMethod(classPath , methodName , args);
     }
+
+    
             
 }

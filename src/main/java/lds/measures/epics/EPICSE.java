@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.EpicsLdManager;
+import lds.indexing.LdIndex;
 import lds.resource.R;
 import sc.research.ldq.*;
 import slib.utils.i.Conf;
@@ -81,7 +82,15 @@ public class EPICSE implements LdSimilarity{
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
         
-        List<String> similar_features = UtilityE.similarFeatures(a , b , features_a, features_b , config);
+        LdIndex featuresIndex_a = ldManager.loadFeaturesIndex(a);
+        LdIndex featuresIndex_b = ldManager.loadFeaturesIndex(b);
+        
+        List<String> similar_features = UtilityE.similarFeatures(features_a , features_b , featuresIndex_b , config);        
+        
+        ldManager.closeFeaturesIndex(featuresIndex_a);
+        ldManager.closeFeaturesIndex(featuresIndex_b);
+        
+//        List<String> similar_features = UtilityE.similarFeatures(a , b , features_a, features_b , config);
         
         features_a.removeAll(similar_features);
         features_b.removeAll(similar_features);
