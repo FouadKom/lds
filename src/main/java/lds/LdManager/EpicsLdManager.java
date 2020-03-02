@@ -135,6 +135,8 @@ public class EpicsLdManager extends PicssLdManager{
     private static String getPath(String path , String fileName){
         String s =  path + "/" + fileName;
         
+        s = s.replace("://" , "\\");
+        
         int len = s.length();
         
         StringBuilder sb = new StringBuilder(len);
@@ -144,12 +146,12 @@ public class EpicsLdManager extends PicssLdManager{
         for (int i = 0; i < len; i++) {
             char ch = s.charAt(i); 
             
-            if (ch > ' ' && ch < 0x7F && ch != '.' && ch != ':' && ch != '#' && ch != '/' && ch != '*' && ch != '?' && ch != '<' && ch != '>' && ch != '|' && ch != '*' && ch != '\\' && ch != '/') {
+            if (ch > ' ' && ch < 0x7F && ch != '.' && ch != ':' && ch != '#' && ch != '*' && ch != '?' && ch != '<' && ch != '>' && ch != '|' && ch != '*' && ch != '\\') {
                 sb.append(ch);
             }
             
-            if( ( ch == '.' && i!= 0)  || ch == '/'){
-                sb.append('\\');
+            if( ( ch == '.' && i!= 0)  || ch == '\\'){
+                sb.append('/');
             }
             
         }
