@@ -175,7 +175,6 @@ public class UtilityE {
        
        //To use properties saved in the created files uncomment this part and comment the parts before it 
        if(config.getParam("threadsNumber") == null || (Integer)config.getParam("threadsNumber") == 1 ){
-            //To use singlethread uncomment this parts and comment the parts after it
             String link_a , node_b , direction_a;
             double sim;
             for(String fa : a){
@@ -186,7 +185,7 @@ public class UtilityE {
                String path = EpicsLdManager.getPath(r_b , link_a+"|"+direction_a );
                
                File file =  new File(path);
-               if(file.exists()){
+               if(file.exists() && file.length() != 0){
                    Scanner sc = new Scanner(file); 
 
                    while (sc.hasNextLine()){
