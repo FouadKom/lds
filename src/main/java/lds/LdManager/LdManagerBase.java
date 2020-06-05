@@ -558,7 +558,7 @@ public class LdManagerBase implements LdManager {
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" 
                                     + dataset.getDefaultGraph()+ ">") 
                                     + " where {<" + a.getUri() + "> <" + link1 + "> ?object . "
-                                    + "?subject <" + link2 + "> ?object}");
+                                    + "[] <" + link2 + "> []}");
             
             
             ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());

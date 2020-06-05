@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import lds.benchmark.BenchmarkFile;
 import lds.measures.Measure;
 import lds.resource.R;
 import lds.resource.LdResourcePair;
@@ -63,6 +64,8 @@ public class Engine_Multithread_Test_HdtFiles  {
         config.addParam("useIndexes", true);
         config.addParam("LdDatasetMain" , dataSet);
 //        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
+
+        BenchmarkFile sourceFile = new BenchmarkFile(resourcesFilePath1);
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
@@ -70,7 +73,7 @@ public class Engine_Multithread_Test_HdtFiles  {
         
         startTime = System.nanoTime();
         
-        engine.similarity(resourcesFilePath1 , true , true);
+        engine.similarity(sourceFile , 4 , true); //calculate similarity using four threads
         
         //end timing
         endTime = System.nanoTime();
@@ -80,7 +83,7 @@ public class Engine_Multithread_Test_HdtFiles  {
         
         startTime = System.nanoTime();
         
-        engine.similarity(resourcesFilePath1 , false , false);
+        engine.similarity(sourceFile , 1 , false);
         
         //end timing
         endTime = System.nanoTime();

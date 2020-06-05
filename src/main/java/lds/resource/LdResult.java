@@ -41,4 +41,8 @@ public class LdResult {
         return this.triple.toString(separator) + " " + separator + " " + Double.toString(duration);
     }
     
+    public String toString(char separator , char quote){
+        return this.triple.toString(separator , quote) + " " + separator + " " + Double.toString(duration);
+    }
+    
 }

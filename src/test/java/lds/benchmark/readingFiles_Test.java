@@ -5,36 +5,38 @@
  */
 package lds.benchmark;
 
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
-import lds.benchmark.*;
 import lds.resource.LdResourceTriple;
+import org.junit.Test;
 
 /**
  *
  * @author Fouad Komeiha
  */
 public class readingFiles_Test {
-    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/mashups-resources.csv";
+    public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/Test_Results.csv";
     public static final String resourcesFileText = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
     
-    public static void main(String args[]) throws FileNotFoundException, IOException{
-//        List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFileText , false);
-//        for(LdResourceTriple triple : triples){
-//            System.out.println(triple.toString('|') +"\n");
-//        }
-//        
-//        triples = LdBenchmark.readListFromFile(resourcesFileText , false);
-//        for(LdResourceTriple triple : triples){
-//            System.out.println(triple.toString('|') +"\n");
-//        }
-
-        List<LdResourceTriple> triples = LdBenchmark.readListFromFile(resourcesFileCsv ,false);
-        for(LdResourceTriple triple : triples){
-            System.out.println(triple.toString('|') +"\n");
-        }
-
+    
+//    @Test
+//    public void test() throws Exception{
+    public static void main(String args[]) throws IOException {
+        
+          BenchmarkFile source = new BenchmarkFile(resourcesFileText , ',' , '"');
+          
+          LdBenchmark benchmark = new LdBenchmark(source);
+          
+          List<LdResourceTriple> sourceTriples = benchmark.readFromFile(true);
+          
+          System.out.println("Source Triples");
+          int i = 0;
+          for(LdResourceTriple triple : sourceTriples){
+                i++;
+                System.out.println(i + "- " + triple.toString( source.getSeparator() ) );
+          }
+          
+          System.out.println();
     }
     
 }

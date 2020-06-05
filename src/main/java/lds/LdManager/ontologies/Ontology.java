@@ -14,6 +14,7 @@ import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
 import lds.measures.lods.ontologies.*;
 import lds.resource.R;
+import org.apache.jena.rdf.model.Resource;
 import org.openrdf.model.URI;
 
 /**
@@ -212,6 +213,74 @@ public class Ontology {
         nameSpaceIndex.addValue("vcard", "http://www.w3.org/2006/vcard/ns#");
         nameSpaceIndex.addValue("freebase", "http://rdf.freebase.com/ns/");
         
+    }
+
+    public static String compressValue(Resource resource) {
+        String nameSpace = resource.getNameSpace();
+        String localName = resource.getLocalName();
+        String r = resource.getURI();
+        if (!nameSpace.endsWith("/") || !nameSpace.endsWith("#")) {
+            if (r.contains("#")) {
+                nameSpace = r.substring(0, r.lastIndexOf("#") + 1).trim();
+                localName = r.substring(r.lastIndexOf("#") + 1).trim();
+            } else {
+                nameSpace = r.substring(0, r.lastIndexOf("/") + 1).trim();
+                localName = r.substring(r.lastIndexOf("/") + 1).trim();
+            }
+        }
+        //        if( nameSpace.equals(resource.getURI()) || nameSpace.charAt(nameSpace.length()-1) != '/'){
+        //            nameSpace = nameSpace.substring(0 , nameSpace.lastIndexOf("/") + 1);
+        //        }
+        //
+        String prefix = Ontology.getPrefixFromNamespace(nameSpace);
+        if (prefix.equals(nameSpace) || prefix.equals(r) || !prefix.contains(":")) {
+            return resource.getURI();
+        }
+        return prefix + localName;
+    }
+
+    public static String compressValue(URI uri) {
+        String nameSpace = uri.getNamespace();
+        String localName = uri.getLocalName();
+        String r = uri.stringValue();
+        if (!nameSpace.endsWith("/") || !nameSpace.endsWith("#")) {
+            if (r.contains("#")) {
+                nameSpace = r.substring(0, r.lastIndexOf("#") + 1).trim();
+                localName = r.substring(r.lastIndexOf("#") + 1).trim();
+            } else {
+                nameSpace = r.substring(0, r.lastIndexOf("/") + 1).trim();
+                localName = r.substring(r.lastIndexOf("/") + 1).trim();
+            }
+        }
+        //        if( nameSpace.equals(uri.stringValue()) || nameSpace.charAt(nameSpace.length()-1) != '/'){
+        //            nameSpace = nameSpace.substring(0 , nameSpace.lastIndexOf("/") + 1);
+        //        }
+        String prefix = Ontology.getPrefixFromNamespace(uri);
+        if (prefix.equals(nameSpace) || prefix.equals(r) || !prefix.contains(":")) {
+            return uri.toString();
+        }
+        return prefix + localName;
+    }
+
+    public static String compressValue(R r) {
+        return compressValue(r.getUri());
+    }
+    
+    public static String decompressValue(String value){
+        if (value.contains("http") || !value.contains(":")) {
+            return value;
+        }
+        
+        String namespace = null, localName = null;
+        try{
+        String string[] =  value.split("\\:" , 2);
+        namespace = Ontology.getNamespaceFromPrefix(string[0]);
+        localName = string[1];
+        }
+        catch(Exception e){
+            System.out.println("Error " + e.toString() + " when decompressing value: " + value);
+        }
+        return namespace + localName;
     }
     
        

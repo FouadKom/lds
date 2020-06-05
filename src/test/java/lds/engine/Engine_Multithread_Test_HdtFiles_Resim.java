@@ -10,6 +10,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import lds.benchmark.BenchmarkFile;
 import lds.measures.Measure;
 import lds.resource.R;
 import lds.resource.LdResourcePair;
@@ -19,6 +20,7 @@ import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 import org.junit.Test;
 import lds.benchmark.LdBenchmark;
+import static lds.engine.Engine_Multithread_Test_HdtFiles.resourcesFilePath1;
 import lds.resource.LdResourceTriple;
 
 /**
@@ -62,7 +64,8 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataSet);
-//        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
+
+        BenchmarkFile sourceFile = new BenchmarkFile(resourcesFilePath1);
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
@@ -70,7 +73,7 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
         
         startTime = System.nanoTime();
         
-        engine.similarity(resourcesFilePath1 , true , false);
+        engine.similarity(sourceFile , 4 , false);
         
         //end timing
         endTime = System.nanoTime();
@@ -80,7 +83,7 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
         
         startTime = System.nanoTime();
         
-//        engine.similarity(resourcesFilePath1 , false , false);
+        engine.similarity(sourceFile , 1 , false);
         
         //end timing
         endTime = System.nanoTime();

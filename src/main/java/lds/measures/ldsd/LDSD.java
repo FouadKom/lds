@@ -1,23 +1,32 @@
+/*
+ * To change this license header, choose License Headers in Project Properties.
+ * To change this template file, choose Tools | Templates
+ * and open the template in the editor.
+ */
 package lds.measures.ldsd;
 
+import java.util.List;
 import java.util.Set;
-
-import org.openrdf.model.URI;
-
 import lds.LdManager.LdsdLdManager;
-import lds.measures.weight.Weight;
+import lds.LdManager.LdsdLdManagerO;
+import lds.LdManager.ontologies.Ontology;
+import lds.measures.LdSimilarity;
+import lds.measures.weight.WeightO;
 import lds.measures.weight.WeightMethod;
 import lds.resource.R;
+import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
-import lds.measures.LdSimilarity;
 
-
+/**
+ *
+ * @author Fouad Komeiha
+ */
 public abstract class LDSD implements LdSimilarity {
-    protected Set<URI> edges;
-    protected LdsdLdManager LDSDLDLoader;
-    protected LdsdLdManager SpecificLDSDLDLoader;
-    protected Weight weight;
+    protected List<URI> edges;
+    protected LdsdLdManagerO LDSDLDLoader;
+    protected LdsdLdManagerO SpecificLDSDLDLoader;
+    protected WeightO weight;
     protected boolean useIndeses;
     
     public LDSD(Conf config) throws Exception {
@@ -30,7 +39,7 @@ public abstract class LDSD implements LdSimilarity {
                 throw new Exception("Some configuration parameters missing"); 
                 
             case 2:
-                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
+                this.LDSDLDLoader = new LdsdLdManagerO((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
                 
@@ -38,9 +47,9 @@ public abstract class LDSD implements LdSimilarity {
                 throw new Exception("Some configuration parameters missing"); 
 
             default:
-                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-                this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
-                this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
+                this.LDSDLDLoader = new LdsdLdManagerO((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
+                this.SpecificLDSDLDLoader = new LdsdLdManagerO((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
+                this.weight = new WeightO((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
 
@@ -61,6 +70,9 @@ public abstract class LDSD implements LdSimilarity {
             }
         }
         
+        //close prefixes and namespaces index
+        Ontology.closeIndexes();
+        
     }
     
     
@@ -74,6 +86,9 @@ public abstract class LDSD implements LdSimilarity {
                 weight.loadIndexes();
             }
         }
+        
+        //load prefixes and namespaces index
+        Ontology.loadIndexes();
     }
         
         

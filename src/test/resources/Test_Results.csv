@@ -1,0 +1,12 @@
+http://dbpedia.org/resource/Privacy , http://dbpedia.org/resource/Picasa , 0.11489764348922182
+"http://dbpedia.org/resource/Oodle,_Inc." , http://dbpedia.org/resource/Hypertext_Transfer_Protocol , 0.11479335316014816
+"http://dbpedia.org/resource/Privacy" , "http://dbpedia.org/resource/Oodle,_Inc." , 0.11489764348922182
+"http://dbpedia.org/resource/Hypertext_Transfer_Protocol" , "http://dbpedia.org/resource/Picasa" , 0.20609499822783328
+"http://dbpedia.org/resource/Picasa" , "http://dbpedia.org/resource/Privacy" , 0.1138084783179476
+"http://dbpedia.org/resource/Picasa" , "http://dbpedia.org/resource/Hypertext_Transfer_Protocol" , 0.20435915246366065
+"http://dbpedia.org/resource/Oodle,_Inc." , "http://dbpedia.org/resource/Picasa" , 0.11479335316014816
+"http://dbpedia.org/resource/Privacy" , "http://dbpedia.org/resource/Hypertext_Transfer_Protocol" , 0.11489764348922182
+"http://dbpedia.org/resource/Hypertext_Transfer_Protocol" , "http://dbpedia.org/resource/Oodle,_Inc." , 0.11488623869393055
+"http://dbpedia.org/resource/Hypertext_Transfer_Protocol" , "http://dbpedia.org/resource/Privacy" , 0.11488623869393055
+"http://dbpedia.org/resource/Picasa" , "http://dbpedia.org/resource/Oodle,_Inc." , 0.1138084783179476
+"http://dbpedia.org/resource/Oodle,_Inc." , "http://dbpedia.org/resource/Privacy" , 0.11479335316014816

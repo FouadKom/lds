@@ -7,6 +7,7 @@ import org.openrdf.model.URI;
 
 
 public interface LdManager {
+        
 	
 	boolean isSameAs(R a, R b); 
          

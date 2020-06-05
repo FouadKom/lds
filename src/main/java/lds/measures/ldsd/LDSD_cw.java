@@ -5,6 +5,7 @@
  */
 package lds.measures.ldsd;
 
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import slib.utils.i.Conf;
@@ -14,13 +15,14 @@ import slib.utils.i.Conf;
  * @author Fouad Komeiha
  */
 public class LDSD_cw extends LDSD{
-
+    
     public LDSD_cw(Conf config) throws Exception {
         super(config);
     }
 
     @Override
     public double compare(R a, R b) {
+        
         edges = LDSDLDLoader.getEdges(a, b);
         return LDSD_cw_sim(a, b);
     }

@@ -8,8 +8,8 @@ package lds.engine;
 import test.utility.Util;
 import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.util.List;
 import java.util.concurrent.ExecutionException;
+import lds.benchmark.BenchmarkFile;
 import lds.measures.Measure;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
@@ -33,7 +33,9 @@ public class Engine_BenchMark_Test {
 
         engine.load(Measure.LDSD_cw , config);
         
-        engine.similarity("C:\\Users\\LENOVO\\Downloads\\test.txt" , false , true);
+        BenchmarkFile sourceFile = new BenchmarkFile("C:\\Users\\LENOVO\\Downloads\\test.txt");
+        
+        engine.similarity(sourceFile , 1 , true);
         
         engine.close();
        

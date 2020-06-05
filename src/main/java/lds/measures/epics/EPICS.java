@@ -9,7 +9,8 @@ package lds.measures.epics;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lds.LdManager.PicssLdManager;
+import lds.LdManager.EpicsLdManager;
+import lds.indexing.LdIndex;
 import lds.resource.R;
 import sc.research.ldq.*;
 import slib.utils.i.Conf;
@@ -20,7 +21,7 @@ import lds.measures.LdSimilarity;
  * @author Fouad Komeiha
  */
 public class EPICS implements LdSimilarity{
-    private PicssLdManager ldManager;
+    private EpicsLdManager ldManager;
     private boolean useIndeses;
     private int NumberOfResources;
     private Conf config;
@@ -30,7 +31,7 @@ public class EPICS implements LdSimilarity{
             throw new Exception("Some configuration parameters missing"); 
         
         this.config = config;
-        this.ldManager = new PicssLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
+        this.ldManager = new EpicsLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
         this.useIndeses = (Boolean) config.getParam("useIndexes");
         this.NumberOfResources = (Integer) config.getParam("resourcesCount");
     }
@@ -81,7 +82,15 @@ public class EPICS implements LdSimilarity{
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
         
-        List<String> similar_features = Utility.similarFeatures(features_a, features_b , config);
+        /*LdIndex featuresIndex_a = ldManager.loadFeaturesIndex(a);
+        LdIndex featuresIndex_b = ldManager.loadFeaturesIndex(b);
+        
+        List<String> similar_features = Utility.similarFeatures(features_a , features_b , featuresIndex_b , config);        
+        
+        ldManager.closeFeaturesIndex(featuresIndex_a);
+        ldManager.closeFeaturesIndex(featuresIndex_b);*/
+        
+        List<String> similar_features = Utility.similarFeatures(a , b , features_a, features_b , config);
         
         features_a.removeAll(similar_features);
         features_b.removeAll(similar_features);
@@ -103,7 +112,6 @@ public class EPICS implements LdSimilarity{
     
     private double PIC(List<String> F) {
 	double s = 0.0;
-//        int N = ldManager.countResource();
         
 	for (String f : F) {
             

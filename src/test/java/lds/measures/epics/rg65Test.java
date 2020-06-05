@@ -27,7 +27,7 @@ static String datsetpath = System.getProperty("user.dir") + "/src/test/resources
     
     @Test
     public void rg65Test() throws Exception{  
-        String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/rg65/rg_DBpedia.csv"; 
+        /*String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/rg65/rg_DBpedia.csv"; 
         if(! lds.benchmark.Utility.checkPath(outputFilePath) )
             return;
         
@@ -236,7 +236,7 @@ static String datsetpath = System.getProperty("user.dir") + "/src/test/resources
         }
         
         picss.closeIndexes();
-        epics.closeIndexes();
+        epics.closeIndexes();*/
     
     }
     

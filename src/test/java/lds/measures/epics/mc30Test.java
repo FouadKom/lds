@@ -27,7 +27,7 @@ public class mc30Test {
     
     @Test
     public void mc30Test() throws Exception{  
-        String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/mc30/mc_DBpedia.csv"; 
+       /* String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/mc30/mc_DBpedia.csv"; 
          if(! lds.benchmark.Utility.checkPath(outputFilePath) )
             return;
         
@@ -236,7 +236,7 @@ public class mc30Test {
         }
         
         picss.closeIndexes();
-        epics.closeIndexes();
+        epics.closeIndexes();*/
     
     }
     

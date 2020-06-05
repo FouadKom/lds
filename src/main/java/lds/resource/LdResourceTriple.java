@@ -43,7 +43,11 @@ public class LdResourceTriple {
     
     public String toString(char separator){
        return pair.toString(separator) + " " + separator + " " + result;
-    } 
+    }
+    
+    public String toString(char separator , char quote){
+       return pair.toString(separator , quote) + " " + separator + " " + result;
+    }
     
     public boolean equals(LdResourceTriple triple){
         return this.pair.equals(triple.getResourcePair()) && this.result == triple.getSimilarityResult();

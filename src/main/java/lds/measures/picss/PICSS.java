@@ -8,6 +8,7 @@ package lds.measures.picss;
 
 import java.util.List;
 import lds.LdManager.PicssLdManager;
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import sc.research.ldq.*;
 import slib.utils.i.Conf;
@@ -34,6 +35,8 @@ public class PICSS implements LdSimilarity{
     
     @Override
     public void closeIndexes(){
+        //load prefixes and namespaces index
+        Ontology.loadIndexes();
         if(useIndeses){
             ldManager.closeIndexes();
         }
@@ -46,16 +49,14 @@ public class PICSS implements LdSimilarity{
         if(useIndeses){
             ldManager.loadIndexes();
         }
+        Ontology.closeIndexes();
     }
     
     
     @Override
     public double compare(R a, R b) {
 	double sim = 0;
-
         sim= PICSS(a , b);
-
-
         return sim;
 
     }
@@ -82,7 +83,7 @@ public class PICSS implements LdSimilarity{
 
 	if ((x + y + z) == 0)
             return 0;
-//	return (x / (x + y + z));
+
         double sim = (x / (x + y + z)) < 0 ? 0 : (x / (x + y + z));
         return sim;
     }
@@ -90,9 +91,6 @@ public class PICSS implements LdSimilarity{
     
     private double PIC(List<String> F) {
 	double s = 0.0;
-//        int N = ldManager.countResource();
-//        int N = 9;
-//        int N = 2350906;
         
 	for (String f : F) {
             

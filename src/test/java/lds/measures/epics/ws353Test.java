@@ -39,7 +39,7 @@ public class ws353Test {
     
     @Test
     public void ws353Test() throws Exception{  
-        String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/ws353simrel/wordsim_DBpedia.csv"; 
+        /*String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/ws353simrel/wordsim_DBpedia.csv"; 
         if(! lds.benchmark.Utility.checkPath(outputFilePath) )
             return;
         
@@ -248,7 +248,7 @@ public class ws353Test {
         }
         
         picss.closeIndexes();
-        epics.closeIndexes();
+        epics.closeIndexes();*/
     
     }    
     

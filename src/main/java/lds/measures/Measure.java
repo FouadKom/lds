@@ -20,7 +20,6 @@ public enum Measure {
     LDSD_i ,
     LDSD_iw ,
     LDSD_cw ,
-    LDSD_cwO ,
     TLDSD_cw ,
     WLDSD_cw ,
     WTLDSD_cw ,
@@ -58,9 +57,6 @@ public enum Measure {
         }
         if(measure == LDSD_cw){
             return "lds.measures.ldsd.LDSD_cw" ;
-        }
-        if(measure == LDSD_cwO){
-            return "lds.measures.ldsd.LDSD_cwO" ;
         }
         if(measure == TLDSD_cw){
             return "lds.measures.ldsd.TLDSD_cw" ;

@@ -9,10 +9,13 @@ package lds.measures.resim;
 import java.util.List;
 import java.util.Set;
 import lds.LdManager.ontologies.Ontology;
+import static lds.measures.resim.ResimTest.datasetDir;
+import lds.measures.weight.WeightMethod;
 import lds.resource.R;
 import org.junit.Test;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
+import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 import test.utility.Util;
 
@@ -21,24 +24,35 @@ import test.utility.Util;
  * @author Fouad Komeiha
  */
 public class OptimizationTest {
-        
-    @Test
-    public void OptimizationTest() throws Exception{
+    public static final String datasetDir = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf";    
+//    @Test
+//    public void OptimizationTest() throws Exception{
+    public static void main(String args[])throws Exception{
    
         R r1 = new R("http://dbpedia.org/resource/Bob_Dylan");
         R r2 = new R("http://dbpedia.org/resource/Ronnie_Hawkins");
+//        R r1 = new R("http://dbpedia.org/resource/The_Noah");
+//        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
         double startTime , endTime , duration;
         
         LdDataset datasetMain = Util.getDBpediaDataset();
         
+        LdDataset datasetSpecific  = LdDatasetFactory.getInstance()
+                                                     .name("specificSet")
+                                                     .file(datasetDir)
+                                                     .defaultGraph("http://specificSet/dataset")
+                                                     .create();
+        
         Conf configSim = new Conf();            
         
         configSim.addParam("LdDatasetMain" , datasetMain);
         configSim.addParam("useIndexes" , false);
+        configSim.addParam("LdDatasetSpecific" , datasetSpecific);
+        configSim.addParam("WeightMethod" , WeightMethod.RSLAW);
         
-        ResourceSimilarityO resim_o = new ResimO(configSim);
-        ResourceSimilarity resim = new Resim(configSim);
+        ResourceSimilarityO resim_o = new TResimO(configSim);
+        ResourceSimilarity resim = new TResim(configSim);
         resim_o.loadIndexes();
         resim.loadIndexes();
         
@@ -70,7 +84,7 @@ public class OptimizationTest {
         
         Set<URI> edges = resim.edges;
         List<URI> edges_o = resim_o.edges;
-        Ontology.loadIndexes();
+
         if(edges.size() == edges_o.size())
             System.out.println("Edges have same size");
         
@@ -79,10 +93,10 @@ public class OptimizationTest {
         System.out.println();
         System.out.println("Cop(a) = " + resim_o.Cop(r1) );
         System.out.println("Cop(a) = " + resim.Cop(r1) );
-        System.out.println();
+        System.out.println();*/
             
-        for(URI edge: edges){
-            System.out.println("edge " + edge.stringValue());
+      /*  for(URI edge: edges){
+            /*System.out.println("edge " + edge.stringValue());
             System.out.println("Csip(l , a , b) = " + resim_o.Csip(edge , r1 , r2) );
             System.out.println("Csip(l , a , b) = " + resim.Csip(edge , r1 , r2) );
             System.out.println();
@@ -118,11 +132,40 @@ public class OptimizationTest {
             System.out.println();
             System.out.println("Cio_normalized(l , a , b) = " + resim_o.Cio_normalized(edge , r1 , r2) );
             System.out.println("Cio_normalized(l , a , b) = " + resim.Cio_normalized(edge , r1 , r2) );
-            System.out.println();           
-        }
+            System.out.println(); */
+            
+           /* for(URI edge2: edges){
+                System.out.println(edge + " " + edge2);
+                System.out.println("Cii(li , lj , a , b) = " + resim_o.Cii(edge , edge2 , r1 , r2) );
+                System.out.println("Cii(li , lj , a , b) = " + resim.Cii(edge , edge2 , r1 , r2) );
+                System.out.println();
+                System.out.println("Cio(li , lj , a , b) = " + resim_o.Cio(edge , edge2 , r1 , r2) );
+                System.out.println("Cio(li , lj , a , b) = " + resim.Cio(edge , edge2 , r1 , r2) );
+                System.out.println();
+                System.out.println("Cii(li , lj , a) = " + resim_o.Cii(edge , edge2 , r1) );
+                System.out.println("Cii(li , lj , a) = " + resim.Cii(edge , edge2 , r1) );
+                System.out.println();
+                System.out.println("Cio(li , lj , a) = " + resim_o.Cio(edge , edge2 , r1) );
+                System.out.println("Cio(li , lj , a) = " + resim.Cio(edge , edge2 , r1) );
+                System.out.println();
+                System.out.println("Cii(li , lj , b) = " + resim_o.Cii(edge , edge2 , r2) );
+                System.out.println("Cii(li , lj , b) = " + resim.Cii(edge , edge2 , r2) );
+                System.out.println();
+                System.out.println("Cio(li , lj , b) = " + resim_o.Cio(edge , edge2 , r2) );
+                System.out.println("Cio(li , lj , b) = " + resim.Cio(edge , edge2 , r2) );
+                System.out.println();
+                System.out.println("Cii_normalized(li , lj , a , b) = " + resim_o.Cii_normalized(edge , edge2 , r1 , r2) );
+                System.out.println("Cii_normalized(li , lj , a , b) = " + resim.Cii_normalized(edge , edge2 , r1 , r2) );
+                System.out.println();
+                System.out.println("Cio_normalized(li , lj , a , b) = " + resim_o.Cio_normalized(edge , edge2 , r1 , r2) );
+                System.out.println("Cio_normalized(li , lj , a , b) = " + resim.Cio_normalized(edge , edge2 , r1 , r2) );
+                System.out.println();
+                System.out.println();
+            }
+            
+        }*/
         
-        Ontology.closeIndexes();
         resim.closeIndexes();
-        resim_o.closeIndexes();*/
+        resim_o.closeIndexes();
     }
 }

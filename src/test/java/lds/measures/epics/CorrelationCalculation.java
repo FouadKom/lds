@@ -7,7 +7,6 @@ package lds.measures.epics;
 
 import java.util.ArrayList;
 import java.util.List;
-import static lds.benchmark.LdBenchmark.calculateCorrelation;
 import org.junit.Test;
 
 /**
@@ -86,10 +85,11 @@ public class CorrelationCalculation {
         benchMark.add("0.12");
         benchMark.add("0.43");
         
-        System.out.println(calculateCorrelation(picss , benchMark));
-        System.out.println(calculateCorrelation(epics_ldsd_d , benchMark));
-        System.out.println(calculateCorrelation(epics_ldsd_dw , benchMark));
-        System.out.println(calculateCorrelation(epics_ldsd_cw , benchMark));
+        
+//        System.out.println(calculateCorrelation(picss , benchMark));
+//        System.out.println(calculateCorrelation(epics_ldsd_d , benchMark));
+//        System.out.println(calculateCorrelation(epics_ldsd_dw , benchMark));
+//        System.out.println(calculateCorrelation(epics_ldsd_cw , benchMark));
         
     }
     

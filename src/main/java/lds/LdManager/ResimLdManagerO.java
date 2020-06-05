@@ -121,7 +121,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
         List<String> sameAs_resources_a = getSameAsResources(a);
         if(sameAs_resources_a == null)
             return false;
-        else if(sameAs_resources_a.contains(Utility.compressValue(b)))
+        else if(sameAs_resources_a.contains(Ontology.compressValue(b)))
             return true;
         
         return false;
@@ -154,7 +154,7 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
     public int countSubject(URI l, R a) {
         List<String> subjects_a = getSubjects(a);
         int count = 0;
-        String uri = Utility.compressValue(l);
+        String uri = Ontology.compressValue(l);
         
         if(subjects_a == null)
             return count;
@@ -168,6 +168,48 @@ public class ResimLdManagerO extends DistanceMeasuresLdManagerO{
         }
         
         return count;
+    }
+    
+    public int countTyplessCommonSubjects(URI li, URI lj , R a){
+        int count = 0;
+        List<String> commonSubjects = getCommonSubjects(a);
+        
+        if(commonSubjects ==  null || commonSubjects.contains("-1"))
+            return count;
+        
+        for(String items:commonSubjects){
+            String string[] =  items.split("\\|");
+            String property1 = string[1];
+            String property2 = string[2];
+            
+            if(property1.equals(Ontology.compressValue(li)) && property2.equals(Ontology.compressValue(lj)))
+                count++;
+        }           
+    
+        return count;
+    }
+    
+    public int countTyplessCommonObjects(URI li, URI lj , R a){
+        int count = 0;
+        List<String> commonObjects = getCommonObjects(a);
+//        List<String> distinctCommonObjects = new ArrayList<>();
+        
+        if(commonObjects ==  null || commonObjects.contains("-1"))
+            return count;
+        
+        for(String items:commonObjects){
+            String string[] =  items.split("\\|");
+//            String object = string[0];
+            String property1 = string[1];
+            String property2 = string[2];
+            
+            if(property1.equals(Ontology.compressValue(li)) && property2.equals(Ontology.compressValue(lj)))
+                count++;
+//                distinctCommonObjects.add(object);
+        }           
+    
+        return count;
+//          return distinctCommonObjects.size();
     }
     
 }

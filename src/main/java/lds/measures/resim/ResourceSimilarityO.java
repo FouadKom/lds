@@ -19,6 +19,7 @@ import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
+import lds.measures.weight.WeightO;
 
 /**
  *
@@ -28,7 +29,7 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
     protected List<URI> edges;
     protected ResimLdManagerO resimLDLoader;
     protected ResimLdManagerO SpecificResimLdLoader;
-    protected Weight weight;
+    protected WeightO weight;
     protected boolean useIndeses;
     
     public ResourceSimilarityO(Conf config) throws Exception{
@@ -49,10 +50,10 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
                 throw new Exception("Some configuration parameters missing");
                 
             default:
-//                this.resimLDLoader = new ResimLdManagerO((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-//                this.SpecificResimLdLoader = new ResimLdManagerO((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
-//                this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , resimLDLoader , SpecificResimLdLoader , (Boolean)config.getParam("useIndexes"));
-//                this.useIndeses = (Boolean) config.getParam("useIndexes");
+                this.resimLDLoader = new ResimLdManagerO((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
+                this.SpecificResimLdLoader = new ResimLdManagerO((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
+                this.weight = new WeightO((WeightMethod)config.getParam("WeightMethod") , resimLDLoader , SpecificResimLdLoader , (Boolean)config.getParam("useIndexes"));
+                this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
             
 //            default:
@@ -72,6 +73,10 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
             }
         }
         
+        //close prefixes and namespaces index
+        Ontology.closeIndexes();
+        
+        
     }
     
     @Override
@@ -84,13 +89,14 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
                 weight.loadIndexes();
             }
         }
+        
+        //load prefixes and namespaces index
+        Ontology.loadIndexes();
     }
 
     @Override
     public double compare(R a, R b) {
-        //load prefixes Index
-        Ontology.loadIndexes();
-        
+               
         double sim = 0;
         try {
 
@@ -101,14 +107,11 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        Ontology.closeIndexes();
         return sim;
     }
     
     
     public double compare(R a, R b , int w1 , int w2) {
-        //load prefixes and namespaces index
-        Ontology.loadIndexes();
         
         double sim = 0;
         try {
@@ -119,7 +122,6 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        Ontology.closeIndexes();
         return sim;
     }
 

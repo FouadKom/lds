@@ -8,35 +8,33 @@ package lds.measures.epics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import lds.measures.LdSimilarity;
 import static lds.measures.epics.Utility.getDirection;
 import static lds.measures.epics.Utility.getLink;
 import static lds.measures.epics.Utility.getVertex;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import lds.measures.LdSimilarity;
 
 /**
  *
- * @author Fouad Komeiha
+ * @author Fouad komeiha
  */
-public class SearchTask extends Thread{
+public class SearchTask implements Callable<List<String>>{
     private String feature;
     private List<String> list;
     private List<String> result;
     private LdSimilarity measure;
     
-    
-    public SearchTask(LdSimilarity measure , String feature , List<String> list , List<String> result){
+    public SearchTask(LdSimilarity measure , String feature , List<String> list ){
         this.feature = feature;
         this.list = list;
-        this.result = result;
+        this.result = new ArrayList<>();
         this.measure = measure;
         
     }
     
-
     @Override
-    public void run() {
+    public List<String> call() {
         String link_b , direction_b , node_b , link_a , direction_a , node_a;
         double sim = 0;
         
@@ -54,18 +52,18 @@ public class SearchTask extends Thread{
                R r2 = LdResourceFactory.getInstance().uri(node_b).create();
                
                
-                try{
-                    Thread.sleep(60000);
-                }
-                catch(InterruptedException e){
-                    System.out.println(e);
-                }
+//                try{
+//                    Thread.sleep(60000);
+//                }
+//                catch(InterruptedException e){
+//                    System.out.println(e);
+//                }
                 
                 synchronized(this){
                     sim = measure.compare(r1 , r2);
                 }
                 
-               if( sim >= 0.5){
+                if( sim >= 0.5){
                    
                    result.add(feature);
                    result.add(fb);
@@ -74,8 +72,7 @@ public class SearchTask extends Thread{
             }
         }
         
-   
+        return result;
     }
-    
     
 }

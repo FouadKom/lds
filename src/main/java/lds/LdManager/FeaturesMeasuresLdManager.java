@@ -18,7 +18,7 @@ import sc.research.ldq.LdDataset;
  *
  * @author Fouad Komeiha
  */
-public class FeaturesMeasuresLdManager extends LdManagerBase{
+public class FeaturesMeasuresLdManager extends LdManagerBaseO{
     
     public FeaturesMeasuresLdManager(LdDataset dataset) {
         super(dataset);

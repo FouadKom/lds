@@ -5,12 +5,8 @@
  */
 package lds.measures.ldsd;
 
-import lds.LdManager.LdsdLdManager;
-import lds.measures.weight.Weight;
-import lds.measures.weight.WeightMethod;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 
 /**

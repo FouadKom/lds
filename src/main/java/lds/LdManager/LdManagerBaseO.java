@@ -7,6 +7,7 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
@@ -21,7 +22,7 @@ import slib.utils.i.Conf;
  *
  * @author Fouad Komeiha
  */
-public class LdManagerBaseO {
+public class LdManagerBaseO implements LdManagerO{
     
     protected LdDataset dataset;
     protected Conf config = null;
@@ -33,6 +34,7 @@ public class LdManagerBaseO {
     }
     
     
+    @Override
     public List<String> getSubjects(R a) {
         List<String> commonSubjects = new ArrayList();
     
@@ -45,8 +47,8 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = Utility.compressValue(qs.getResource("subject"));
-            String property = Utility.compressValue(qs.getResource("property"));
+            String resource = Ontology.compressValue(qs.getResource("subject"));
+            String property = Ontology.compressValue(qs.getResource("property"));
             commonSubjects.add(resource+"|"+property);
 
         }
@@ -60,6 +62,7 @@ public class LdManagerBaseO {
  
     
 
+    @Override
     public List<String> getSameAsResources(R a) {
         List<String> sameAsresources = new ArrayList();
         
@@ -72,7 +75,7 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = Utility.compressValue(qs.getResource("object"));
+            String resource = Ontology.compressValue(qs.getResource("object"));
             sameAsresources.add(resource);
 
         }
@@ -84,6 +87,7 @@ public class LdManagerBaseO {
     }
     
     
+    @Override
     public int countPropertyOccurrence(URI link){
         Literal count = null;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
@@ -105,6 +109,7 @@ public class LdManagerBaseO {
     }
     
     
+    @Override
     public List<String> getCommonObjects(R a , R b){
         List<String> commonObjects = new ArrayList();
             
@@ -119,9 +124,9 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = Utility.compressValue(qs.getResource("object"));
-            String property1 = Utility.compressValue(qs.getResource("property1"));
-            String property2 = Utility.compressValue(qs.getResource("property2"));
+            String resource = Ontology.compressValue(qs.getResource("object"));
+            String property1 = Ontology.compressValue(qs.getResource("property1"));
+            String property2 = Ontology.compressValue(qs.getResource("property2"));
             commonObjects.add(resource+"|"+property1+"|"+property2);
 
         }
@@ -132,6 +137,35 @@ public class LdManagerBaseO {
             return null;
     }
     
+    @Override
+      public List<String> getCommonObjects(R a){
+        List<String> commonObjects = new ArrayList();
+            
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+        query_cmd.setCommandText("select distinct ?object  ?property1  ?property2 " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
+                                                                           + " where {<" + a.getUri() + "> ?property1 ?object . "
+                                                                           + "[] ?property2 ?object. "
+                                                                           + "filter( isuri(?object))}");
+
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        while (resultSet.hasNext()) {
+            QuerySolution qs = resultSet.nextSolution();
+            String resource = Ontology.compressValue(qs.getResource("object"));
+            String property1 = Ontology.compressValue(qs.getResource("property1"));
+            String property2 = Ontology.compressValue(qs.getResource("property2"));
+            commonObjects.add(resource+"|"+property1+"|"+property2);
+
+        }
+
+        if(! commonObjects.isEmpty())
+            return commonObjects;
+        else
+            return null;
+    }
+    
+    @Override
     public List<String> getCommonSubjects(R a , R b){
         List<String> commonSubjects = new ArrayList();
         
@@ -139,15 +173,15 @@ public class LdManagerBaseO {
 
         query_cmd.setCommandText("select distinct ?subject  ?property1  ?property2 " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
                                                                            + " where {?subject ?property1 <" + a.getUri() + ">. "
-                                                                           + " ?subject ?property2 <" + b.getUri() + ">}");
+                                                                           + " ?subject ?property2 <" + b.getUri() + "> }");
 
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            String resource = Utility.compressValue(qs.getResource("subject"));
-            String property1 = Utility.compressValue(qs.getResource("property1"));
-            String property2 = Utility.compressValue(qs.getResource("property2"));
+            String resource = Ontology.compressValue(qs.getResource("subject"));
+            String property1 = Ontology.compressValue(qs.getResource("property1"));
+            String property2 = Ontology.compressValue(qs.getResource("property2"));
             commonSubjects.add(resource+"|"+property1+"|"+property2);
         }
 
@@ -157,6 +191,33 @@ public class LdManagerBaseO {
             return null;
     }
     
+    @Override
+    public List<String> getCommonSubjects(R a){
+        List<String> commonSubjects = new ArrayList();
+        
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+        query_cmd.setCommandText("select distinct ?subject  ?property1  ?property2 " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
+                                                                           + " where {?subject ?property1 <" + a.getUri() + ">. "
+                                                                           + " ?subject ?property2 []}");
+
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        while (resultSet.hasNext()) {
+            QuerySolution qs = resultSet.nextSolution();
+            String resource = Ontology.compressValue(qs.getResource("subject"));
+            String property1 = Ontology.compressValue(qs.getResource("property1"));
+            String property2 = Ontology.compressValue(qs.getResource("property2"));
+            commonSubjects.add(resource+"|"+property1+"|"+property2);
+        }
+
+        if(! commonSubjects.isEmpty())
+            return commonSubjects;
+        else
+            return null;
+    }
+    
+    @Override
     public List<String> getEdges(R a) { 
         List<String> edges = new ArrayList();
         
@@ -183,7 +244,7 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            edge = Utility.compressValue(qs.getResource("property"));
+            edge = Ontology.compressValue(qs.getResource("property"));
             edges.add(edge);
         }
 
@@ -196,6 +257,7 @@ public class LdManagerBaseO {
     }
 
     
+    @Override
     public List<String> getObjects(R a){
         List<String> objects =  new ArrayList<>();
         
@@ -212,8 +274,8 @@ public class LdManagerBaseO {
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            object = Utility.compressValue(qs.getResource("object"));
-            property = Utility.compressValue(qs.getResource("property"));
+            object = Ontology.compressValue(qs.getResource("object"));
+            property = Ontology.compressValue(qs.getResource("property"));
             objects.add(object+"|"+property);
             // dataset.close();
         }
@@ -225,13 +287,15 @@ public class LdManagerBaseO {
             
         }
     
+    @Override
     public int countShareCommonObjects(URI link , R a){
         Literal count = null;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
         query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object . "
                                                                                    + "?subject <" + link + "> ?object ."
-                                                                                 + "filter(?subject != <" + a.getUri() + ">)}");
+                                                                                 + " filter(?subject != <" + a.getUri() + ">)}");
+        
 
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
@@ -247,6 +311,7 @@ public class LdManagerBaseO {
         return 0;
     }
     
+    @Override
     public int countShareCommonSubjects(URI link , R a){
         Literal count = null;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
@@ -270,7 +335,62 @@ public class LdManagerBaseO {
             return 0;
 
     }
+    
+    
+    //////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    @Override
+    public  int countResource() {
+        int count = 0;
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+        query_cmd.setCommandText("select (count(distinct ?s) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
+                                   + " WHERE\n" +
+                                "  {\n" +
+                                "    ?s ?p ?o .\n" +
+                                "    FILTER ( REGEX (STR (?s), \"resource\" ) )\n" +
+                               "  }");
         
+        
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        if (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+                count = qs.getLiteral("count").getInt();
+                // dataset.close();
+                return count;
+
+        }
+        
+
+        // dataset.close();
+        return 0;
+        
+    }
+
+    @Override
+    public int countSubject(URI link, R a) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int countSubject(R a) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int countObject(URI link, R a) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public int countObject(R a) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<URI> getEdges(R a, R b) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 }
     
 

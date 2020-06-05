@@ -41,7 +41,7 @@ public class TLDSD_cw extends LDSD_cw{
     
     
     public int Cii(URI li , URI lj , R a, R b) {
-        return LDSDLDLoader.countShareTyplessCommonSubjects(li , lj , a , b);
+        return LDSDLDLoader.countTyplessCommonSubjects(li , lj , a , b);
           
     }
     
@@ -62,7 +62,7 @@ public class TLDSD_cw extends LDSD_cw{
     }
     
     public int Cio(URI li , URI lj , R a, R b) {
-        return LDSDLDLoader.countShareTyplessCommonObjects(li , lj , a , b);
+        return LDSDLDLoader.countTyplessCommonObjects(li , lj , a , b);
     }
     
     public double Cio_normalized(URI li , URI lj , R a, R b) {

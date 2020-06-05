@@ -39,7 +39,7 @@ public class EnhancingTest {
         config.addParam("extendingMeasure" , "LDSD_dw");
         
         EPICS epics = new EPICS(config);
-        EPICSE epics_e = new EPICSE(config);
+        EPICS epics_e = new EPICS(config);
         
         epics.loadIndexes();
         epics_e.loadIndexes();        

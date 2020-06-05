@@ -5,6 +5,7 @@
  */
 package lds.measures.ldsd;
 
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import slib.utils.i.Conf;
 
@@ -21,8 +22,10 @@ public class LDSD_d extends LDSD{
 
     @Override
     public double compare(R a, R b) {
-       edges = LDSDLDLoader.getEdges(a, b);
-       return LDSD_d_sim(a , b);
+     
+      edges = LDSDLDLoader.getEdges(a, b);       
+
+      return LDSD_d_sim(a , b);
     }    
     
     public double LDSD_d(R a, R b) {

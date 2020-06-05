@@ -6,11 +6,11 @@
 package lds.measures.weight;
 
 
-import java.util.Set;
-import lds.LdManager.LdManager;
+import java.util.List;
+import lds.LdManager.DistanceMeasuresLdManagerO;
+import lds.LdManager.LdManagerO;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
-import lds.indexing.LdIndexer_;
 import lds.resource.R;
 import org.openrdf.model.URI;
 
@@ -18,10 +18,10 @@ import org.openrdf.model.URI;
  *
  * @author Fouad Komeiha
  */
-public class Weight {
+public class WeightO {
     private static WeightMethod method;
-    private static LdManager datasetLoader;
-    private static LdManager specificClassLoader;   
+    private static LdManagerO datasetLoader;
+    private static LdManagerO specificClassLoader;   
     private static LdIndex weightsIndex;
     private static LdIndexer manager;
     private static boolean useIndex;
@@ -30,7 +30,7 @@ public class Weight {
                                     
     
     
-    public Weight(WeightMethod method , LdManager ldManagerMain , LdManager ldManagerSpecific , boolean useIndexes) throws Exception{
+    public WeightO(WeightMethod method , LdManagerO ldManagerMain , LdManagerO ldManagerSpecific , boolean useIndexes) throws Exception{
         this.method = method;
         this.datasetLoader = ldManagerMain;
         this.specificClassLoader = ldManagerSpecific;
@@ -39,7 +39,7 @@ public class Weight {
     
     
     //Used for reflection in LdSimilarityEngine
-    public Weight() throws Exception{
+    public WeightO() throws Exception{
        
     } 
     
@@ -135,7 +135,7 @@ public class Weight {
     
     public void calculateWeights_ITW(R a , R b){
         
-        Set<URI> edges = datasetLoader.getEdges(a, b);
+        List<URI> edges = datasetLoader.getEdges(a, b);
         double min = ITW(edges.iterator().next() , a , b) , max = 0 , weight = 0;
         
         for(URI edge:datasetLoader.getEdges(a, b)){
@@ -166,7 +166,7 @@ public class Weight {
     
     public double getMinWeight(R a , R b){
         double min = 0 , weight = 0;
-        Set<URI> edges = datasetLoader.getEdges(a, b);
+        List<URI> edges = datasetLoader.getEdges(a, b);
         
         if(useIndex){
             min = weightsIndex.getDoubleFromIndex("minWeight:" + a.getUri().stringValue() + ":" + b.getUri().stringValue() , "lds.measures.resim.Weight.calculateWeights_ITW" , a , b);
