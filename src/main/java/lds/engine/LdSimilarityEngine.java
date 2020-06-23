@@ -205,11 +205,16 @@ public class LdSimilarityEngine {
            return benchmark.calculateCorrelation();                             
            
        }
-       
-        
-        
 
-	// TODO: transform engine to a factory that inits contructor...
+    public LdSimilarity getMeasure() {
+        return measure;
+    }
+
+    public void setMeasure(LdSimilarity measure) {
+        this.measure = measure;
+    }
+
+    // TODO: transform engine to a factory that inits contructor...
 
 	// keep datasets management separated ? even cache ?
 	// keep all that on ldq ?

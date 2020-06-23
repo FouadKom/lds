@@ -40,7 +40,7 @@ public class LdIndexer {
     }
     
     public void closeIndex(LdIndex index){
-        if(indexes.containsKey(index.getDBPath())){
+        if(null != indexes && indexes.containsKey(index.getDBPath())){
             index.close();
             indexes.remove(index.getDBPath());
         }
