@@ -11,10 +11,10 @@ import sc.research.ldq.LdDataset;
  *
  * @author Fouad Komeiha
  */
-public class LdsdLdManager extends DistanceMeasuresLdManager {
+public class LdsdLdManager extends DistanceMeasuresLdManagerO {
     
     public LdsdLdManager(LdDataset dataset, Boolean useIndexes) {
         super(dataset , useIndexes);
     }
-   
+    
 }

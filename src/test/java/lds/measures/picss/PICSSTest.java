@@ -5,7 +5,9 @@
  */
 package lds.measures.picss;
 
+import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
+import lds.measures.LdConfFactory;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
@@ -23,11 +25,12 @@ public class PICSSTest {
     @Test
     public void PICSSTest() throws Exception{
         
-        LdDataset dataset = Util.getDBpediaDataset();
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
                 
+        //Create conf objects and pass needed configuration parameters
         Conf config = new Conf();
         //using indexes for calculation, change to false of no data indexing is wanted
-        config.addParam("useIndexes", true);
+        config.addParam("useIndexes", false);
         
         //specifying the main dataset that will be used for querying, in our case DBpedia
         config.addParam("LdDatasetMain" , dataset);
@@ -35,8 +38,12 @@ public class PICSSTest {
         //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
         config.addParam("resourcesCount" , 2350906);
         
-        R r1 = new R("http://dbpedia.org/resource/Bob_Dylan");
-        R r2 = new R("http://dbpedia.org/resource/Ronnie_Hawkins");
+        
+        //Otherwise you can create default conf 
+ //     Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS);
+        
+        R r1 = new R("http://dbpedia.org/resource/Paris");
+        R r2 = new R("http://dbpedia.org/resource/New_York");
         
         
         //Initialzie the engine class object
@@ -44,7 +51,11 @@ public class PICSSTest {
         
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //PICSS similarity calculaton
-        engine.load(Measure.PICSS , config);
+
+        engine.load(Measure.PICSS , config);        
+        /* Note: calling engine.load(Measure.PICSS) creates a default conf and executes the similarity
+                 No need to create a conf object with this method
+        */
         
         System.out.println( engine.similarity(r1 , r2) );
         

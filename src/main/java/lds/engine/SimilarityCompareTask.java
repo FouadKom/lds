@@ -6,18 +6,11 @@
 package lds.engine;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
-import lds.LdManager.LdManagerBase;
 import lds.benchmark.BenchmarkFile;
 import lds.benchmark.LdBenchmark;
-import lds.indexing.LdIndexer_;
-import lds.measures.Measure;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
-import lds.resource.R;
-import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 /**

@@ -49,7 +49,7 @@ public class PICSS implements LdSimilarity{
         if(useIndeses){
             ldManager.loadIndexes();
         }
-        Ontology.closeIndexes();
+        Ontology.loadIndexes();
     }
     
     

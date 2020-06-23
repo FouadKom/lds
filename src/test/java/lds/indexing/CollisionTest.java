@@ -5,8 +5,6 @@
  */
 package lds.indexing;
 
-import lds.resource.R;
-import org.apache.jena.rdf.model.Resource;
 
 /**
  *

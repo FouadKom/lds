@@ -15,6 +15,7 @@ import java.util.concurrent.TimeUnit;
 import lds.benchmark.LdBenchmark;
 import lds.benchmark.BenchmarkFile;
 import lds.benchmark.Correlation;
+import lds.measures.LdConfFactory;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
 import lds.resource.R;
@@ -45,6 +46,13 @@ public class LdSimilarityEngine {
             catch (Exception e) {
                     e.printStackTrace();
             }
+
+
+        }
+        
+        public void load(Measure measureName){
+            
+            load(measureName , LdConfFactory.createDeafaultConf(measureName));
 
 
         }

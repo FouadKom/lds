@@ -7,11 +7,8 @@ package lds.measures.resim;
 
 import java.util.List;
 import lds.measures.weight.WeightMethod;
-import lds.measures.weight.Weight;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lds.LdManager.ResimLdManager;
 import lds.LdManager.ResimLdManagerO;
 import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;

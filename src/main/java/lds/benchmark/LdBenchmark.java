@@ -478,7 +478,7 @@ public class LdBenchmark {
                 c2 = record.get(1);
 
                 if(record.size() >= 3){
-                    System.out.println(record.size());
+                    //System.out.println(record.size());
                     c3 = record.get(2);
                     if( ! Utility.isNumeric(c3)){
                         c3 = record.get(3);

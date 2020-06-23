@@ -5,8 +5,6 @@
  */
 package lds.measures.ldsd;
 
-import java.util.List;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import slib.utils.i.Conf;

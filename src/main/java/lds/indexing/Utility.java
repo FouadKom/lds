@@ -42,7 +42,7 @@ public class Utility {
                 method.invoke(_instance , args);
             }
              catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException ex) {
-                Logger.getLogger(LdIndexer_.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LdIndexer.class.getName()).log(Level.SEVERE, null, ex);
  
             }
             
@@ -76,7 +76,7 @@ public class Utility {
                 returnedItem = method.invoke(_instance , args);
             }
              catch (IllegalAccessException | IllegalArgumentException | InvocationTargetException | NoSuchMethodException | SecurityException | ClassNotFoundException | InstantiationException ex) {
-                Logger.getLogger(LdIndexer_.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LdIndexer.class.getName()).log(Level.SEVERE, null, ex);
                 return null;
             }
             

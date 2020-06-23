@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.EpicsLdManager;
-import lds.indexing.LdIndex;
 import lds.resource.R;
 import sc.research.ldq.*;
 import slib.utils.i.Conf;

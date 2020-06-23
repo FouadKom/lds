@@ -81,4 +81,8 @@ public enum Measure {
         return null;
     }
     
+    public static String getName(Measure measure){
+        return measure.toString();
+    }
+    
 }

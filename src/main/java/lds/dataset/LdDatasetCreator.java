@@ -3,9 +3,8 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package test.utility;
+package lds.dataset;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -22,9 +21,37 @@ import static org.junit.Assert.fail;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 
-public class Util {
+public class LdDatasetCreator {
         
+    public static LdDataset getDBpediaDataset(DBpediaChapter chapter) {
+		
+            PrefixMapping prefixes = new PrefixMappingImpl();
+
+            prefixes.setNsPrefix("dbpedia", DBpediaChapter.getResourceNameSpace(chapter));
+            prefixes.setNsPrefix("dbpedia-owl", DBpediaChapter.getOntologyNameSpace(chapter));
+
+            LdDataset dataset = null;
+
+            try {
+                    dataset = LdDatasetFactory.getInstance()
+                                    .service(DBpediaChapter.getServiceURI(chapter))
+                                    .name(DBpediaChapter.getName(chapter))
+                                    .defaultGraph(DBpediaChapter.getDefaultGraphURI(chapter))
+                                    .prefixes(prefixes).create();
+
+            } catch (Exception e) {
+
+                    fail("Error with dataset: " + e.getMessage());
+            }
+
+            return dataset;
+    }
+    
     public static LdDataset getDBpediaDataset() {
+        return getDBpediaDataset(DBpediaChapter.En);
+    }
+    
+    public static LdDataset getDBpediaMirrorDataset(String service , String name) {
 		
             PrefixMapping prefixes = new PrefixMappingImpl();
 
@@ -35,8 +62,8 @@ public class Util {
 
             try {
                     dataset = LdDatasetFactory.getInstance()
-                                    .service("https://dbpedia.org/sparql")
-                                    .name("dbpedia")
+                                    .service(service)
+                                    .name(name)
                                     .defaultGraph("http://dbpedia.org")
                                     .prefixes(prefixes).create();
 
@@ -48,37 +75,13 @@ public class Util {
             return dataset;
     }
     
-    public static LdDataset getDBpediaMirrorDataset() {
-		
-            PrefixMapping prefixes = new PrefixMappingImpl();
-
-            prefixes.setNsPrefix("dbpedia", "http://dbpedia.org/resource/");
-            prefixes.setNsPrefix("dbpedia-owl", "http://dbpedia.org/ontology/");
-
-            LdDataset dataset = null;
-
-            try {
-                    dataset = LdDatasetFactory.getInstance()
-                                    .service("http://localhost:8891/sparql")
-                                    .name("dbpedia")
-                                    .defaultGraph("http://dbpedia.org")
-                                    .prefixes(prefixes).create();
-
-            } catch (Exception e) {
-
-                    fail("Error with dataset: " + e.getMessage());
-            }
-
-            return dataset;
-    }
-    
-    public static LdDataset getDBpediaHDTDataset(String dataSetDir) {
+    public static LdDataset getDBpediaHDTDataset(String dataSetDir , String name) {
 		
             LdDataset dataSet = null;
         
             try {
                     dataSet = LdDatasetFactory.getInstance()
-                                              .name("hdtDBpedia")
+                                              .name(name)
                                               .file(dataSetDir)
                                               .create();
 
@@ -89,10 +92,10 @@ public class Util {
             return dataSet;
     }
         
-    public static List<R> getDbpediaResources(int limit) {
+    public static List<R> getDbpediaResources(DBpediaChapter chapter , int limit) {
             List<R> resources = new ArrayList<>();
             Resource resource;
-            LdDataset dataset = getDBpediaDataset();
+            LdDataset dataset = getDBpediaDataset(chapter);
 
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -116,7 +119,7 @@ public class Util {
 
             }catch (Exception ex) {
 
-                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LdDatasetFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             dataset.close();
@@ -125,10 +128,10 @@ public class Util {
 
     }
     
-    public static List<R> getDbpediaMirrorResources(int limit) {
+    public static List<R> getDbpediaMirrorResources(String service , String name , int limit) {
             List<R> resources = new ArrayList<>();
             Resource resource;
-            LdDataset dataset = getDBpediaMirrorDataset();
+            LdDataset dataset = getDBpediaMirrorDataset(service , name);
 
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
@@ -152,7 +155,7 @@ public class Util {
 
             }catch (Exception ex) {
 
-                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LdDatasetFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             dataset.close();
@@ -161,10 +164,10 @@ public class Util {
 
     }
     
-    public static List<R> getHDTResources(int limit , String datasetDir) {
+    public static List<R> getHDTResources(String datasetDir , String name , int limit) {
         List<R> resources = new ArrayList<>();
         Resource resource;
-        LdDataset dataset = getDBpediaHDTDataset(datasetDir);
+        LdDataset dataset = getDBpediaHDTDataset(datasetDir , name);
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
         
@@ -188,7 +191,7 @@ public class Util {
 
             }catch (Exception ex) {
 
-                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LdDatasetFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             dataset.close();
@@ -226,7 +229,7 @@ public class Util {
 
             }catch (Exception ex) {
 
-                Logger.getLogger(Util.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(LdDatasetFactory.class.getName()).log(Level.SEVERE, null, ex);
             }
 
             dataset.close();
@@ -234,81 +237,5 @@ public class Util {
             return resources;
         
     }
-        
-        public static SplitedList splitList(List<R> list){
-            
-            int wholeSize = list.size();
-            int halfSize = list.size() / 2;
-            
-            List<R> firstPart = new ArrayList<>();
-            List<R> secondPart = new ArrayList<>();
-            
-            for(int i = 0 ; i < halfSize ; i++){
-                firstPart.add( list.get(i) );
-            }
-            
-            for(int i = halfSize ; i < wholeSize ; i++){
-                secondPart.add( list.get(i) );
-            }
-            
-            
-            return new SplitedList(firstPart , secondPart);
-            
-        }
-        
-        
-        public static void listFilesForFolder(File folder , boolean traverseSubDirectory) {
-                for (final File fileEntry : folder.listFiles()) {
-                    if (fileEntry.isDirectory() && traverseSubDirectory) {
-                        Util.listFilesForFolder(fileEntry , traverseSubDirectory);
-                    } 
-                    else if (fileEntry.isDirectory() && ! traverseSubDirectory) {
-                        continue;
-                    }
-                    else {
-                        System.out.println(fileEntry.getPath());
-                    }
-                }
-        }
-        
-        public static void DeleteFilesForFolder(File folder , boolean traverseSubDirectory) {
-                for (final File fileEntry : folder.listFiles()) {
-                    if (fileEntry.isDirectory() && traverseSubDirectory) {
-                        Util.DeleteFilesForFolder(fileEntry , traverseSubDirectory);
-                    }
-                    else if (fileEntry.isDirectory() && ! traverseSubDirectory) {
-                        continue;
-                    }
-                    else {
-                        fileEntry.delete();
-                    }
-                }
-        }
-        
-        
-        public static class SplitedList{
-            private List<R> firstList;
-            private List<R> secondList;
-            
-            public SplitedList(){
-                firstList = new ArrayList<>();
-                secondList = new ArrayList<>();
-            }
-            
-            public SplitedList(List<R> list1 , List<R> list2){
-                firstList = list1;
-                secondList = list2;
-            }
-            
-            public List<R> getFirstList(){
-                return this.firstList;
-            }
-            
-            public List<R> getSecondList(){
-                return this.secondList;
-            }
-    
-        }
-       
 
 }

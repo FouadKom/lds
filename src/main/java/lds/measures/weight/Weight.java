@@ -10,7 +10,6 @@ import java.util.Set;
 import lds.LdManager.LdManager;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
-import lds.indexing.LdIndexer_;
 import lds.resource.R;
 import org.openrdf.model.URI;
 

@@ -6,9 +6,7 @@
 package lds.measures.ldsd;
 
 import java.util.List;
-import java.util.Set;
 import lds.LdManager.LdsdLdManager;
-import lds.LdManager.LdsdLdManagerO;
 import lds.LdManager.ontologies.Ontology;
 import lds.measures.LdSimilarity;
 import lds.measures.weight.WeightO;
@@ -24,8 +22,8 @@ import slib.utils.i.Conf;
  */
 public abstract class LDSD implements LdSimilarity {
     protected List<URI> edges;
-    protected LdsdLdManagerO LDSDLDLoader;
-    protected LdsdLdManagerO SpecificLDSDLDLoader;
+    protected LdsdLdManager LDSDLDLoader;
+    protected LdsdLdManager SpecificLDSDLDLoader;
     protected WeightO weight;
     protected boolean useIndeses;
     
@@ -39,7 +37,7 @@ public abstract class LDSD implements LdSimilarity {
                 throw new Exception("Some configuration parameters missing"); 
                 
             case 2:
-                this.LDSDLDLoader = new LdsdLdManagerO((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
+                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
                 
@@ -47,12 +45,14 @@ public abstract class LDSD implements LdSimilarity {
                 throw new Exception("Some configuration parameters missing"); 
 
             default:
-                this.LDSDLDLoader = new LdsdLdManagerO((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-                this.SpecificLDSDLDLoader = new LdsdLdManagerO((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
+                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
+                this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
                 this.weight = new WeightO((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
 
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
 //            default:
 //                throw new Exception("Some configuration parameters missing");               
         }

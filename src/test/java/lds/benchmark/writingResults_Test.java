@@ -20,9 +20,9 @@ public class writingResults_Test {
     public static final String resourcesFileText = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
     public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/missing_resources_2.csv";
     
-//    @Test
-//    public void test() throws Exception{
-    public static void main(String args[]) throws Exception{
+    @Test
+    public void test() throws Exception{
+//    public static void main(String args[]) throws Exception{
 
         LdDataset dataSet = Util.getDBpediaDataset();
         
@@ -38,7 +38,7 @@ public class writingResults_Test {
 
         engine.load(Measure.LDSD_cw, config);
         
-        engine.similarity(benchmark , true);
+        engine.similarity(benchmark , false);
         
         engine.close();
     }

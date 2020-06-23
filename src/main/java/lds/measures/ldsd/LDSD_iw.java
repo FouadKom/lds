@@ -5,7 +5,6 @@
  */
 package lds.measures.ldsd;
 
-import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import slib.utils.i.Conf;
