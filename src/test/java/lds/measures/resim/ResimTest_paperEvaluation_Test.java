@@ -5,6 +5,7 @@
  */
 package lds.measures.resim;
 
+import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import test.utility.Util;
@@ -27,7 +28,7 @@ public class ResimTest_paperEvaluation_Test {
     @Test
     public void isResimWorksCorrectlyOnPaperExample() throws Exception {
         
-    	LdDataset dataset = Util.getDBpediaDataset();
+    	LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
                 
         Conf config = new Conf();
         config.addParam("useIndexes", true);

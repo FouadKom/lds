@@ -54,7 +54,7 @@ public class DistanceMeasuresLdManagerO extends LdManagerBaseO{
         String countShareCommonObjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Opt/Distance_Measures/countShareCommonObjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         countShareCommonObjectsIndex = manager.loadIndex(countShareCommonObjectsIndexFile);
         
-        String commonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Opt/Resim/commonSubjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        String commonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Opt/Distance_Measures/commonSubjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         commonSubjectsIndex = manager.loadIndex(commonSubjectsIndexFile);
     }
     

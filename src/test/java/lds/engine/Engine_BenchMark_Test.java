@@ -14,6 +14,7 @@ import lds.measures.Measure;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 import lds.benchmark.LdBenchmark;
+import lds.dataset.LdDatasetCreator;
 /**
  *
  * @author Fouad Komeiha
@@ -23,7 +24,7 @@ public class Engine_BenchMark_Test {
     public static void main(String args[]) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
         
         
-        LdDataset dataSetMain = Util.getDBpediaDataset();
+        LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
             
         Conf config = new Conf();
         config.addParam("useIndexes", false);

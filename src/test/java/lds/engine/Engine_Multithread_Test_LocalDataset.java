@@ -10,12 +10,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
 import lds.resource.LdResourcePair;
 import static org.junit.Assert.fail;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 
 /**
@@ -28,17 +28,10 @@ public class Engine_Multithread_Test_LocalDataset {
     public static void main(String args[]) throws InterruptedException, ExecutionException, Exception{
         double startTime , endTime , duration;
         
-        LdDataset dataSet = null;
+        LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir , "example");
         
-        try {
-                dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir)
-                                .defaultGraph("http://graphResim/dataset").create();
-
-        } catch (Exception e) {
-                fail(e.getMessage());
-        }
-        
-        Util.SplitedList sp = Util.splitList(Util.getLocalResources(6 , dataSetDir));
+        LdDatasetCreator.getDBpediaDataset();
+        Util.SplitedList sp = Util.splitList(LdDatasetCreator.getLocalResources(dataSetDir , "example" ,6));
 
         List<R> listOfResources1 = sp.getFirstList();
         List<R> listOfResources2 = sp.getSecondList();

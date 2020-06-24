@@ -5,6 +5,7 @@
  */
 package lds.measures.picss;
 
+import lds.dataset.LdDatasetCreator;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
@@ -25,7 +26,7 @@ public class PICSSTest_DBpedia_Mirror {
     @Test
     public void isPICSSWorksCorrectlyOnPaperExample() throws Exception{
 
-        LdDataset dataset = Util.getDBpediaMirrorDataset();
+        LdDataset dataset = LdDatasetCreator.getDBpediaMirrorDataset("http://localhost:8891/sparql" , "dbpedia");
 
         Conf config = new Conf();
         config.addParam("useIndexes", false);

@@ -7,6 +7,7 @@ package lds.engine;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
 import static org.junit.Assert.fail;
@@ -28,11 +29,11 @@ public class Engine_Test_HDTvsDBpedia {
             
             double startTime , endTime , duration;
             
-            LdDataset dbpedia = Util.getDBpediaDataset();
+            LdDataset dbpedia = LdDatasetCreator.getDBpediaDataset();
             
-            LdDataset hdt = Util.getDBpediaHDTDataset(dataSetDir);
+            LdDataset hdt = LdDatasetCreator.getDBpediaHDTDataset(dataSetDir , "HDTDbpedia");
             
-            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(20));
+            Util.SplitedList sp = Util.splitList(LdDatasetCreator.getDbpediaResources(20));
 
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();

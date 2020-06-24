@@ -6,6 +6,7 @@ import java.util.List;
 import java.util.concurrent.ExecutionException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lds.dataset.LdDatasetCreator;
 import static lds.engine.Engine_Multithread_Test_HdtFiles_PICSS.resourcesFilePath1;
 import lds.measures.Measure;
 import lds.resource.LdResourceFactory;
@@ -25,9 +26,9 @@ public class Engine_Multithread_Test_DBpedia {
             
             double startTime , endTime , duration;
             
-            LdDataset dataSetMain = Util.getDBpediaDataset();
+            LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
             
-            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(20));
+            Util.SplitedList sp = Util.splitList(LdDatasetCreator.getDbpediaResources(20));
 
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();

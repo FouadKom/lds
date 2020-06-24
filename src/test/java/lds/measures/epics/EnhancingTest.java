@@ -8,7 +8,7 @@ package lds.measures.epics;
 import java.io.File;
 import java.util.Date;
 import lds.LdManager.EpicsLdManager;
-import lds.resource.LdResourceFactory;
+import lds.dataset.LdDatasetCreator;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
@@ -25,7 +25,7 @@ public class EnhancingTest {
     @Test
     public void OptimizationTest() throws Exception{
         
-        LdDataset dataset = Util.getDBpediaDataset();
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
         
         R r1 = new R("http://dbpedia.org/resource/Automobile");
         R r2 = new R("http://dbpedia.org/resource/Car");

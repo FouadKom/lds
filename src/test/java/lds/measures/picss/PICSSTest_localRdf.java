@@ -5,6 +5,7 @@
  */
 package lds.measures.picss;
 
+import lds.dataset.LdDatasetCreator;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import lds.resource.R;
@@ -22,16 +23,7 @@ public class PICSSTest_localRdf {
 
 	@Test
 	public void isPICSSWorksCorrectlyOnPaperExample() throws Exception {
-		LdDataset dataSet = null;
-		
-
-		try {
-			dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir).create();
-
-		} catch (Exception e) {
-			fail(e.getMessage());
-			e.printStackTrace();
-		}
+		LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir, "example");
                 
                  R r1 = new R("http://www.example.org#Fish");
                  R r2 = new R("http://www.example.org#Whale");

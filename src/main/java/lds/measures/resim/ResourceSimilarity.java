@@ -6,7 +6,6 @@
 package lds.measures.resim;
 
 import lds.measures.weight.WeightMethod;
-import lds.measures.weight.Weight;
 import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -16,6 +15,7 @@ import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
+import lds.measures.weight.Weight;
 
 /**
  *
@@ -52,6 +52,8 @@ public abstract class ResourceSimilarity implements LdSimilarity {
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
                 break;
             
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
 //            default:
 //                throw new Exception("Some configuration parameters missing");               
         }            
@@ -269,7 +271,7 @@ public abstract class ResourceSimilarity implements LdSimilarity {
         return this.SpecificResimLdLoader;
     }
     
-    public Weight getWeight(){
+    public WeightO getWeight(){
         return this.weight;
     }
     
@@ -282,7 +284,7 @@ public abstract class ResourceSimilarity implements LdSimilarity {
         this.SpecificResimLdLoader = manager;
     }
     
-    public void setWeight(Weight weight){
+    public void setWeight(WeightO weight){
         this.weight = weight;
     }*/
     

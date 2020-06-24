@@ -5,6 +5,7 @@
  */
 package lds.measures.picss;
 
+import static lds.dataset.LdDatasetCreator.getDBpediaHDTDataset;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
@@ -21,14 +22,9 @@ public class PICSSTest_hdtFiles {
     
     @Test
     public void isPICSSWorksCorrectlyOnPaperExample() throws Exception{
-//    public static void main(String args[]) throws Exception{
         
-        LdDataset dataset = LdDatasetFactory.getInstance()
-                    .name("example")
-                    .file(System.getProperty("user.dir") + "/src/test/resources/dbpedia2016-04en.hdt")
-//                    .file(System.getProperty("user.dir") + "/src/test/resources/swdf-2012-11-28.hdt")
-                    .create();  
-                
+        LdDataset dataset = getDBpediaHDTDataset("/src/test/resources/dbpedia2016-04en.hdt" , "example");
+
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataset);

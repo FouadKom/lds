@@ -7,14 +7,13 @@ package lds.measures.epics;
 
 import java.util.ArrayList;
 import java.util.List;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.picss.PICSS;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
-import test.utility.Util;
 
 /**
  *
@@ -26,7 +25,7 @@ public class measureTest_DBpedia {
     public void runEngineOnSpecificLdMeasureTest() throws Exception{  
 //    public static void main(String args[]) throws Exception{
       
-        LdDataset dataset = Util.getDBpediaDataset();
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();;
         
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();

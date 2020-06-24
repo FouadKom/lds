@@ -7,6 +7,7 @@ package lds.engine;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
@@ -27,11 +28,11 @@ public static final String dataSetDir = System.getProperty("user.dir") + "/src/t
             
             double startTime , endTime , duration;
             
-            LdDataset dbpedia = Util.getDBpediaDataset();
+            LdDataset dbpedia = LdDatasetCreator.getDBpediaDataset();
             
-            LdDataset hdt = Util.getDBpediaHDTDataset(dataSetDir);
+            LdDataset hdt = LdDatasetCreator.getDBpediaHDTDataset(dataSetDir , "HDTDbpedia");
             
-            Util.SplitedList sp = Util.splitList(Util.getHDTResources(2, dataSetDir));
+            Util.SplitedList sp = Util.splitList(LdDatasetCreator.getHDTResources(dataSetDir , "HDTDbpedia2" , 2));
 //            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(2));
 
             //get two list of Dbpedia resources

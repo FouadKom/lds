@@ -55,6 +55,18 @@ public abstract class LDSD implements LdSimilarity {
 //                throw new Exception("Some configuration parameters missing");               
 //            default:
 //                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
+//            default:
+//                throw new Exception("Some configuration parameters missing");               
         }
         
     }

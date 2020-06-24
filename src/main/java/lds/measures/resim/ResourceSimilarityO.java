@@ -54,6 +54,12 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
                 break;
             
 //            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
 //                throw new Exception("Some configuration parameters missing");               
         }            
     }
@@ -276,7 +282,7 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
         return this.SpecificResimLdLoader;
     }
     
-    public Weight getWeight(){
+    public WeightO getWeight(){
         return this.weight;
     }
     
@@ -289,7 +295,7 @@ public abstract class ResourceSimilarityO implements LdSimilarity {
         this.SpecificResimLdLoader = manager;
     }
     
-    public void setWeight(Weight weight){
+    public void setWeight(WeightO weight){
         this.weight = weight;
     }*/
     

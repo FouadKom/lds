@@ -6,10 +6,8 @@
 
 package lds.measures.resim;
 
-import java.util.List;
-import java.util.Set;
 import lds.LdManager.ontologies.Ontology;
-import static lds.measures.resim.ResimTest.datasetDir;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.weight.WeightMethod;
 import lds.resource.R;
 import org.junit.Test;
@@ -36,7 +34,7 @@ public class OptimizationTest {
         
         double startTime , endTime , duration;
         
-        LdDataset datasetMain = Util.getDBpediaDataset();
+        LdDataset datasetMain = LdDatasetCreator.getDBpediaDataset();
         
         LdDataset datasetSpecific  = LdDatasetFactory.getInstance()
                                                      .name("specificSet")

@@ -7,7 +7,6 @@ package lds.measures.weight;
 
 
 import java.util.List;
-import lds.LdManager.DistanceMeasuresLdManagerO;
 import lds.LdManager.LdManagerO;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;

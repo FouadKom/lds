@@ -47,6 +47,27 @@ public class LdDatasetCreator {
             return dataset;
     }
     
+    public static LdDataset getRemoteDataset(String service , String defaultGraph , String name) {
+		
+        
+
+            LdDataset dataset = null;
+
+            try {
+                    dataset = LdDatasetFactory.getInstance()
+                                    .service(service)
+                                    .name(name)
+                                    .defaultGraph(defaultGraph)
+                                    .create();
+
+            } catch (Exception e) {
+
+                    fail("Error with dataset: " + e.getMessage());
+            }
+
+            return dataset;
+    }
+    
     public static LdDataset getDBpediaDataset() {
         return getDBpediaDataset(DBpediaChapter.En);
     }
@@ -91,6 +112,23 @@ public class LdDatasetCreator {
 
             return dataSet;
     }
+    
+    public static LdDataset getLocalDataset(String dataSetDir , String name){
+        LdDataset dataset = null;
+        
+        try {
+            dataset = LdDatasetFactory.getInstance()
+                        .name(name)
+                        .file(dataSetDir)
+                        .defaultGraph("http://graph/dataset")
+                        .create();
+
+        } catch (Exception e) {
+                fail(e.getMessage());
+        }
+        
+        return dataset;
+    }
         
     public static List<R> getDbpediaResources(DBpediaChapter chapter , int limit) {
             List<R> resources = new ArrayList<>();
@@ -126,6 +164,10 @@ public class LdDatasetCreator {
 
             return resources;
 
+    }
+    
+    public static List<R> getDbpediaResources(int limit){
+        return getDbpediaResources(DBpediaChapter.En , limit);
     }
     
     public static List<R> getDbpediaMirrorResources(String service , String name , int limit) {
@@ -200,18 +242,10 @@ public class LdDatasetCreator {
         
     }
     
-    public static List<R> getLocalResources(int limit , String datsetPath) {
+    public static List<R> getLocalResources(String dataSetDir , String name , int limit) {
         List<R> resources = new ArrayList<>();
         Resource resource;
-        LdDataset dataset = null;
-        
-        try {
-            dataset = LdDatasetFactory.getInstance().name("Local_Eample_Dataset").file(datsetPath)
-                       .defaultGraph("http://graph/dataset").create();
-
-        } catch (Exception e) {
-                fail(e.getMessage());
-        }
+        LdDataset dataset = getLocalDataset(dataSetDir , name);
         
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
         

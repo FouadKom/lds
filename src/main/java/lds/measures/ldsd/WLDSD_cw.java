@@ -15,7 +15,7 @@ import slib.utils.i.Conf;
  */
 public class WLDSD_cw extends LDSD_cw{
 //    private LdsdLdManager SpecificLDSDLDLoader;
-//    private Weight weight;
+//    private WeightO weight;
 //    private boolean useIndeses;
     
     public WLDSD_cw(Conf config) throws Exception {
@@ -23,7 +23,7 @@ public class WLDSD_cw extends LDSD_cw{
         if( config.getParam("LdDatasetSpecific")== null && config.getParam("WeightMethod") == null)
             throw new Exception("Some configuration parameters missing"); 
 //        this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
-//        this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
+//        this.weight = new WeightO((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
 //        this.useIndeses = (Boolean) config.getParam("useIndexes");
     }
     

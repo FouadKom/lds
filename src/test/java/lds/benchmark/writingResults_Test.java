@@ -5,6 +5,7 @@
  */
 package lds.benchmark;
 
+import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import org.junit.Test;
@@ -24,7 +25,7 @@ public class writingResults_Test {
     public void test() throws Exception{
 //    public static void main(String args[]) throws Exception{
 
-        LdDataset dataSet = Util.getDBpediaDataset();
+        LdDataset dataSet = LdDatasetCreator.getDBpediaDataset();
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
         

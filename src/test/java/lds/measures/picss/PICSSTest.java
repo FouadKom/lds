@@ -7,7 +7,8 @@ package lds.measures.picss;
 
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
-import lds.measures.LdConfFactory;
+import lds.conf.LdConfFactory;
+import lds.conf.Param;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
@@ -24,11 +25,17 @@ public class PICSSTest {
     
     @Test
     public void PICSSTest() throws Exception{
-        
+    
         LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
+        
+        //You can create conf in several ways:
+        //1- You can create default conf 
+//      Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS);    
+      
                 
-        //Create conf objects and pass needed configuration parameters
-        Conf config = new Conf();
+        //2- Or Create conf objects and pass needed configuration parameters
+        
+       /* Conf config = new Conf();
         //using indexes for calculation, change to false of no data indexing is wanted
         config.addParam("useIndexes", false);
         
@@ -36,11 +43,10 @@ public class PICSSTest {
         config.addParam("LdDatasetMain" , dataset);
         
         //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
-        config.addParam("resourcesCount" , 2350906);
+        config.addParam("resourcesCount" , 2350906);*/
         
-        
-        //Otherwise you can create default conf 
- //     Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS);
+        //3- Or using createConf method
+       Conf config = LdConfFactory.createConf(Param.LdDatasetMain , dataset , Param.useIndexes , false , Param.resourcesCount , 2350906);
         
         R r1 = new R("http://dbpedia.org/resource/Paris");
         R r2 = new R("http://dbpedia.org/resource/New_York");

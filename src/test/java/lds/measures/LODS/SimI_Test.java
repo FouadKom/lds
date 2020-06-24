@@ -8,6 +8,7 @@ package lds.measures.LODS;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.lods.ontologies.*;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
@@ -27,7 +28,7 @@ public class SimI_Test {
     
     @Test
     public void SimI_Test() throws Exception{
-        LdDataset dataSetMain = Util.getDBpediaDataset();
+        LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
         
         Conf config = new Conf();
         config.addParam("useIndexes", false);
