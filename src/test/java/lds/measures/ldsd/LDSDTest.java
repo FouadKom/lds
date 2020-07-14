@@ -10,6 +10,7 @@ import lds.engine.LdSimilarityEngine;
 import lds.conf.LdConfFactory;
 import lds.measures.Measure;
 import lds.measures.weight.WeightMethod;
+import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.fail;
 import org.junit.Test;
@@ -25,27 +26,31 @@ import test.utility.Util;
 public class LDSDTest {
     public static final String datasetDir = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
     
-    @Test
-    public void LDSDTest() throws Exception{
+//    @Test
+//    public void LDSDTest() throws Exception{
+        public static void main(String args[]) throws Exception{
         
         LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
         LdDataset dataSetSpecific = LdDatasetCreator.getLocalDataset(datasetDir, "LDSD_example");
                
         Conf config = LdConfFactory.createDeafaultConf(Measure.LDSD_cw);
         
-        R r1 = new R("http://dbpedia.org/resource/The_Noah");
-        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
+//        R r1 = new R("http://dbpedia.org/resource/The_Noah");
+//        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
+        
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
+        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //LDSD similarity calculation
-        engine.load(Measure.LDSD_cw , config);
+        engine.load(Measure.LDSD_dw , config);
         System.out.println( engine.similarity(r1 , r2) );
         //ends calculation for the chosen similaarity and closes all indexes if created
         engine.close();
         
-        config = LdConfFactory.createDeafaultConf(Measure.TLDSD_cw);
+        /*config = LdConfFactory.createDeafaultConf(Measure.TLDSD_cw);
         
         engine.load(Measure.TLDSD_cw , config);
         System.out.println( engine.similarity(r1 , r2) );
@@ -61,7 +66,7 @@ public class LDSDTest {
 
         engine.load(Measure.WTLDSD_cw , config);
         System.out.println( engine.similarity(r1, r2) );
-        engine.close();
+        engine.close();*/
 
         
     }

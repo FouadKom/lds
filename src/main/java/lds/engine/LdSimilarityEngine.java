@@ -107,6 +107,10 @@ public class LdSimilarityEngine {
            similarity(benchmark , 1 , skipCalculated);
         } 
         
+        public void similarity(LdBenchmark benchmark) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
+           similarity(benchmark , 1 , false);
+        } 
+        
         
        //calcuate the similarity_MultiThreads for a list of pairs using multithreading
        private List<LdResult> similarity_MultiThreads(List<LdResourceTriple> resourceTriples , BenchmarkFile resultsFile , int threadsNum) throws InterruptedException, ExecutionException {
@@ -154,7 +158,7 @@ public class LdSimilarityEngine {
            
            for(LdResourceTriple triple : resourceTriples){
 
-               if(triple.getSimilarityResult() < 0){
+//               if(triple.getSimilarityResult() < 0){
 
                    startTime = System.nanoTime();
 
@@ -168,7 +172,7 @@ public class LdSimilarityEngine {
                    LdResult result = new LdResult(triple , duration);
 
                    LdBenchmark.writeResultsToFile(result , resultsFile);
-               }
+//               }
                
 //               LdBenchmark.writeResultsToFile(new LdResult(triple , duration) , resultsFile);
 
@@ -188,10 +192,18 @@ public class LdSimilarityEngine {
            
        }
        
+       public double correlation(LdBenchmark benchmark , boolean skipCalculated) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
+           
+           similarity(benchmark , 1 , skipCalculated);
+           
+           return benchmark.calculateCorrelation();                             
+           
+       }
+       
        
        public double correlation(LdBenchmark benchmark, int threadsNum) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
            
-           similarity(benchmark , threadsNum , true);
+           similarity(benchmark , threadsNum , false);
            
            return benchmark.calculateCorrelation();                             
            
@@ -200,7 +212,7 @@ public class LdSimilarityEngine {
        
        public double correlation(LdBenchmark benchmark) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
            
-           similarity(benchmark , 1 , true);
+           similarity(benchmark , 1 , false);
            
            return benchmark.calculateCorrelation();                             
            

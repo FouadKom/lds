@@ -2,19 +2,14 @@ package lds.benchmark;
 
 
 import java.io.BufferedReader;
-import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.io.Writer;
 import java.nio.file.Files;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 import static lds.benchmark.Utility.checkFile;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
@@ -77,7 +72,7 @@ public class LdBenchmark {
         }
         
         List<String> list = readResultsFromFile(resultsFile);
-        List<String> benchMark = readResultsFromFile(sourceFile);
+        List<String> benchMark = readResultsFromBenchmark(sourceFile);
 
         return Correlation.getCorrelation(list , benchMark , correlation);
 
@@ -96,7 +91,7 @@ public class LdBenchmark {
 //        
 //    }
     
-    private List<String> readResultsFromFile(BenchmarkFile file) throws FileNotFoundException, IOException{
+    private List<String> readResultsFromBenchmark(BenchmarkFile file) throws FileNotFoundException, IOException{
         /*List<String> results = new ArrayList<>();
         
         if(sourceFile.getFilePath() != null )
@@ -140,6 +135,55 @@ public class LdBenchmark {
                 c3 = record.get(2);                    
                 result = Double.toString(normalizeValue(Double.parseDouble(c3) , minValue , maxValue));
                 results.add(result);
+            }
+            catch(Exception e){
+                System.out.println("Exception " + e.toString() + " at line " + i + " while reading benchmark file \"" + file.getFilePath() + "\"");
+            }
+        }
+        
+        return results;    
+    }
+    
+    private List<String> readResultsFromFile(BenchmarkFile file) throws FileNotFoundException, IOException{
+        /*List<String> results = new ArrayList<>();
+        
+        if(sourceFile.getFilePath() != null )
+            return null;
+        
+        File file =  new File(sourceFile.getFilePath()); 
+        Scanner sc = new Scanner(file);
+        
+        double minValue = sourceFile.getMinValue();
+        double maxValue = sourceFile.getMaxValue();
+  
+        while (sc.hasNextLine()){
+             String line[] = sc.nextLine().split(Character.toString(sourceFile.getSeparator()));
+             
+             String simValue =  Double.toString(Utility.normalizeValue(Double.parseDouble(line[2]) , minValue , maxValue));
+             
+             results.add(simValue);
+        }
+        
+        
+        
+        return results;*/
+        List<String> results = new ArrayList<>();
+        
+        String filePath = file.getFilePath();
+                        
+        BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
+
+        Iterable<CSVRecord> records = CSVFormat.DEFAULT.withDelimiter(file.getSeparator())
+                                                       .withQuote(file.getQuote())
+                                                       .withRecordSeparator("\r\n")
+                                                       .parse(reader);
+        String c3;
+        int i = 0;
+        for (CSVRecord record : records) {
+            i++;
+            try{
+                c3 = record.get(2);                    
+                results.add(c3);
             }
             catch(Exception e){
                 System.out.println("Exception " + e.toString() + " at line " + i + " while reading benchmark file \"" + file.getFilePath() + "\"");
@@ -342,9 +386,10 @@ public class LdBenchmark {
     
   
 ////////////////////////////////////////Reading from Files//////////////////////////////////////////////////////////////////////////       
+    
     public List<LdResourceTriple> readFromFile() throws FileNotFoundException, IOException{
 
-        Map<String , LdResourceTriple> mainList = new HashMap<>();
+        List<LdResourceTriple> mainList = new ArrayList<>();
 
         int columns = getColumnCountFromFile(sourceFile);
         
@@ -355,7 +400,7 @@ public class LdBenchmark {
             mainList = readPairsFromFile(sourceFile);
         }
 
-        List<LdResourceTriple> remainingList =  new ArrayList<>(mainList.values());
+        List<LdResourceTriple> remainingList =  new ArrayList<>(mainList);
         mainList = null;
 
         return remainingList;
@@ -364,7 +409,7 @@ public class LdBenchmark {
     
     public List<LdResourceTriple> readFromFile(boolean skipCalculated) throws FileNotFoundException, IOException{
 
-        Map<String , LdResourceTriple> mainList = new HashMap<>();
+        List<LdResourceTriple> mainList = new ArrayList<>();
 
         int columns = getColumnCountFromFile(sourceFile);
         
@@ -377,15 +422,15 @@ public class LdBenchmark {
         
         List<LdResourceTriple> remainingList =  null;
         
-        if(skipCalculated){
-            Map<String , LdResourceTriple> resultsList = readPairsFromFile(resultsFile);
+        if(skipCalculated && resultsFile.exits()){
+             List<LdResourceTriple> resultsList = readPairsFromFile(resultsFile);
             remainingList = getRemainingTriples(mainList , resultsList);
             resultsList = null;
             mainList = null;
             return remainingList;
         }
         
-        remainingList = new ArrayList<>(mainList.values());
+        remainingList = new ArrayList<>(mainList);
         mainList = null;
         return remainingList;
         
@@ -406,32 +451,24 @@ public class LdBenchmark {
         
     }
     
-    private List<LdResourceTriple> getRemainingTriples(Map<String , LdResourceTriple> maintriples, Map<String , LdResourceTriple> resultsList) {
-        List<LdResourceTriple> remainingTriples = null;
-        
-        if(resultsList == null || resultsList.isEmpty()){
-//            for(Map.Entry<String, LdResourceTriple> entry : maintriples.entrySet()){
-//
-//                remainingTriples.add(entry.getValue());
-//
-//            }
-            remainingTriples = new ArrayList<>(maintriples.values());
-        }
-        
-        else{
-            remainingTriples = new ArrayList<>();            
-            for(Map.Entry<String, LdResourceTriple> entry : maintriples.entrySet()){                                
-                if(! resultsList.containsKey(entry.getKey())){
-                    remainingTriples.add(entry.getValue());
-                }
-            }
-        }
-        
-        return remainingTriples;          
-
-    }        
     
-    private Map<String , LdResourceTriple> readListFromFile(BenchmarkFile sourceFile) throws FileNotFoundException, IOException{
+    private List<LdResourceTriple> getRemainingTriples(List<LdResourceTriple> maintriples, List<LdResourceTriple> resultsList) {
+        List<LdResourceTriple> remainingTriples = new ArrayList<>(maintriples);
+        
+        if(!remainingTriples.removeAll(resultsList)){
+            
+            for(LdResourceTriple triple:resultsList){
+                if(remainingTriples.contains(triple))
+                    remainingTriples.remove(triple);
+            }
+            
+        }
+        
+        return remainingTriples;         
+
+    }
+    
+    private List<LdResourceTriple> readListFromFile(BenchmarkFile sourceFile) throws FileNotFoundException, IOException{
         String filePath = sourceFile.getFilePath();
         
         List<String> resourceList = new ArrayList<>();
@@ -444,19 +481,18 @@ public class LdBenchmark {
                                                        .parse(reader);
         
         for (CSVRecord record : records) {
-            resourceList.add(record.get(0));
+            resourceList.add(record.get(0).substring(0, 1).toUpperCase() + record.get(0).substring(1));
         }
         
-        Map<String , LdResourceTriple> triples = generateResourceTriple(resourceList);
+        List<LdResourceTriple> triples = generateResourceTriple(resourceList);
         
         return triples;
     }
     
-    
-    private Map<String , LdResourceTriple> readPairsFromFile(BenchmarkFile sourceFile) throws FileNotFoundException, IOException{
+    private List<LdResourceTriple> readPairsFromFile(BenchmarkFile sourceFile) throws FileNotFoundException, IOException{
         String filePath = sourceFile.getFilePath();
         
-        Map<String , LdResourceTriple> resourceList = new HashMap<>();
+        List<LdResourceTriple> resourceList = new ArrayList<>();
         
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
@@ -474,9 +510,10 @@ public class LdBenchmark {
         for (CSVRecord record : records) {
             i++;
             try{
-                c1 = record.get(0);
-                c2 = record.get(1);
+                c1 = record.get(0).replace(quote , ' ').trim();
 
+                c2 = record.get(1).replace(quote , ' ').trim();
+                
                 if(record.size() >= 3){
                     //System.out.println(record.size());
                     c3 = record.get(2);
@@ -488,11 +525,11 @@ public class LdBenchmark {
                 }
 
                 if(c1.contains("http://")){ 
-                    firstResource = new R(c1.replace(quote , ' ').trim());
+                    firstResource = new R(c1);
                 }
 
                 else{
-                    firstResource = new R("http://dbpedia.org/resource/" , c1.replace(quote , ' ').trim());
+                    firstResource = new R("http://dbpedia.org/resource/" , c1.substring(0, 1).toUpperCase() + c1.substring(1));
                 }
 
                 if(c2.contains("http://") ){ 
@@ -500,7 +537,7 @@ public class LdBenchmark {
                 }
 
                 else{
-                    secondResource = new R("http://dbpedia.org/resource/" , c2.replace(quote , ' ').trim());
+                    secondResource = new R("http://dbpedia.org/resource/" , c2.substring(0, 1).toUpperCase() + c2.substring(1));
                 }              
               
             }
@@ -509,37 +546,16 @@ public class LdBenchmark {
             }
               
             LdResourceTriple triple = new LdResourceTriple(firstResource , secondResource , result);
-            resourceList.put(triple.getResourcePair().toString(' ').trim() , triple);
+            resourceList.add(triple);
         }
         
         return resourceList;
     
     }
+   
     
-    
-//    private List<LdResourcePair> generateResourcePairs (List<String> resourceList) {
-//        List<LdResourcePair> pairs = new ArrayList<>();
-//        
-//        for(String firstResource : resourceList){
-//            
-//            for(String secondResource : resourceList){
-//                
-//                if(! firstResource.equals(secondResource) ){
-//                    R r1 = new R("http://dbpedia.org/resource/" , firstResource);
-//                    R r2 = new R("http://dbpedia.org/resource/" , secondResource);
-//                    
-//                    LdResourcePair pair = new LdResourcePair(r1 , r2);
-//                    
-//                    pairs.add(pair);
-//                }
-//            }
-//        }
-//        
-//        return pairs;
-//    }
-    
-    private Map<String , LdResourceTriple> generateResourceTriple (List<String> resourceList) {
-        Map<String , LdResourceTriple> triples = new HashMap<>(); 
+    private List<LdResourceTriple> generateResourceTriple (List<String> resourceList) {
+        List<LdResourceTriple> triples = new ArrayList<>(); 
         
         for(String firstResource : resourceList){
             
@@ -559,7 +575,7 @@ public class LdBenchmark {
                     }
                     
                     LdResourceTriple triple = new LdResourceTriple(r1 , r2 , -1);                    
-                    triples.put(triple.getResourcePair().toString(' ').trim(), triple);
+                    triples.add(triple);
                 }
             }
         }

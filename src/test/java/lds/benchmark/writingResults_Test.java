@@ -23,7 +23,6 @@ public class writingResults_Test {
     
     @Test
     public void test() throws Exception{
-//    public static void main(String args[]) throws Exception{
 
         LdDataset dataSet = LdDatasetCreator.getDBpediaDataset();
         

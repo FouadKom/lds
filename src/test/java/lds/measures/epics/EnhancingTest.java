@@ -38,8 +38,8 @@ public class EnhancingTest {
         config.addParam("resourcesCount" , 2350906);
         config.addParam("extendingMeasure" , "LDSD_dw");
         
-        EPICS epics = new EPICS(config);
-        EPICS epics_e = new EPICS(config);
+        EPICS_v1 epics = new EPICS_v1(config);
+        EPICS_v1 epics_e = new EPICS_v1(config);
         
         epics.loadIndexes();
         epics_e.loadIndexes();        

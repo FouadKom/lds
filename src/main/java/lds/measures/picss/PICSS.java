@@ -72,6 +72,9 @@ public class PICSS implements LdSimilarity {
 
         if (common_features.isEmpty())
             return 0;
+        
+        features_a.removeAll(common_features);
+        features_b.removeAll(common_features);
 
         List<String> unique_features_a = Utility.uniqueFeatures(features_a, features_b);
         List<String> unique_features_b = Utility.uniqueFeatures(features_b, features_a);
@@ -95,7 +98,7 @@ public class PICSS implements LdSimilarity {
 
             double phi_ = phi(f);
             if (phi_ != 0) {
-                double x = Math.log(phi_ / this.NumberOfResources);
+                double x = Utility.log2(phi_ / this.NumberOfResources);
                 double log = -x;
                 s = s + log;
             }

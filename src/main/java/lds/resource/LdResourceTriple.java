@@ -49,7 +49,21 @@ public class LdResourceTriple {
        return pair.toString(separator , quote) + " " + separator + " " + result;
     }
     
-    public boolean equals(LdResourceTriple triple){
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        
+        if (!(o instanceof LdResourceTriple)) { 
+            return false; 
+        } 
+        
+        LdResourceTriple triple = (LdResourceTriple) o;
+        return this.pair.equals(triple.getResourcePair());
+    }
+    
+    public boolean equalsResults(LdResourceTriple triple){
         return this.pair.equals(triple.getResourcePair()) && this.result == triple.getSimilarityResult();
     }
     

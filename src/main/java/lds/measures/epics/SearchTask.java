@@ -8,6 +8,7 @@ package lds.measures.epics;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.Callable;
+import lds.LdManager.ontologies.Ontology;
 import lds.measures.LdSimilarity;
 import static lds.measures.epics.Utility.getDirection;
 import static lds.measures.epics.Utility.getLink;
@@ -35,16 +36,16 @@ public class SearchTask implements Callable<List<String>>{
     
     @Override
     public List<String> call() {
-        String link_b , direction_b , node_b , link_a , direction_a , node_a;
+        String link_b , direction_b , node_b ,  link_a , direction_a , node_a;
         double sim = 0;
         
-        link_a = getLink(feature);
-        node_a = getVertex(feature);
+        link_a = Ontology.decompressValue(getLink(feature));
+        node_a = Ontology.decompressValue(getVertex(feature));
         direction_a = getDirection(feature);
     
         for(String fb : list){
-            link_b = getLink(fb);
-            direction_b = getDirection(fb);
+            link_b = Ontology.decompressValue(getLink(fb));
+            direction_b = Ontology.decompressValue(getDirection(fb));
             node_b = getVertex(fb);
 
             if(link_a.equals(link_b) && direction_a.equals(direction_b)){

@@ -47,6 +47,7 @@ public class LdIndex {
             db = DBMaker.fileDB(this.indexFilePath)
                     .fileChannelEnable()
                     .closeOnJvmShutdown()
+                    .checksumHeaderBypass()
                     .make();
 
             return db;

@@ -1,0 +1,17 @@
+"http://dbpedia.org/resource/Gem" , "http://dbpedia.org/resource/Jewellery" , 0.0
+"http://dbpedia.org/resource/Coast" , "http://dbpedia.org/resource/Shore" , 0.3283037176864818
+"http://dbpedia.org/resource/Furnace" , "http://dbpedia.org/resource/Stove" , 0.0
+"http://dbpedia.org/resource/Food" , "http://dbpedia.org/resource/Fruit" , 0.315051987143137
+"http://dbpedia.org/resource/Bird" , "http://dbpedia.org/resource/Crane_(bird)" , 0.00711116036776724
+"http://dbpedia.org/resource/Tool" , "http://dbpedia.org/resource/Implementation" , 0.0
+"http://dbpedia.org/resource/Brother" , "http://dbpedia.org/resource/Monk" , 0.0
+"http://dbpedia.org/resource/Crane_(bird)" , "http://dbpedia.org/resource/Implementation" , 0.0
+"http://dbpedia.org/resource/Monk" , "http://dbpedia.org/resource/Oracle" , 0.33279254031351446
+"http://dbpedia.org/resource/Cemetery" , "http://dbpedia.org/resource/Woodland" , 0.0
+"http://dbpedia.org/resource/Food" , "http://dbpedia.org/resource/Rooster" , 0.0
+"http://dbpedia.org/resource/Coast" , "http://dbpedia.org/resource/Hill" , 0.0
+"http://dbpedia.org/resource/Forest" , "http://dbpedia.org/resource/Graveyard" , 0.0
+"http://dbpedia.org/resource/Shore" , "http://dbpedia.org/resource/Woodland" , 0.0
+"http://dbpedia.org/resource/Monk" , "http://dbpedia.org/resource/Slave" , 0.0
+"http://dbpedia.org/resource/Coast" , "http://dbpedia.org/resource/Forest" , 0.32446091307279334
+"http://dbpedia.org/resource/Glass" , "http://dbpedia.org/resource/Magician_(paranormal)" , 0.0

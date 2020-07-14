@@ -21,34 +21,35 @@ import slib.utils.i.Conf;
  */
 public class measureTest_DBpedia {
     
-    @Test
-    public void runEngineOnSpecificLdMeasureTest() throws Exception{  
-//    public static void main(String args[]) throws Exception{
+//    @Test
+//    public void runEngineOnSpecificLdMeasureTest() throws Exception{  
+    public static void main(String args[]) throws Exception{
       
-        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();;
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
+        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Plane").create();
         R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
                 
         Conf config = new Conf();
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , dataset);
         config.addParam("resourcesCount" , 2350906);
-        config.addParam("extendingMeasure" , "LDSD_d");
+        config.addParam("threadsNumber" , 5);        
+        config.addParam("extendingMeasure" , "LDSD_dw");
         
-        PICSS picss = new PICSS(config);
-        EPICS epics = new EPICS(config);
+//        PICSS picss = new PICSS(config);
+        EPICS_v1 epics = new EPICS_v1(config);
         
         
-        picss.loadIndexes();
-//        epics.loadIndexes();
+//        picss.loadIndexes();
+        epics.loadIndexes();
         
 //        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
         System.out.println("EPICS(r1 , r2) = " + epics.compare(r1, r2));
         
-        picss.closeIndexes();
-//        epics.closeIndexes();
-        
+//        picss.closeIndexes();
+        epics.closeIndexes();
+    
     }
     
 }

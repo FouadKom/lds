@@ -7,7 +7,9 @@ package lds.measures.epics;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 import java.util.concurrent.Callable;
 import java.util.concurrent.ExecutorService;
@@ -15,6 +17,7 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import lds.LdManager.EpicsLdManager;
+import lds.LdManager.ontologies.Ontology;
 import lds.indexing.LdIndex;
 import lds.measures.ldsd.*;
 import lds.resource.LdResourceFactory;
@@ -212,13 +215,16 @@ public class Utility {
     }
     
     
-    public static List<String> similarFeatures(List<String> a, List<String> b , LdIndex features_b , Conf config) throws Exception {
+    public static List<String> similarFeatures(List<String> a, List<String> b , Conf config) throws Exception {
         List<String> result = new ArrayList<>();
         double sim;
         LdDataset dataset = (LdDataset) config.getParam("LdDatasetMain");
         boolean useIndex = (Boolean) config.getParam("useIndexes");
         String extendingMeasure = (String) config.getParam("extendingMeasure");
-                
+        
+        double startTime = 0 , endTime , duration;
+        double startTime2 = 0 , endTime2 , duration2;
+        
         Conf ldsd_conf = new Conf();
         ldsd_conf.addParam("useIndexes", useIndex);
         ldsd_conf.addParam("LdDatasetMain" , dataset); 
@@ -251,7 +257,56 @@ public class Utility {
         
         ldsd.loadIndexes();
         
-        if(config.getParam("threadsNumber") != null) {          
+        if(config.getParam("threadsNumber") == null || (Integer)config.getParam("threadsNumber") == 1 ){
+
+//            startTime = System.nanoTime(); 
+
+            Map<String , List<String>> map_b = createFeaturesMap(b);
+            //            Map<String , List<String>> map_a = createFeaturesMap(a);
+
+            for(String fa : a){
+               String link_a = Ontology.decompressValue(getLink(fa));
+               String direction_a = getDirection(fa);
+               String node_a = Ontology.decompressValue(getVertex(fa));
+               R r1 = LdResourceFactory.getInstance().uri(node_a).create();
+               String key = link_a+"|"+direction_a;
+
+               List<String> nodes = map_b.get(key);
+
+               if(nodes == null)
+                   continue;
+
+               for(String feature_b : nodes){
+                   String node_b = getVertex(feature_b);
+                   R r2 = LdResourceFactory.getInstance().uri(node_b).create();
+//                   startTime2 = System.nanoTime();
+                   sim = ldsd.compare(r1 , r2);
+//                   endTime2 = System.nanoTime();
+//                   duration2 = (endTime2 - startTime2) / 1000000000 ;
+//                   System.out.println("Comparing similar nodes finished in " + duration2 + " second(s)");
+//                   System.out.println();
+                        if( sim >= 0.5){
+                            result.add(link_a+"|"+node_a+"|"+direction_a);
+                            result.add(link_a+"|"+node_b+"|"+direction_a);
+                        }
+               }
+
+            }
+        }
+
+        
+
+//        endTime = System.nanoTime();
+//        duration = (endTime - startTime) / 1000000000 ;
+//        System.out.println("Getting similar features finished in " + duration + " second(s)");
+//        System.out.println();
+
+        
+        
+        
+        if((Integer)config.getParam("threadsNumber") > 1) {    
+            
+            Map<String , List<String>> map_b = createFeaturesMap(b);
             
             int threadNum = (Integer) config.getParam("threadsNumber");
 
@@ -260,8 +315,13 @@ public class Utility {
             List<Callable<List<String>>> lst = new ArrayList<>();
 
             for(String fa: a){
+                
+               String link_a = Ontology.decompressValue(getLink(fa));
+               String direction_a = getDirection(fa);
 
-                lst.add(new SearchTask(ldsd.getMeasure() , fa , b));
+               String key = link_a+"|"+direction_a;
+               
+                lst.add(new SearchTask(ldsd.getMeasure() , fa , map_b.get(key)));
 
             }
 
@@ -288,35 +348,10 @@ public class Utility {
         
        }
         
-        if(config.getParam("threadsNumber") == null || (Integer)config.getParam("threadsNumber") == 1 ){
-            for(String fa : a){
-               String link_a = getLink(fa);
-               String direction_a = getDirection(fa);
-               String node_a = getVertex(fa);
-               R r1 = LdResourceFactory.getInstance().uri(node_a).create();
-               String key = link_a+"|"+direction_a;
-
-               List<String> nodes = features_b.getList(key);
-
-               if(nodes == null)
-                   continue;
-
-               for(String node_b : nodes){
-                   R r2 = LdResourceFactory.getInstance().uri(node_b).create();
-                   sim = ldsd.compare(r1 , r2);
-                        if( sim >= 0.5){
-                            result.add(fa);
-                            result.add(link_a+"|"+node_b+"|"+direction_a);
-                        }
-               }
-
-            }
-        }
-                
-        ldsd.closeIndexes();
-        return result;
+       ldsd.closeIndexes();
+       return result;
     }
-    
+        
     
     public static List<String> commonFeatures(List<String> a, List<String> b){
         List<String> result = new ArrayList<>(a);
@@ -339,7 +374,62 @@ public class Utility {
     public static String getDirection(String s){
         String string[] =  s.split("\\|");
         return string[2].trim();
-    }	 
+    }
+    
+     private static Map<String , List<String>> createFeaturesMap(List<String> features){
+        List<String> list = features;
+        String link_a , node_a , direction_a;
+        Map<String , List<String>> map = new HashMap<>();
+        
+        double startTime = 0 , endTime , duration;
+        
+//        startTime = System.nanoTime(); 
+        for(String feature : list){
+           List<String> nodes = new ArrayList<>();
+           link_a = Ontology.decompressValue(getLink(feature));
+           direction_a = getDirection(feature);
+           node_a = Ontology.decompressValue(getVertex(feature));
+           
+           String key = link_a+"|"+direction_a; //create key
+         
+           if(map ==null || map.isEmpty()){
+//                nodes.add(node_a);// add node to the list to be added to the map
+                nodes.add(link_a+"|"+node_a+"|"+direction_a);// add node to the list to be added to the map
+                map.put(key, nodes); 
+           }
+           
+           else{
+               nodes = map.get(key);
+               
+               if(nodes == null || nodes.isEmpty()){
+                   nodes = new ArrayList<>();
+//                   nodes.add(node_a);
+                   nodes.add(link_a+"|"+node_a+"|"+direction_a);                   
+                   map.put(key , nodes);
+               }
+               
+               else if(! nodes.contains(node_a)){
+//                    nodes.add(node_a);
+                    nodes.add(link_a+"|"+node_a+"|"+direction_a);  
+                    map.put(key , nodes);
+               }
+            }
+        }
+        
+//        endTime = System.nanoTime();
+//        duration = (endTime - startTime) / 1000000000 ;
+//        System.out.println("creating features map finished in " + duration + " second(s)");
+//        System.out.println();
+                
+        return map;
+    }
+    
+    public static double log2(double N){ 
+
+            double result = (double)(Math.log(N) / Math.log(2)); 
+
+            return result;
+    } 
     
 	
     // Function that matches input str with a given wildcard pattern 
@@ -397,5 +487,7 @@ public class Utility {
 
             return lookup[n][m]; 
     } */
+    
+    
      
 }

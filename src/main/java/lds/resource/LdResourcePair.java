@@ -39,8 +39,18 @@ public class LdResourcePair {
        return quote + firstResource.toString() + quote + " " + separator + " " + quote + secondResource.toString() + quote;
     }
     
-    public boolean equals(LdResourcePair pair){
-        return this.firstResource.equals(pair.getFirstresource()) && this.secondResource.equals(pair.getSecondresource());
-    }
     
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        
+        if (!(o instanceof LdResourcePair)) { 
+            return false; 
+        } 
+        
+        LdResourcePair pair = (LdResourcePair) o;
+                return this.firstResource.equals(pair.getFirstresource()) && this.secondResource.equals(pair.getSecondresource());
+    }
 }

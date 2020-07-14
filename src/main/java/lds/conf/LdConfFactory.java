@@ -24,7 +24,7 @@ public class LdConfFactory {
         config.addParam("useIndexes", false);
         config.addParam("LdDatasetMain" , LdDatasetCreator.getDBpediaDataset(DBpediaChapter.En));
         
-        if(Measure.getName(measure).equals("PICSS"))
+        if(Measure.getName(measure).equals("PICSS") || Measure.getName(measure).equals("EPICS"))
             config.addParam("resourcesCount" , 2350906);
         
         if(Measure.getName(measure).contains("W")){
@@ -90,10 +90,10 @@ public class LdConfFactory {
         return config;
     }
     
-    public static Conf createConf(Map<Param , String> params){
+    public static Conf createConf(Map<Param , Object> params){
         Conf config = new Conf();
         
-        for (Map.Entry<Param ,String> entry : params.entrySet()){
+        for (Map.Entry<Param , Object> entry : params.entrySet()){
             config.addParam(entry.getKey().toString() , entry.getValue());
         }
             

@@ -39,38 +39,38 @@ public class EpicsLdManager extends PicssLdManager{
         this.useIndex = useIndex;
     }
     
-    @Override
-    public List<String> getFeatures(R a) {
-        List<String> IngoingStrings = new ArrayList<>();
-        List<String> OutgoingStrings = new ArrayList<>();
-        List<String> features_a = new ArrayList<>();
-        LdIndex featuresMapIndex = null;
-        
-        IngoingStrings = getIngoingFeatures(a);
-        OutgoingStrings = getOutgoingFeatures(a);
-        
-        try{
-            writeValues(IngoingStrings , a);
-            writeValues(OutgoingStrings , a);
-        }
-        catch(IOException e){
-            
-        }
-        
-        Optional.ofNullable(IngoingStrings).ifPresent(features_a::addAll);
-        Optional.ofNullable(OutgoingStrings).ifPresent(features_a::addAll);
-                   
-        /*Map<String , List<String>> map = createFeaturesMap(features_a);
-        
-        featuresMapIndex = loadFeaturesIndex(a);
-        
-        featuresMapIndex.addMap(map);
-        
-        closeFeaturesIndex(featuresMapIndex);*/
-        
-        return features_a;
-    }
-    
+//    @Override
+//    public List<String> getFeatures(R a) {
+//        List<String> IngoingStrings = new ArrayList<>();
+//        List<String> OutgoingStrings = new ArrayList<>();
+//        List<String> features_a = new ArrayList<>();
+//        LdIndex featuresMapIndex = null;
+//        
+//        IngoingStrings = getIngoingFeatures(a);
+//        OutgoingStrings = getOutgoingFeatures(a);
+//        
+//        /*try{
+//            writeValues(IngoingStrings , a);
+//            writeValues(OutgoingStrings , a);
+//        }
+//        catch(IOException e){
+//            
+//        }*/
+//        
+//        Optional.ofNullable(IngoingStrings).ifPresent(features_a::addAll);
+//        Optional.ofNullable(OutgoingStrings).ifPresent(features_a::addAll);
+//                   
+//        Map<String , List<String>> map = createFeaturesMap(features_a);
+//        
+//        featuresMapIndex = loadFeaturesIndex(a);
+//        
+//        featuresMapIndex.addMap(map);
+//        
+//        closeFeaturesIndex(featuresMapIndex);
+//        
+//        return features_a;
+//    }
+  
     @Override
     public void loadIndexes() throws Exception{
         super.loadIndexes();
@@ -221,36 +221,52 @@ public class EpicsLdManager extends PicssLdManager{
     }
     
     
-    private Map<String , List<String>> createFeaturesMap(List<String> features){
-        List<String> list = features;
-        String link_a , node_a , direction_a;
-        Map<String , List<String>> map = new HashMap<>();
-        List<String> nodes = new ArrayList<>();
-        
-        for(String feature : list){
-           link_a = getLink(feature);
-           direction_a = getDirection(feature);
-           node_a = getVertex(feature);
-
-           String key = link_a+"|"+direction_a;
-
-           nodes.add(node_a);
-
-           for(String feature2 : list){
-               link_a = getLink(feature2);
-               direction_a = getDirection(feature2);
-               node_a = getVertex(feature2);
-
-               if(key.equals(link_a+"|"+direction_a)){
-                   nodes.add(node_a);
-               }
-           }
-
-           map.put(key, nodes);            
-        }
-        
-        return map;
-    }
+//    private Map<String , List<String>> createFeaturesMap(List<String> features){
+//        List<String> list = features;
+//        String link_a , node_a , direction_a;
+//        Map<String , List<String>> map = new HashMap<>();
+////        List<String> nodes = new ArrayList<>();
+//        
+//        for(String feature : list){
+//           List<String> nodes = new ArrayList<>();
+//           link_a = getLink(feature);
+//           direction_a = getDirection(feature);
+//           node_a = getVertex(feature);
+//           
+//           String key = link_a+"|"+direction_a; //create key
+//
+//           nodes.add(node_a);// add node to the list to be ddaed to the map
+//
+//           /*for(String feature2 : list){
+//               link_a = getLink(feature2);
+//               direction_a = getDirection(feature2);
+//               node_a = getVertex(feature2);
+//
+//               if(key.equals(link_a+"|"+direction_a)){
+//                   nodes.add(node_a);
+//               }
+//           }*/
+//           
+//           if(map ==null || map.isEmpty())
+//                map.put(key, nodes); 
+//           
+//           else{
+//               nodes = map.get(key);
+//               
+//               if(nodes == null || nodes.isEmpty()){
+//                   nodes = new ArrayList<>();
+//                   nodes.add(node_a);
+//                   map.put(key , nodes);
+//               }
+//               else if(! nodes.contains(node_a)){
+//                        nodes.add(node_a);
+//                        map.put(key , nodes);
+//               }
+//            }
+//        }
+//                
+//        return map;
+//    }
     
     
 }

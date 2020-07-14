@@ -43,7 +43,7 @@ public class measureTest_localRDF {
         config.addParam("resourcesCount" , 9); 
         
         PICSS picss = new PICSS(config);
-        EPICS epics = new EPICS(config);
+        EPICS_v1 epics = new EPICS_v1(config);
         
         picss.loadIndexes();
         epics.loadIndexes();

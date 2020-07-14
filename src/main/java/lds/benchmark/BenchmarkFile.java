@@ -86,6 +86,11 @@ public class BenchmarkFile {
 
         return true;
     }
+    
+    public boolean exits(){
+        File file = new File(filePath);
+        return file.exists();
+    }
 
     
     

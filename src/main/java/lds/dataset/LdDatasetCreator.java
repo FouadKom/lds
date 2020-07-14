@@ -47,6 +47,10 @@ public class LdDatasetCreator {
             return dataset;
     }
     
+    public static LdDataset getDBpediaDataset() {
+        return getDBpediaDataset(DBpediaChapter.En);
+    }
+    
     public static LdDataset getRemoteDataset(String service , String defaultGraph , String name) {
 		
         
@@ -68,9 +72,7 @@ public class LdDatasetCreator {
             return dataset;
     }
     
-    public static LdDataset getDBpediaDataset() {
-        return getDBpediaDataset(DBpediaChapter.En);
-    }
+    
     
     public static LdDataset getDBpediaMirrorDataset(String service , String name) {
 		
