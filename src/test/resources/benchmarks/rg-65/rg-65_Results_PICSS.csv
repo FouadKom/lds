@@ -11,11 +11,11 @@
 "http://dbpedia.org/resource/Food" , "http://dbpedia.org/resource/Rooster" , 0.0
 "http://dbpedia.org/resource/Forest" , "http://dbpedia.org/resource/Graveyard" , 0.0
 "http://dbpedia.org/resource/Mound" , "http://dbpedia.org/resource/Shore" , 0.0
-"http://dbpedia.org/resource/Automobile" , "http://dbpedia.org/resource/Cushion" , 0.0
+"http://dbpedia.org/resource/Car" , "http://dbpedia.org/resource/Cushion" , 0.0
 "http://dbpedia.org/resource/Monk" , "http://dbpedia.org/resource/Oracle" , 3.874155738633868E-4
 "http://dbpedia.org/resource/Shore" , "http://dbpedia.org/resource/Woodland" , 0.0
 "http://dbpedia.org/resource/Coast" , "http://dbpedia.org/resource/Forest" , 4.702025167051889E-4
-"http://dbpedia.org/resource/Monk" , "http://dbpedia.org/resource/Slave" , 0.0
+"http://dbpedia.org/resource/Monk" , "http://dbpedia.org/resource/Slavery" , 0.0
 "http://dbpedia.org/resource/Cushion" , "http://dbpedia.org/resource/Gemstone" , 0.0
 "http://dbpedia.org/resource/Boy" , "http://dbpedia.org/resource/Rooster" , 0.0
 "http://dbpedia.org/resource/Glass" , "http://dbpedia.org/resource/Magician_(paranormal)" , 0.0

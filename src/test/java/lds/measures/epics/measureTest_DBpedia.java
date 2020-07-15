@@ -21,10 +21,8 @@ import slib.utils.i.Conf;
  */
 public class measureTest_DBpedia {
     
-//    @Test
-//    public void runEngineOnSpecificLdMeasureTest() throws Exception{  
-    public static void main(String args[]) throws Exception{
-      
+    @Test
+    public void runEngineOnSpecificLdMeasureTest() throws Exception{        
         LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
         
         R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Plane").create();

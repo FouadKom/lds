@@ -1,4 +1,0 @@
-http://dbpedia.org/resource/Privacy
-http://dbpedia.org/resource/Picasa
-"http://dbpedia.org/resource/Oodle,_Inc."
-http://dbpedia.org/resource/Hypertext_Transfer_Protocol

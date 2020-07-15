@@ -18,9 +18,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexer;
-import static lds.measures.epics.Utility.getDirection;
-import static lds.measures.epics.Utility.getLink;
-import static lds.measures.epics.Utility.getVertex;
+import static lds.measures.epics.Utility_v1.getDirection;
+import static lds.measures.epics.Utility_v1.getLink;
+import static lds.measures.epics.Utility_v1.getVertex;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 

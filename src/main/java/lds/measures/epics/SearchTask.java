@@ -10,9 +10,9 @@ import java.util.List;
 import java.util.concurrent.Callable;
 import lds.LdManager.ontologies.Ontology;
 import lds.measures.LdSimilarity;
-import static lds.measures.epics.Utility.getDirection;
-import static lds.measures.epics.Utility.getLink;
-import static lds.measures.epics.Utility.getVertex;
+import static lds.measures.epics.Utility_v1.getDirection;
+import static lds.measures.epics.Utility_v1.getLink;
+import static lds.measures.epics.Utility_v1.getVertex;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 

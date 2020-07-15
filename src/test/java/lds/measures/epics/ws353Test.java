@@ -21,9 +21,8 @@ import slib.utils.i.Conf;
 public class ws353Test {
     static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/wordsim-353_DBpedia-1.txt";
     
-//    @Test
-//    public void ws353Test() throws Exception{
-    public static void main(String args[]) throws Exception{
+    @Test
+    public void ws353Test() throws Exception{
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
         BenchmarkFile source = new BenchmarkFile(sourcepath , ',' , '"');

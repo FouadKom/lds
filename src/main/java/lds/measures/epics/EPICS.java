@@ -11,7 +11,6 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.EpicsLdManager;
 import lds.LdManager.ontologies.Ontology;
-import lds.indexing.LdIndex;
 import lds.resource.R;
 import sc.research.ldq.*;
 import slib.utils.i.Conf;
@@ -81,7 +80,7 @@ public class EPICS implements LdSimilarity{
         if(features_a.isEmpty() ||  features_b.isEmpty())
             return 0;
         
-        List<String> common_features = Utility_v2.commonFeatures(features_a, features_b);        
+        List<String> common_features = Utility.commonFeatures(features_a, features_b);        
         
         if(common_features == null || common_features.isEmpty())
             return 0;
@@ -89,21 +88,13 @@ public class EPICS implements LdSimilarity{
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
         
-//        LdIndex featuresIndex_a = ldManager.loadFeaturesIndex(a);
-//        LdIndex featuresIndex_b = ldManager.loadFeaturesIndex(b);
-        
-        List<String> similar_features = Utility_v2.similarFeatures(features_a , features_b);        
-
-//        ldManager.closeFeaturesIndex(featuresIndex_a);
-//        ldManager.closeFeaturesIndex(featuresIndex_b);
-        
-        /*List<String> similar_features = Utility_v2.similarFeatures(a , b , features_a, features_b , config);*/
+        List<String> similar_features = Utility.similarFeatures(features_a , features_b);        
         
         features_a.removeAll(similar_features);
         features_b.removeAll(similar_features);
         
-	List<String> unique_features_a = Utility_v2.uniqueFeatures(features_a , features_b);
-	List<String> unique_features_b = Utility_v2.uniqueFeatures(features_b, features_a);
+	List<String> unique_features_a = Utility.uniqueFeatures(features_a , features_b);
+	List<String> unique_features_b = Utility.uniqueFeatures(features_b, features_a);
         
         double x = PIC(common_features);
 	double y = PIC(unique_features_a);
@@ -124,7 +115,7 @@ public class EPICS implements LdSimilarity{
             
             double phi_ = phi(f);
             if (phi_ != 0) {
-                double x = Utility_v2.log2(phi_ / this.NumberOfResources);
+                double x = Utility.log2(phi_ / this.NumberOfResources);
                 double log = -x;
                 s = s + log;
             }
@@ -140,9 +131,9 @@ public class EPICS implements LdSimilarity{
 
 	int count = 0;
         
-        String direction = Utility_v2.getDirection(feature);
-        String property = Utility_v2.getLink(feature);
-        String resource = Utility_v2.getVertex(feature);
+        String direction = Utility.getDirection(feature);
+        String property = Utility.getLink(feature);
+        String resource = Utility.getVertex(feature);
         
         if(direction.equals("In")){
             count = ldManager.getIngoingFeatureFrequency(property , resource);

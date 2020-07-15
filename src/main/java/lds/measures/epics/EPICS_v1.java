@@ -80,7 +80,7 @@ public class EPICS_v1 implements LdSimilarity{
         if(features_a.isEmpty() &&  features_b.isEmpty())
             return 0;
         
-        List<String> common_features = Utility.commonFeatures(features_a, features_b);
+        List<String> common_features = Utility_v1.commonFeatures(features_a, features_b);
         
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
@@ -88,18 +88,18 @@ public class EPICS_v1 implements LdSimilarity{
 //        LdIndex featuresIndex_a = ldManager.loadFeaturesIndex(a);
 //        LdIndex featuresIndex_b = ldManager.loadFeaturesIndex(b);
         
-        List<String> similar_features = Utility.similarFeatures(features_a , features_b  , config);        
+        List<String> similar_features = Utility_v1.similarFeatures(features_a , features_b  , config);        
         
 //        ldManager.closeFeaturesIndex(featuresIndex_a);
 //        ldManager.closeFeaturesIndex(featuresIndex_b);
         
-        /*List<String> similar_features = Utility.similarFeatures(a , b , features_a, features_b , config);
+        /*List<String> similar_features = Utility_v1.similarFeatures(a , b , features_a, features_b , config);
         
         features_a.removeAll(similar_features);
         features_b.removeAll(similar_features);*/
         
-	List<String> unique_features_a = Utility.uniqueFeatures(features_a , features_b);
-	List<String> unique_features_b = Utility.uniqueFeatures(features_b, features_a);
+	List<String> unique_features_a = Utility_v1.uniqueFeatures(features_a , features_b);
+	List<String> unique_features_b = Utility_v1.uniqueFeatures(features_b, features_a);
         
         double x = PIC(common_features);
 	double y = PIC(unique_features_a);
@@ -136,9 +136,9 @@ public class EPICS_v1 implements LdSimilarity{
 
 	int count = 0;
         
-        String direction = Utility.getDirection(feature);
-        String property = Utility.getLink(feature);
-        String resource = Utility.getVertex(feature);
+        String direction = Utility_v1.getDirection(feature);
+        String property = Utility_v1.getLink(feature);
+        String resource = Utility_v1.getVertex(feature);
         
         if(direction.equals("In")){
             count = ldManager.getIngoingFeatureFrequency(property , resource);
