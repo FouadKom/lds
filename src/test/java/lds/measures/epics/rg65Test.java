@@ -39,8 +39,6 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
         Conf config = LdConfFactory.createDeafaultConf(Measure.EPICS);
-//        config.addParam("threadsNumber" , 1);        
-//        config.addParam("extendingMeasure" , "LDSD_dw");
 
         engine.load(Measure.EPICS , config);
                        

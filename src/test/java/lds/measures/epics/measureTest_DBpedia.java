@@ -5,15 +5,12 @@
  */
 package lds.measures.epics;
 
-import java.util.ArrayList;
-import java.util.List;
-import lds.dataset.LdDatasetCreator;
 import lds.measures.picss.PICSS;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import lds.conf.LdConfFactory;
+import lds.measures.Measure;
 
 /**
  *
@@ -23,29 +20,25 @@ public class measureTest_DBpedia {
     
     @Test
     public void runEngineOnSpecificLdMeasureTest() throws Exception{        
-        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Plane").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
+        R r1 = new R("http://dbpedia.org/resource/Monk");
+        R r2 = new R("http://dbpedia.org/resource/Slavery");
                 
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906);
-        config.addParam("threadsNumber" , 5);        
-        config.addParam("extendingMeasure" , "LDSD_dw");
+        Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS);
+//        config.addParam("threadsNumber" , 5);        
+//        config.addParam("extendingMeasure" , "LDSD_dw");
         
-//        PICSS picss = new PICSS(config);
-        EPICS_v1 epics = new EPICS_v1(config);
+        PICSS picss = new PICSS(config);
+        EPICS epics = new EPICS(config);
         
         
-//        picss.loadIndexes();
+        picss.loadIndexes();
         epics.loadIndexes();
         
-//        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
+        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
         System.out.println("EPICS(r1 , r2) = " + epics.compare(r1, r2));
         
-//        picss.closeIndexes();
+        picss.closeIndexes();
         epics.closeIndexes();
     
     }

@@ -19,9 +19,9 @@ import lds.measures.LdSimilarity;
  * @author Fouad Komeiha
  */
 public class PICSS implements LdSimilarity {
-    private PicssLdManager ldManager;
-    private boolean useIndexes;
-    private int NumberOfResources;
+    protected PicssLdManager ldManager;
+    protected boolean useIndexes;
+    protected int NumberOfResources;
 
     public PICSS(Conf config) throws Exception {
         if (config.getParam("LdDatasetMain") == null || config.getParam("useIndexes") == null || config.getParam("resourcesCount") == null)
@@ -70,7 +70,7 @@ public class PICSS implements LdSimilarity {
 
         List<String> common_features = Utility.commonFeatures(features_a, features_b);
 
-        if (common_features.isEmpty())
+        if (common_features == null || common_features.isEmpty())
             return 0;
         
         features_a.removeAll(common_features);
@@ -91,7 +91,7 @@ public class PICSS implements LdSimilarity {
     }
 
 
-    private double PIC(List<String> F) {
+    protected double PIC(List<String> F) {
         double s = 0.0;
 
         for (String f : F) {
@@ -109,7 +109,7 @@ public class PICSS implements LdSimilarity {
     }
 
 
-    private double phi(String feature) {
+    protected double phi(String feature) {
 
         int count = 0;
 

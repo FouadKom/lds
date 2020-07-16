@@ -9,51 +9,19 @@ package lds.measures.epics;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import lds.LdManager.EpicsLdManager;
-import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
-import sc.research.ldq.*;
 import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
+import lds.measures.picss.PICSS;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class EPICS implements LdSimilarity{
-    private EpicsLdManager ldManager;
-    private boolean useIndeses;
-    private int NumberOfResources;
-    private Conf config;
+public class EPICS extends PICSS {
     
     public EPICS(Conf config) throws Exception{
-        if( config.getParam("LdDatasetMain")== null || config.getParam("useIndexes")== null || config.getParam("resourcesCount")== null )
-            throw new Exception("Some configuration parameters missing"); 
-        
-        this.config = config;
-        this.ldManager = new EpicsLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-        this.useIndeses = (Boolean) config.getParam("useIndexes");
-        this.NumberOfResources = (Integer) config.getParam("resourcesCount");
-    }
-
-    
-    @Override
-    public void closeIndexes(){
-        Ontology.closeIndexes();
-        if(useIndeses){
-            ldManager.closeIndexes();
-        }
-        
-        
-    }
-    
-    
-    @Override
-    public void loadIndexes() throws Exception{
-        Ontology.loadIndexes();
-        if(useIndeses){
-            ldManager.loadIndexes();
-        }
+        super(config);
     }
     
     
@@ -64,7 +32,7 @@ public class EPICS implements LdSimilarity{
         try {
             sim= EPICS(a , b);
         } catch (Exception ex) {
-            Logger.getLogger(EPICS.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(EPICS.class.getName()).log(Level.SEVERE, null, ex + " comparing resources " + a.toString() + " and " + b.toString());
         }
 
 
@@ -99,60 +67,19 @@ public class EPICS implements LdSimilarity{
         double x = PIC(common_features);
 	double y = PIC(unique_features_a);
 	double z = PIC(unique_features_b);
-        double s = PIC(similar_features)/2; //because similar features we get average
+        double s = PIC(similar_features)/2; //because similar features we get average between the two resources
 
 	if ((x + s + y + z) == 0)
             return 0;
-        
-	return ( (x + s) / (x + s + y + z));
-    }
-    
-    
-    private double PIC(List<String> F) {
-	double s = 0.0;
-        
-	for (String f : F) {
-            
-            double phi_ = phi(f);
-            if (phi_ != 0) {
-                double x = Utility.log2(phi_ / this.NumberOfResources);
-                double log = -x;
-                s = s + log;
-            }
-            
-	}
-        
-	return s;
-    }
-    
- 
-    
-    private double phi(String feature) {
-
-	int count = 0;
-        
-        String direction = Utility.getDirection(feature);
-        String property = Utility.getLink(feature);
-        String resource = Utility.getVertex(feature);
-        
-        if(direction.equals("In")){
-            count = ldManager.getIngoingFeatureFrequency(property , resource);
-        }
-        
-        if(direction.equals("Out")){
-            count = ldManager.getOutgoingFeatureFrequency(property , resource);
-        }
-
-	return count;
-
+        	
+        double sim = ((x + s) / (x + s + y + z)) < 0 ? 0 : ((x + s) / (x + s + y + z));
+        return sim;
     }
     
     @Override
     public LdSimilarity getMeasure(){
         return this;
     }
-    
-    
-    
+       
     
 }

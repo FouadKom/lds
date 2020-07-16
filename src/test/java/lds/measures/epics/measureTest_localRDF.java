@@ -5,7 +5,6 @@
  */
 package lds.measures.epics;
 
-import lds.LdManager.EpicsLdManager;
 import lds.measures.picss.PICSS;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
@@ -23,7 +22,6 @@ public class measureTest_localRDF {
     
     @Test
     public void runEngineOnSpecificLdMeasureTest() throws Exception{  
-//    public static void main(String args[]) throws Exception{
         LdDataset dataSet = null;
 
         R r1 = new R("http://www.example.org#Fish");
@@ -43,7 +41,7 @@ public class measureTest_localRDF {
         config.addParam("resourcesCount" , 9); 
         
         PICSS picss = new PICSS(config);
-        EPICS_v1 epics = new EPICS_v1(config);
+        EPICS epics = new EPICS(config);
         
         picss.loadIndexes();
         epics.loadIndexes();

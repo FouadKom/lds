@@ -16,6 +16,9 @@ import lds.resource.LdResult;
 import lds.resource.R;
 import org.apache.commons.csv.*;
 import java.nio.file.Paths;
+import lds.dataset.LdDatasetCreator;
+import org.apache.jena.query.ParameterizedSparqlString;
+import sc.research.ldq.LdDataset;
 
 
 public class LdBenchmark {
@@ -381,6 +384,21 @@ public class LdBenchmark {
         results_writer.close();
 
     }
+    
+    public synchronized void writeListToFile(List<String> list) throws IOException{
+        String filePath = resultsFile.getFilePath();
+        
+        FileWriter results_writer = new FileWriter(filePath , true);
+        
+        for(String str: list){
+            results_writer.write(str);
+            results_writer.write(System.getProperty("line.separator"));
+        }
+        
+        results_writer.close();
+
+    }
+    
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////  
     
     
@@ -581,6 +599,39 @@ public class LdBenchmark {
         }
         
         return triples;
+    }
+    
+    
+    /*Method to check if pairs in a benchmark are found in DBpedia and produces a list of unmatched pairs*/
+    public void checkMappingInDBpedia() throws IOException{
+        List<LdResourceTriple> triples = readFromFile(false);
+        List<String> unmapped = new ArrayList<>();
+        
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
+        
+        for(LdResourceTriple triple: triples){
+            String r1 = triple.getResourcePair().getFirstresource().toString();
+            String r2 = triple.getResourcePair().getSecondresource().toString();
+            
+            
+            ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+            query_cmd.setCommandText("ask {<" + r1 + ">  <http://dbpedia.org/ontology/abstract> ?abstract . }");
+            
+            if( ! dataset.executeAskQuery(query_cmd.toString())){
+                unmapped.add(r1);
+            }
+            
+            query_cmd.setCommandText("ask {<" + r2 + ">  <http://dbpedia.org/ontology/abstract> ?abstract . }");
+            
+            if( ! dataset.executeAskQuery(query_cmd.toString())){
+                unmapped.add(r2);
+            }               
+            
+        }
+        
+        writeListToFile(unmapped);
+        
     }
         
 }

@@ -19,7 +19,7 @@ import slib.utils.i.Conf;
  * @author Fouad Komeiha
  */
 public class ws353Test {
-    static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/wordsim-353_DBpedia-1.txt";
+    static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/wikipediaSimilarity353_DBpedia.csv";
     
     @Test
     public void ws353Test() throws Exception{
@@ -31,10 +31,10 @@ public class ws353Test {
         source.setMinValue(0);
         /**/
         
-        BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/wordsim-353_Results_EPICS.csv" , ',' , '"');
-        
+        BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/wordsim-353_Results_EPICS.csv" , ',' , '"');        
         
         LdBenchmark benchmark = new LdBenchmark(source , result);
+        
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
         Conf config = LdConfFactory.createDeafaultConf(Measure.EPICS);
@@ -67,6 +67,6 @@ public class ws353Test {
         
         System.out.println("PICSS Spearman Correlation: " + engine.correlation(benchmark , true));
         
-        engine.close();    
+        engine.close();   
     }
 }

@@ -50,8 +50,7 @@ public class Utility {
         
         return result;
     }
-    
-    
+        
     public static List<String> commonFeatures(List<String> a, List<String> b){
         List<String> result = new ArrayList<>(a);
         
@@ -59,7 +58,7 @@ public class Utility {
         
         return result;
     }
-    
+   
     public static String getLink(String s){
           String string[] =  s.split("\\|");
           return string[0].trim();

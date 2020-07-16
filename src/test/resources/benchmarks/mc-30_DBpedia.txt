@@ -1,4 +1,4 @@
-gem , jewellery , 3.84
+gemstone , jewellery , 3.84
 coast , shore , 3.70 
 furnace , stove , 3.11
 food , fruit , 3.08
@@ -12,6 +12,6 @@ food , rooster , 0.89
 coast , hill , 0.87
 forest , graveyard , 0.84
 shore , woodland , 0.63
-monk , slave ,0.55
+monk , Slavery ,0.55
 coast , forest , 0.42
 glass , "magician_(paranormal)" , 0.11

@@ -49,8 +49,8 @@ public class mc30Test {
         
         engine.close();
         
-//EPICS Pearson Correlation: 0.12393498736099316
-//EPICS Spearman Correlation: 0.21440558720998626
+//EPICS Pearson Correlation: 0.18323571598691282
+//EPICS Spearman Correlation: 0.16052781266558666
         
         /* PICSS */
         result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30_Results_PICSS.csv" , ',' , '"');
