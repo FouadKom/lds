@@ -21,12 +21,10 @@ public class measureTest_DBpedia {
     @Test
     public void runEngineOnSpecificLdMeasureTest() throws Exception{        
         
-        R r1 = new R("http://dbpedia.org/resource/Monk");
-        R r2 = new R("http://dbpedia.org/resource/Slavery");
+        R r1 = new R("http://dbpedia.org/resource/Money");
+        R r2 = new R("http://dbpedia.org/resource/Cash");
                 
         Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS);
-//        config.addParam("threadsNumber" , 5);        
-//        config.addParam("extendingMeasure" , "LDSD_dw");
         
         PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);

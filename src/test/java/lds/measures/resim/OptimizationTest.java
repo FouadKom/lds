@@ -49,7 +49,7 @@ public class OptimizationTest {
         configSim.addParam("LdDatasetSpecific" , datasetSpecific);
         configSim.addParam("WeightMethod" , WeightMethod.RSLAW);
         
-        ResourceSimilarityO resim_o = new TResimO(configSim);
+        ResourceSimilarity resim_o = new TResim(configSim);
         ResourceSimilarity resim = new TResim(configSim);
         resim_o.loadIndexes();
         resim.loadIndexes();

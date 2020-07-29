@@ -11,10 +11,6 @@ import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
-import test.utility.Util;
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.query.ResultSetFormatter;
 
 /**
  *

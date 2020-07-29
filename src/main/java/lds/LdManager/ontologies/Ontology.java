@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexerManager;
 import lds.measures.lods.ontologies.*;
 import lds.resource.R;
 import org.apache.jena.rdf.model.Resource;
@@ -22,7 +22,7 @@ import org.openrdf.model.URI;
  * @author Fouad Komeiha
  */
 public class Ontology {
-    private static LdIndexer manager;
+    private static LdIndexerManager manager;
     private static String prefixIndexPath = System.getProperty("user.dir") + "/Indexes/Prefixes/prefixes_index.db";
     private static String namespaceIndexPath = System.getProperty("user.dir") + "/Indexes/Prefixes/namespaces_index.db";
     private static LdIndex prefixIndex;
@@ -122,7 +122,7 @@ public class Ontology {
     }
     
     public static void loadIndexes(){
-        manager = LdIndexer.getManager();
+        manager = LdIndexerManager.getManager();
         
         try {
         prefixIndex = manager.loadIndex(prefixIndexPath); 

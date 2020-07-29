@@ -12,18 +12,18 @@ import java.util.Map;
  *
  * @author Fouad Komeiha
  */
-public class LdIndexer {
+public class LdIndexerManager {
     private static Map<String, LdIndex> indexes;
     
-    static private LdIndexer indexManager;
+    static private LdIndexerManager indexManager;
     
-    private LdIndexer(){
+    private LdIndexerManager(){
         indexes = new HashMap<>();
     }
     
-    public static LdIndexer getManager() {
+    public static LdIndexerManager getManager() {
         if(indexManager == null){
-            indexManager = new LdIndexer();            
+            indexManager = new LdIndexerManager();            
         }        
         return indexManager;
     }

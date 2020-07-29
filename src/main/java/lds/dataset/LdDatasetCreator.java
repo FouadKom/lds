@@ -131,6 +131,24 @@ public class LdDatasetCreator {
         
         return dataset;
     }
+    
+    public static LdDataset getLocalDataset(String dataSetDir , String graph , String name){
+        LdDataset dataset = null;
+        
+        try {
+            dataset = LdDatasetFactory.getInstance()
+                        .name(name)
+                        .file(dataSetDir)
+                        .defaultGraph(graph)
+                        .create();
+
+        } catch (Exception e) {
+                fail(e.getMessage());
+        }
+        
+        return dataset;
+    }
+        
         
     public static List<R> getDbpediaResources(DBpediaChapter chapter , int limit) {
             List<R> resources = new ArrayList<>();

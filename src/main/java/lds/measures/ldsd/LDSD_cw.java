@@ -5,6 +5,7 @@
  */
 package lds.measures.ldsd;
 
+import lds.conf.Config;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import slib.utils.i.Conf;

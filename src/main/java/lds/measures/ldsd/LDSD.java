@@ -9,7 +9,7 @@ import java.util.List;
 import lds.LdManager.LdsdLdManager;
 import lds.LdManager.ontologies.Ontology;
 import lds.measures.LdSimilarity;
-import lds.measures.weight.WeightO;
+import lds.measures.weight.Weight;
 import lds.measures.weight.WeightMethod;
 import lds.resource.R;
 import org.openrdf.model.URI;
@@ -24,7 +24,7 @@ public abstract class LDSD implements LdSimilarity {
     protected List<URI> edges;
     protected LdsdLdManager LDSDLDLoader;
     protected LdsdLdManager SpecificLDSDLDLoader;
-    protected WeightO weight;
+    protected Weight weight;
     protected boolean useIndeses;
     
     public LDSD(Conf config) throws Exception {
@@ -47,28 +47,11 @@ public abstract class LDSD implements LdSimilarity {
             default:
                 this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
                 this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
-                this.weight = new WeightO((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
+                this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
                 this.useIndeses = (Boolean) config.getParam("useIndexes");
-                break;
-
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
-//            default:
-//                throw new Exception("Some configuration parameters missing");               
+                break;            
         }
-        
+
     }
         
     @Override

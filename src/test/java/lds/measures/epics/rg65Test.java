@@ -20,7 +20,7 @@ import slib.utils.i.Conf;
  */
 public class rg65Test {
     
-static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65_DBpedia.txt";
+static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65/rg-65_DBpedia.csv";
     
     @Test
     public void rg65Test() throws Exception{
@@ -33,10 +33,12 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         source.setMinValue(0);
         /**/
         
-        BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65_Results_EPICS.csv" , ',' , '"');        
+        BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65/rg-65_Results_EPICS.csv" , ',' , '"');        
         
         LdBenchmark benchmark = new LdBenchmark(source , result);
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
+        
+        benchmark.checkMappingInDBpedia();
         
         Conf config = LdConfFactory.createDeafaultConf(Measure.EPICS);
 
@@ -50,11 +52,10 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         
         engine.close();
         
-//EPICS Pearson Correlation: 0.013169011235697005
-//EPICS Spearman Correlation: 0.10704886108930826
+
         
         /* PICSS */
-        result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65_Results_PICSS.csv" , ',' , '"');
+        result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65/rg-65_Results_PICSS.csv" , ',' , '"');
         benchmark = new LdBenchmark(source , result);
         
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
@@ -71,7 +72,6 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         
         engine.close(); 
         
-//PICSS Pearson Correlation: 0.22996896621386245
-//PICSS Spearman Correlation: 0.1798779482887808
+
     }
 }

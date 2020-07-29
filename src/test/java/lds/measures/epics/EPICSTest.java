@@ -3,8 +3,9 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.measures.picss;
+package lds.measures.epics;
 
+import lds.measures.picss.*;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.conf.LdConfFactory;
@@ -18,17 +19,17 @@ import slib.utils.i.Conf;
  *
  * @author Fouad Komeiha
  */
-public class PICSSTest {
+public class EPICSTest {
     
     
     @Test
-    public void PICSSTest() throws Exception{
+    public void EPICSTest() throws Exception{
     
         LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
         
         //You can create conf in several ways:
         //1- You can create default conf 
-        Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS); 
+        Conf config = LdConfFactory.createDeafaultConf(Measure.EPICS); 
                  
         //2- Or Create conf objects and pass needed configuration parameters
         
@@ -41,7 +42,7 @@ public class PICSSTest {
         
         //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
         config.addParam("resourcesCount" , 2350906);*/
-                
+       
         R r1 = new R("http://dbpedia.org/resource/Coast");
         R r2 = new R("http://dbpedia.org/resource/Shore");
         
@@ -51,7 +52,7 @@ public class PICSSTest {
         
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //PICSS similarity calculaton
-        engine.load(Measure.PICSS , config);        
+        engine.load(Measure.EPICS, config);        
         System.out.println( engine.similarity(r1 , r2) );
         
         //ends calculation for the chosen similaarity and closes all indexes if created

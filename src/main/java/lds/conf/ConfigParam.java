@@ -5,23 +5,15 @@
  */
 package lds.conf;
 
-import lds.engine.LdSimilarityEngine;
-import lds.measures.weight.WeightMethod;
-
 /**
  *
  * @author Fouad Komeiha
  */
-public enum Param {
+public enum ConfigParam {
      LdDatasetMain,
      useIndexes,
      LdDatasetSpecific,
      WeightMethod,
-     resourcesCount;
+     resourcesCount;     
      
-     
-     
-    public static String toString(Param param){
-        return param.toString();
-    }
 }

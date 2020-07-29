@@ -6,6 +6,7 @@
 package lds.measures.resim;
 
 import java.util.List;
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.openrdf.model.URI;
@@ -88,7 +89,9 @@ public class WResim extends ResourceSimilarity{
             List<String> commonObjects = resimLDLoader.getCommonSubjects(a, b);
 
             for(String resource: commonObjects){
-                R k = LdResourceFactory.getInstance().uri(resource).create();
+                String string[] =  resource.split("\\|");
+                String uri = string[0];
+                R k = new R(Ontology.decompressValue(uri));
                 wciil = wciil + Cio(l , k);
             }
             
@@ -125,7 +128,9 @@ public class WResim extends ResourceSimilarity{
             List<String> commonObjects = resimLDLoader.getCommonObjects(a, b);
 
             for(String resource: commonObjects){
-                R k = LdResourceFactory.getInstance().uri(resource).create();
+                String string[] =  resource.split("\\|");
+                String uri = string[0];
+                R k = new R(Ontology.decompressValue(uri));
                 wciol = wciol + Cio(l , k);
             }
             

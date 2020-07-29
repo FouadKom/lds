@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 
@@ -27,7 +27,7 @@ public class PicssLdManager extends HybridMeasuresLdManager {
     private LdIndex countOutgoingFeaturesIndex;
     private LdIndex countResourcesIndex;
     
-    private LdIndexer manager;
+    private LdIndexerManager manager;
     
      
     public PicssLdManager(LdDataset dataset , boolean useIndex) throws Exception {                
@@ -36,12 +36,12 @@ public class PicssLdManager extends HybridMeasuresLdManager {
     }
     
     public void loadIndexes() throws Exception{
-        manager = LdIndexer.getManager();
+        manager = LdIndexerManager.getManager();
         
-        String ingoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/Opt/PICSS/picss_ingoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String outgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/Opt/PICSS/picss_outgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String countOutgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/Opt/PICSS/picss_countOutgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String countIngoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/Opt/PICSS/picss_countIngoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        String ingoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_ingoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        String outgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_outgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        String countOutgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_countOutgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        String countIngoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_countIngoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
 //        String countResourcesIndexFile = System.getProperty("user.dir") + "/Indexes/All_Measures/countResources_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         
         ingoingFeaturesIndex = manager.loadIndex(ingoingFeaturesIndexFile);

@@ -11,7 +11,6 @@ package lds.measures;
  */
 public enum Measure {
     Resim ,
-    ResimO ,
     TResim ,
     WResim ,
     WTResim ,
@@ -30,9 +29,6 @@ public enum Measure {
     public static String getPath(Measure measure){
         if(measure == Resim){
             return "lds.measures.resim.Resim" ;
-        }
-        if(measure == ResimO){
-            return "lds.measures.resim.ResimO" ;
         }
         if(measure == TResim){
             return "lds.measures.resim.TResim" ;
@@ -72,8 +68,7 @@ public enum Measure {
         }
         if(measure == LODS){
             return "lds.measures.lods.LODS" ;
-        }
-        
+        }        
         if(measure == EPICS){
             return "lds.measures.epics.EPICS" ;
         }

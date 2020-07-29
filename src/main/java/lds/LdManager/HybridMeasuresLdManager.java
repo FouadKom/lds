@@ -18,7 +18,7 @@ import sc.research.ldq.LdDataset;
  *
  * @author Fouad komeiha
  */
-public class HybridMeasuresLdManager extends LdManagerBaseO {
+public class HybridMeasuresLdManager extends LdManagerBase {
     protected String baseClassPath = "lds.LdManager.HybridMeasuresLdManager.";
     
     public HybridMeasuresLdManager(LdDataset dataset) {

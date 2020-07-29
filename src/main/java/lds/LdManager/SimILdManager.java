@@ -10,7 +10,7 @@ package lds.LdManager;
 import java.util.List;
 import lds.LdManager.ontologies.Ontology;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexerManager;
 import lds.measures.lods.ontologies.O;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
@@ -25,7 +25,7 @@ public class SimILdManager extends FeaturesMeasuresLdManager{
     private LdIndex ontologiesIndex;
     private LdIndex augmentedOntologiesIndex;
     
-    private LdIndexer manager;
+    private LdIndexerManager manager;
 
     public SimILdManager(LdDataset dataset , boolean useIndex) {
         super(dataset);
@@ -33,7 +33,7 @@ public class SimILdManager extends FeaturesMeasuresLdManager{
     }
     
     public void loadIndexes() throws Exception{
-        manager = LdIndexer.getManager();
+        manager = LdIndexerManager.getManager();
         
         String ontologiesIndexFile = System.getProperty("user.dir") + "/Indexes/LODS/SimI/simI_ontologies_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String augmentedOntologiesIndexFile = System.getProperty("user.dir") + "/Indexes/LODS/SimI/simI_augmented_ontologies_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";

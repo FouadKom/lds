@@ -12,12 +12,12 @@ package lds.indexing;
  */
 public class CollisionTest {
     protected static LdIndex index;  
-    protected static LdIndexer manager;
+    protected static LdIndexerManager manager;
     static String indexFile = System.getProperty("user.dir") + "/Indexes/Prefixes/namespaces_index.db";
         
     
     public static void main(String args[]) throws Exception {
-        manager = LdIndexer.getManager();
+        manager = LdIndexerManager.getManager();
         
         index = manager.loadIndex(indexFile);
 

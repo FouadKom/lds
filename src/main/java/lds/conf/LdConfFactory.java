@@ -5,6 +5,7 @@
  */
 package lds.conf;
 
+import java.util.HashMap;
 import java.util.Map;
 import lds.dataset.DBpediaChapter;
 import lds.dataset.LdDatasetCreator;
@@ -12,6 +13,7 @@ import lds.measures.Measure;
 import lds.measures.weight.WeightMethod;
 import sc.research.ldq.LdDataset;
 import slib.utils.i.Conf;
+import lds.conf.Config;
 /**
  *
  * @author Fouad Komeiha
@@ -35,6 +37,11 @@ public class LdConfFactory {
         return config;
     }
     
+    public static Config createDeafaultConfig(Measure measure){
+        Conf config = createDeafaultConf(measure);            
+        return new Config(config);
+    }
+        
     public static Conf createConf(Object... params){
         Conf config = new Conf();
         String key = null;
@@ -44,10 +51,9 @@ public class LdConfFactory {
         int val = 0;
         int i =0;
         
-//        for (int i = 0; i < params.length; i++) {
         while(i < params.length){
                         
-            if (params[i] instanceof Param) {
+            if (params[i] instanceof ConfigParam) {
                 
                 key = params[i].toString();                 
                         
@@ -90,17 +96,10 @@ public class LdConfFactory {
         return config;
     }
     
-    public static Conf createConf(Map<Param , Object> params){
+    public static Conf createConf(HashMap<String, Object> params){
         Conf config = new Conf();
-        
-        for (Map.Entry<Param , Object> entry : params.entrySet()){
-            config.addParam(entry.getKey().toString() , entry.getValue());
-        }
-            
+        config.setParams(params);
         return config;
     }
-    
-    
-    
-
+      
 }

@@ -20,7 +20,7 @@ import slib.utils.i.Conf;
  */
 public class mc30Test {
     
-    static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30_DBpedia.txt";
+    static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30/mc-30_DBpedia.csv";
     
     @Test
     public void mc30Test() throws Exception{  
@@ -32,7 +32,7 @@ public class mc30Test {
         source.setMinValue(0);
         /**/
         
-        BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30_Results_EPICS.csv" , ',' , '"');        
+        BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30/mc-30_Results_EPICS.csv" , ',' , '"');        
         
         LdBenchmark benchmark = new LdBenchmark(source , result);
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
@@ -49,11 +49,10 @@ public class mc30Test {
         
         engine.close();
         
-//EPICS Pearson Correlation: 0.18323571598691282
-//EPICS Spearman Correlation: 0.16052781266558666
+
         
         /* PICSS */
-        result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30_Results_PICSS.csv" , ',' , '"');
+        result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30/mc-30_Results_PICSS.csv" , ',' , '"');
         benchmark = new LdBenchmark(source , result);
         
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
@@ -68,8 +67,7 @@ public class mc30Test {
         
         engine.close();  
         
-//PICSS Pearson Correlation: 0.3776320001769634
-//PICSS Spearman Correlation: 0.11526136095487043
+
           
 
     }

@@ -5,33 +5,31 @@
  */
 package lds.LdManager;
 
-
+import java.util.ArrayList;
 import java.util.List;
+import lds.LdManager.ontologies.Ontology;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
 
 /**
  *
- * @author Nasredine CHENIKI
+ * @author Fouad Komeiha
  */
-public class ResimLdManager extends DistanceMeasuresLdManager {
+public class ResimLdManager extends DistanceMeasuresLdManager{
     
     private boolean useIndex;
-
+  
     private LdIndex sameAsIndex;
-    private LdIndex subjectsIndex;
     private LdIndex propertyOccurrenceIndex;
-    private LdIndex commonObjectsIndex;
-    private LdIndex commonSubjectsIndex;
-    private LdIndex typlessCommonObjectsIndex;
-    private LdIndex typlessCommonSubjectsIndex;        
+    private LdIndex objectsIndex;
+    private LdIndex countShareCommonSubjectsIndex;
+    private LdIndexerManager manager;
+    
 
-    private LdIndexer manager;
-
-    public ResimLdManager(LdDataset dataset , boolean useIndex) throws Exception {                
+    public ResimLdManager (LdDataset dataset , boolean useIndex) throws Exception {                
             super(dataset , useIndex);
             this.useIndex = useIndex; 
 
@@ -43,25 +41,19 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
 
         super.loadIndexes();
         
-        manager = LdIndexer.getManager();
+        manager = LdIndexerManager.getManager();
         
         // TODO: specify an index directory
-        String sameAsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_sameAs_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String subjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_subjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        
+        String sameAsResourcesIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_sameAsResources_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        sameAsIndex = manager.loadIndex(sameAsResourcesIndexFile);
+        
         String propertyOccurrenceIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_propertyOccurence_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String typlessCommonObjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_typlessCommonObjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String typlessCommonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_typlessCommonSubjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String commonObjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_commonObjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-        String commonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/resim_commonSubjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
-
-        sameAsIndex = manager.loadIndex(sameAsIndexFile);
-        subjectsIndex = manager.loadIndex(subjectsIndexFile);
         propertyOccurrenceIndex = manager.loadIndex(propertyOccurrenceIndexFile);
-        typlessCommonObjectsIndex = manager.loadIndex(typlessCommonObjectsIndexFile);
-        typlessCommonSubjectsIndex = manager.loadIndex(typlessCommonSubjectsIndexFile);
-        commonObjectsIndex = manager.loadIndex(commonObjectsIndexFile);
-        commonSubjectsIndex = manager.loadIndex(commonSubjectsIndexFile);
-
+        
+        String countShareCommonSubjectsIndexFile = System.getProperty("user.dir") + "/Indexes/Resim/countShareCommonSubjects_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+        countShareCommonSubjectsIndex = manager.loadIndex(countShareCommonSubjectsIndexFile);
+        
     }
 
 
@@ -70,139 +62,95 @@ public class ResimLdManager extends DistanceMeasuresLdManager {
         if (useIndex) {
 
             super.closeIndexes();
-
             manager.closeIndex(sameAsIndex);
-            manager.closeIndex(subjectsIndex);
             manager.closeIndex(propertyOccurrenceIndex);
-            manager.closeIndex(commonSubjectsIndex);
-            manager.closeIndex(commonObjectsIndex);
-            manager.closeIndex(typlessCommonSubjectsIndex);
-            manager.closeIndex(typlessCommonObjectsIndex);
-
-
+            manager.closeIndex(countShareCommonSubjectsIndex);
         }
 
     }
-       
-         
+ 
+    @Override
+    public List<String> getSameAsResources(R a) {
+        if(useIndex){
+            return sameAsIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getSameAsResources" , a );
+        }
         
-    @Override
-    public int countSubject(URI link , R a) {
-       int count = 0;
-
-       if (useIndex) {
-         return subjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue()+ ":" + link.stringValue(), baseClassPath + "countSubject" , link , a);
-
-       }
-
-      count = super.countSubject(link , a);
-      return count;
+        return super.getSameAsResources(a);       
     }
-
-
+    
+    
     @Override
-    public int countSubject(R a) {
-
-       int count = 0;
-
-        if (useIndex) {
-         return subjectsIndex.getIntegerFromIndex(dataset , a.getUri().stringValue(), baseClassPath + "countSubject" , a);
-
-       }
-
-       count = super.countSubject(a);
-
-      return count;
-
-    }
-
-
-    @Override
-    public boolean isSameAs(R a, R b) {
-       boolean result;
-
-        if (useIndex) {
-            return sameAsIndex.getBooleanFromIndex(dataset , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "isSameAs", a , b);
-
+    public int countPropertyOccurrence(URI link){
+        if(useIndex){
+            return propertyOccurrenceIndex.getIntegerFromIndex(dataset , Utility.createKey(link) , baseClassPath + "countPropertyOccurrence", link);
         }
-
-        result = super.isSameAs(a, b);
-        return result;
-
+        
+        return super.countPropertyOccurrence(link);
+    
     }
-
+    
+    
     @Override
-     public int countPropertyOccurrence(URI link){
-         int count = 0;
-
-         if (useIndex) {
-               return propertyOccurrenceIndex.getIntegerFromIndex(dataset , link.stringValue() , baseClassPath + "countPropertyOccurrence", link);
-           }
-
-           count = super.countPropertyOccurrence(link);
-
-      return count;
-
-     }
-
-
-    @Override
-    public List<String> getTyplessCommonObjects(R a , R b){
-
-        List<String> list;
-
-        if (useIndex) {
-             return typlessCommonObjectsIndex.getListFromIndex(dataset , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonObjects" , a , b);
-        }  
-
-        list = super.getTyplessCommonObjects(a, b);
-
-        return list;
+    public int countShareCommonSubjects(URI link , R a){
+        if(useIndex){
+           return countShareCommonSubjectsIndex.getIntegerFromIndex(dataset , Utility.createKey(a , link), baseClassPath + "countShareCommonSubjects" , link , a);
+        }
+        
+        return super.countShareCommonSubjects(link, a);
     }
-
-
-    @Override
-    public List<String> getTyplessCommonSubjects(R a , R b){
-        List<String> list;
-
-        if (useIndex) {
-             return typlessCommonSubjectsIndex.getListFromIndex(dataset , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getTyplessCommonSubjects" , a , b);
-        }  
-
-        list = super.getTyplessCommonSubjects(a, b);
-
-        return list;
-
-
-
+    
+    public boolean isSameAs(R a, R b) {
+        List<String> sameAs_resources_a = getSameAsResources(a);
+        if(sameAs_resources_a == null)
+            return false;
+        else if(sameAs_resources_a.contains(Ontology.compressValue(b)))
+            return true;
+        
+        return false;
     }
-
-    @Override
-    public List<String> getCommonObjects(R a , R b){
-
-        List<String> list;
-
-        if (useIndex) {
-             return commonObjectsIndex.getListFromIndex(dataset , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getCommonObjects" , a , b);
-        }  
-
-        list = super.getCommonObjects(a, b);
-
-        return list;
+    
+    public int countTyplessCommonSubjects(URI li, URI lj , R a){
+        int count = 0;
+        List<String> commonSubjects = getCommonSubjects(a);
+        
+        if(commonSubjects ==  null || commonSubjects.contains("-1"))
+            return count;
+        
+        for(String items:commonSubjects){
+            String string[] =  items.split("\\|");
+            String property1 = string[1];
+            String property2 = string[2];
+            
+            if(property1.equals(Ontology.compressValue(li)) && property2.equals(Ontology.compressValue(lj)))
+                count++;
+        }           
+    
+        return count;
     }
+    
+    public int countTyplessCommonObjects(URI li, URI lj , R a){
+        int count = 0;
+        List<String> commonObjects = getCommonObjects(a);
+//        List<String> distinctCommonObjects = new ArrayList<>();
+        
+        if(commonObjects ==  null || commonObjects.contains("-1"))
+            return count;
+        
+        for(String items:commonObjects){
+            String string[] =  items.split("\\|");
+//            String object = string[0];
+            String property1 = string[1];
+            String property2 = string[2];
+            
+            if(property1.equals(Ontology.compressValue(li)) && property2.equals(Ontology.compressValue(lj)))
+                count++;
+//                distinctCommonObjects.add(object);
+        }           
+    
+        return count;
+//          return distinctCommonObjects.size();
+    }
+    
+}
 
-
-    @Override
-    public List<String> getCommonSubjects(R a , R b){
-        List<String> list;
-
-        if (useIndex) {
-             return commonSubjectsIndex.getListFromIndex(dataset , a.getUri().stringValue()+ ":" + b.getUri().stringValue() , baseClassPath + "getCommonSubjects" , a , b);
-        } 
-
-        list = super.getCommonSubjects(a, b);
-        return list;
-
-    }  
-         
- }
+    

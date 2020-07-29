@@ -9,15 +9,10 @@ import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.conf.LdConfFactory;
 import lds.measures.Measure;
-import lds.measures.weight.WeightMethod;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
-import test.utility.Util;
 
 /**
  *
@@ -26,38 +21,70 @@ import test.utility.Util;
 public class LDSDTest {
     public static final String datasetDir = System.getProperty("user.dir") + "/src/test/resources/specific_class_set.rdf"; 
     
-//    @Test
-//    public void LDSDTest() throws Exception{
-        public static void main(String args[]) throws Exception{
+    @Test
+    public void LDSDTest() throws Exception{  
         
-        LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
-        LdDataset dataSetSpecific = LdDatasetCreator.getLocalDataset(datasetDir, "LDSD_example");
-               
-        Conf config = LdConfFactory.createDeafaultConf(Measure.LDSD_cw);
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
+        LdDataset dataSetSpecific = LdDatasetCreator.getLocalDataset(datasetDir, "LDSD_example");              
         
-//        R r1 = new R("http://dbpedia.org/resource/The_Noah");
-//        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
+        R r1 = new R("http://dbpedia.org/resource/The_Noah");
+        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
-        
+        //Initialzie the engine class object
         LdSimilarityEngine engine = new LdSimilarityEngine();
+        
+        /*Intiialize the conf object which contains the necessary parameters for the measure
+        you can use the default conf as follows. This creattes a conf with default parameters and no indexing by default*/
+        Conf config = LdConfFactory.createDeafaultConf(Measure.LDSD_cw);
 
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //LDSD similarity calculation
+        engine.load(Measure.LDSD_d , config);
+        System.out.println( engine.similarity(r1 , r2) );
+        //ends calculation for the chosen similaarity and closes all indexes if created
+        engine.close();
+        
         engine.load(Measure.LDSD_dw , config);
         System.out.println( engine.similarity(r1 , r2) );
         //ends calculation for the chosen similaarity and closes all indexes if created
         engine.close();
         
-        /*config = LdConfFactory.createDeafaultConf(Measure.TLDSD_cw);
+        engine.load(Measure.LDSD_i , config);
+        System.out.println( engine.similarity(r1 , r2) );
+        //ends calculation for the chosen similaarity and closes all indexes if created
+        engine.close();
+        
+        engine.load(Measure.LDSD_iw , config);
+        System.out.println( engine.similarity(r1 , r2) );
+        //ends calculation for the chosen similaarity and closes all indexes if created
+        engine.close();
+        
+        engine.load(Measure.LDSD_cw , config);
+        System.out.println( engine.similarity(r1 , r2) );
+        //ends calculation for the chosen similaarity and closes all indexes if created
+        engine.close();
+        
+        config = LdConfFactory.createDeafaultConf(Measure.TLDSD_cw);
         
         engine.load(Measure.TLDSD_cw , config);
         System.out.println( engine.similarity(r1 , r2) );
         engine.close();
         
-        config = LdConfFactory.createDeafaultConf(Measure.WLDSD_cw);
-        config.addParam(datasetDir, dataSetSpecific);
+        config = LdConfFactory.createDeafaultConf(Measure.WLDSD_cw);       
+        
+        /*Note:
+        Using the default conf for measures that use weighting algorithims such as : WLDSD_cw, WTLDSD_cw 
+        requires adding the specific dataset object which is used for weight calculation.
+        To add the specific dataset use the following:
+        */ 
+        config.addParam("LdDatasetSpecific" , dataSetSpecific);        
+        
+        /*Note:
+        Using the default conf for measures that use weighting algorithims such as : WLDSD_cw, WTLDSD_cw  uses ITW algorithim by default.
+        To change the weighting algorithim use the following:
+        
+        config.addParam("WeightMethod" , WeightMethod.RSLAW);        
+        */ 
         
         engine.load(Measure.WLDSD_cw , config);
         System.out.println( engine.similarity(r1 , r2) );
@@ -66,7 +93,7 @@ public class LDSDTest {
 
         engine.load(Measure.WTLDSD_cw , config);
         System.out.println( engine.similarity(r1, r2) );
-        engine.close();*/
+        engine.close();
 
         
     }

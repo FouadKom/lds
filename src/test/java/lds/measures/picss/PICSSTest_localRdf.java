@@ -9,9 +9,7 @@ import lds.dataset.LdDatasetCreator;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
 import lds.resource.R;
-import static org.junit.Assert.fail;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 
 /**

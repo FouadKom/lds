@@ -71,13 +71,13 @@ public class WTResim extends ResourceSimilarity{
     
     @Override
     public int Cii(URI li, URI lj , R k) { //Similar to TCii in TResim
-        return resimLDLoader.countShareTyplessCommonSubjects(li , lj , k);
+        return resimLDLoader.countTyplessCommonSubjects(li , lj , k);
         
     }
     
     @Override
     public int Cii(URI li, URI lj, R a, R b) {//Similar to TCii in TResim
-       return resimLDLoader.countShareTyplessCommonSubjects(li , lj , a , b);
+       return resimLDLoader.countTyplessCommonSubjects(li , lj , a , b);
     }
     
     
@@ -96,7 +96,7 @@ public class WTResim extends ResourceSimilarity{
         }
         else 
         {
-            List<String> commonSubjects = resimLDLoader.getTyplessCommonSubjects(a, b) ;
+            List<String> commonSubjects = resimLDLoader.getCommonSubjects(a, b) ;
             
             for(String resource:commonSubjects){
                 R k = LdResourceFactory.getInstance().uri(resource).create();
@@ -120,13 +120,13 @@ public class WTResim extends ResourceSimilarity{
     
     @Override
     public int Cio(URI li, URI lj, R a, R b) { //TCio  in TResim
-        return resimLDLoader.countShareTyplessCommonObjects(li , lj , a , b);
+        return resimLDLoader.countTyplessCommonObjects(li , lj , a , b);
     }
     
 
     @Override
     public int Cio(URI li, URI lj , R k) { //TCio  in TResim
-        return resimLDLoader.countShareTyplessCommonObjects(li , lj , k);
+        return resimLDLoader.countTyplessCommonObjects(li , lj , k);
     } 
     
 
@@ -145,7 +145,7 @@ public class WTResim extends ResourceSimilarity{
         }
         else
         {
-            List<String> commonObjects = resimLDLoader.getTyplessCommonObjects(a, b);
+            List<String> commonObjects = resimLDLoader.getCommonObjects(a, b);
             
             for(String resource: commonObjects){
                R k = LdResourceFactory.getInstance().uri(resource).create();
