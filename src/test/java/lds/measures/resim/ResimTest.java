@@ -6,15 +6,15 @@
 package lds.measures.resim;
 
 
-import lds.conf.LdConfFactory;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.config.LdConfigFactory;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
-import lds.measures.weight.WeightMethod;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -27,7 +27,7 @@ public class ResimTest {
     
     @Test
     public void ResimTest() throws Exception{ 
-        
+           
         R r1 = new R("http://dbpedia.org/resource/The_Noah");
         R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
@@ -39,7 +39,7 @@ public class ResimTest {
         
         /*Intiialize the conf object which contains the necessary parameters for the measure
         you can use the default conf as follows. This creattes a conf with default parameters and no indexing by default*/
-        Conf config = LdConfFactory.createDeafaultConf(Measure.Resim);   
+        Config config = LdConfigFactory.createDeafaultConf(Measure.Resim);   
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //Resim similarity calculaton
         engine.load(Measure.Resim , config);
@@ -50,7 +50,7 @@ public class ResimTest {
         engine.close();
         
         
-        config = LdConfFactory.createDeafaultConf(Measure.TResim);
+        config = LdConfigFactory.createDeafaultConf(Measure.TResim);
         //TResim similarity calculation
         engine.load(Measure.TResim , config);
         
@@ -58,14 +58,14 @@ public class ResimTest {
         
         engine.close();      
     
-        config = LdConfFactory.createDeafaultConf(Measure.WResim);
+        config = LdConfigFactory.createDeafaultConf(Measure.WResim);
         
         /*Note:
         Using the default conf for measures that use weighting algorithims such as : WResm, WTResim 
         requires adding the specific dataset object which is used for weight calculation.
         To add the specific dataset use the following:
         */ 
-        config.addParam("LdDatasetSpecific" , datasetSpecific);        
+        config.addParam(ConfigParam.LdDatasetSpecific , datasetSpecific);        
         
         /*Note:
         Using the default conf for measures that use weighting algorithims such as : WResm, WTResim uses ITW algorithim by default.

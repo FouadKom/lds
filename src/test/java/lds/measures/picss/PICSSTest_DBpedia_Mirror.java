@@ -5,12 +5,13 @@
  */
 package lds.measures.picss;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -24,13 +25,13 @@ public class PICSSTest_DBpedia_Mirror {
 
         LdDataset dataset = LdDatasetCreator.getDBpediaMirrorDataset("http://localhost:8891/sparql" , "dbpedia");
 
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906);
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataset);
+        config.addParam(ConfigParam.resourcesCount , 2350906);
 
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Bob_Dylan").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Ronnie_Hawkins").create();
+        R r1 = new R("http://dbpedia.org/resource/Bob_Dylan");
+        R r2 = new R("http://dbpedia.org/resource/Ronnie_Hawkins");
 
         PICSS picss = new PICSS(config);
 

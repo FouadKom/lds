@@ -9,10 +9,11 @@ import java.util.Arrays;
 
 import java.util.List;
 import lds.LdManager.ontologies.WikiDataLdManager;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
+
 
 /**
  *
@@ -28,10 +29,10 @@ public class O_WikiData implements O {
     private List<String> namespaces = Arrays.asList("\"http://www.wikidata.org/entity/\"");
 
     @Override
-    public void initializeOntology(Conf config) throws Exception {
-        this.useIndex = (Boolean) config.getParam("useIndexes");
-        this.dataAugmentation = (Boolean) config.getParam("dataAugmentation");
-        this.datasetInitial = (LdDataset) config.getParam("LdDatasetMain");
+    public void initializeOntology(Config config) throws Exception {
+        this.useIndex = (Boolean) config.getParam(ConfigParam.useIndexes);
+        this.dataAugmentation = (Boolean) config.getParam(ConfigParam.dataAugmentation);
+        this.datasetInitial = (LdDataset) config.getParam(ConfigParam.LdDatasetMain);
         
         this.wikiDataldManager = new WikiDataLdManager(datasetInitial , useIndex);
         

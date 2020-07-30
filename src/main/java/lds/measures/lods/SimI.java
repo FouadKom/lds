@@ -13,9 +13,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.SimILdManager;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 /**
@@ -28,17 +29,17 @@ public class SimI implements LdSimilarity {
     private List<O> commonOntologies;
     private boolean dataAugmentation;
     private SimILdManager simIldManager;
-    private Conf config;
-
+    private Config config;
     
-    public SimI(Conf config) throws Exception{
-        if(config.getParam("useIndexes") == null || config.getParam("ontologyList") == null || config.getParam("dataAugmentation") == null)
+    
+    public SimI(Config config) throws Exception{
+        if(config.getParam(ConfigParam.useIndexes) == null || config.getParam(ConfigParam.ontologyList) == null || config.getParam(ConfigParam.dataAugmentation) == null)
             throw new Exception("Some configuration parameters missing"); 
 
-        this.simIldManager = new SimILdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-        this.useIndeses = (Boolean) config.getParam("useIndexes");
-        this.ontologyList = (List<O>) config.getParam("ontologyList");
-        this.dataAugmentation = (Boolean) config.getParam("dataAugmentation");
+        this.simIldManager = new SimILdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+        this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
+        this.ontologyList = (List<O>) config.getParam(ConfigParam.ontologyList);
+        this.dataAugmentation = (Boolean) config.getParam(ConfigParam.dataAugmentation);
         this.config = config;
     }
 

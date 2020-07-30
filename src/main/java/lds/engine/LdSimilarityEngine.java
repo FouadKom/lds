@@ -14,11 +14,11 @@ import java.util.concurrent.Future;
 import java.util.concurrent.TimeUnit;
 import lds.benchmark.LdBenchmark;
 import lds.benchmark.BenchmarkFile;
-import lds.conf.LdConfFactory;
+import lds.config.Config;
+import lds.config.LdConfigFactory;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
 import lds.resource.R;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 
@@ -28,13 +28,13 @@ public class LdSimilarityEngine {
         private LdSimilarity measure;
         
 
-	public void load(Measure measureName, Conf config){
+	public void load(Measure measureName, Config config){
             
             Class<?> measureClass;
             LdSimilarity ldMeasure = null;
             try {
                     measureClass = Class.forName(Measure.getPath(measureName));
-                    Constructor<?> measureConstructor = measureClass.getConstructor(Conf.class);
+                    Constructor<?> measureConstructor = measureClass.getConstructor(Config.class);
                     ldMeasure = (LdSimilarity) measureConstructor.newInstance(config);
                     this.measure = ldMeasure;
 
@@ -51,7 +51,7 @@ public class LdSimilarityEngine {
         
         public void load(Measure measureName){
             
-            load(measureName , LdConfFactory.createDeafaultConf(measureName));
+            load(measureName , LdConfigFactory.createDeafaultConf(measureName));
 
 
         }

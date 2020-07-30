@@ -9,6 +9,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.measures.Measure;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
@@ -56,9 +58,9 @@ public class Engine_Multithread_Test_LocalRDF {
                 fail(e.getMessage());
         }
 
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSet);
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSet);
         
         List<R> listOfResources1 = new ArrayList<>();
         

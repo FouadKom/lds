@@ -5,14 +5,15 @@
  */
 package lds.measures.ldsd;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
-import lds.conf.LdConfFactory;
+import lds.config.LdConfigFactory;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -35,49 +36,49 @@ public class LDSDTest {
         
         /*Intiialize the conf object which contains the necessary parameters for the measure
         you can use the default conf as follows. This creattes a conf with default parameters and no indexing by default*/
-        Conf config = LdConfFactory.createDeafaultConf(Measure.LDSD_cw);
+        Config config = LdConfigFactory.createDeafaultConf(Measure.LDSD_cw);
 
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //LDSD similarity calculation
         engine.load(Measure.LDSD_d , config);
         System.out.println( engine.similarity(r1 , r2) );
-        //ends calculation for the chosen similaarity and closes all indexes if created
+        //ends calculation for the chosen similarity and closes all indexes if created
         engine.close();
         
         engine.load(Measure.LDSD_dw , config);
         System.out.println( engine.similarity(r1 , r2) );
-        //ends calculation for the chosen similaarity and closes all indexes if created
+        //ends calculation for the chosen similarity and closes all indexes if created
         engine.close();
         
         engine.load(Measure.LDSD_i , config);
         System.out.println( engine.similarity(r1 , r2) );
-        //ends calculation for the chosen similaarity and closes all indexes if created
+        //ends calculation for the chosen similarity and closes all indexes if created
         engine.close();
         
         engine.load(Measure.LDSD_iw , config);
         System.out.println( engine.similarity(r1 , r2) );
-        //ends calculation for the chosen similaarity and closes all indexes if created
+        //ends calculation for the chosen similarity and closes all indexes if created
         engine.close();
         
         engine.load(Measure.LDSD_cw , config);
         System.out.println( engine.similarity(r1 , r2) );
-        //ends calculation for the chosen similaarity and closes all indexes if created
+        //ends calculation for the chosen similarity and closes all indexes if created
         engine.close();
         
-        config = LdConfFactory.createDeafaultConf(Measure.TLDSD_cw);
+        config = LdConfigFactory.createDeafaultConf(Measure.TLDSD_cw);
         
         engine.load(Measure.TLDSD_cw , config);
         System.out.println( engine.similarity(r1 , r2) );
         engine.close();
         
-        config = LdConfFactory.createDeafaultConf(Measure.WLDSD_cw);       
+        config = LdConfigFactory.createDeafaultConf(Measure.WLDSD_cw);       
         
         /*Note:
         Using the default conf for measures that use weighting algorithims such as : WLDSD_cw, WTLDSD_cw 
         requires adding the specific dataset object which is used for weight calculation.
         To add the specific dataset use the following:
         */ 
-        config.addParam("LdDatasetSpecific" , dataSetSpecific);        
+        config.addParam(ConfigParam.LdDatasetSpecific , dataSetSpecific);        
         
         /*Note:
         Using the default conf for measures that use weighting algorithims such as : WLDSD_cw, WTLDSD_cw  uses ITW algorithim by default.

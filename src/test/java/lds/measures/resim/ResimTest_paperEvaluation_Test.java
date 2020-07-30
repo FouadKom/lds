@@ -5,6 +5,8 @@
  */
 package lds.measures.resim;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
@@ -30,9 +32,9 @@ public class ResimTest_paperEvaluation_Test {
         
     	LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
                 
-        Conf config = new Conf();
-        config.addParam("useIndexes", true);
-        config.addParam("LdDatasetMain" , dataset);
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataset);
         
         ResourceSimilarity resim = new Resim(config);       
 

@@ -5,9 +5,9 @@
  */
 package lds.measures.resim;
 
+import lds.config.Config;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -16,8 +16,8 @@ import slib.utils.i.Conf;
 
   public class Resim extends ResourceSimilarity {  
 
-	public Resim(Conf configuration) throws Exception {
-            super(configuration);               
+	public Resim(Config config) throws Exception {
+            super(config);               
 	}
 
 

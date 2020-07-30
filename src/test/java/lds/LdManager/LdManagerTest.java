@@ -9,6 +9,7 @@ import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 
+
 public class LdManagerTest {
 	
 	ResimLdManager resimLdManager;
@@ -36,5 +37,5 @@ public class LdManagerTest {
 	public void deleteOutputFile() {
 		resimLdManager.closeIndexes();
 	}
-
+    
 }

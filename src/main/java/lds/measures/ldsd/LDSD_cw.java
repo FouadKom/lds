@@ -5,10 +5,9 @@
  */
 package lds.measures.ldsd;
 
-import lds.conf.Config;
+import lds.config.Config;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -16,7 +15,7 @@ import slib.utils.i.Conf;
  */
 public class LDSD_cw extends LDSD{
     
-    public LDSD_cw(Conf config) throws Exception {
+    public LDSD_cw(Config config) throws Exception {
         super(config);
     }
 

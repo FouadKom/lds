@@ -6,11 +6,12 @@
 package lds.LdManager.ontologies;
 
 import java.util.List;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -35,11 +36,11 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     }
     
     
-    public DBpediaLdManager(Conf config) throws Exception {
-        super((LdDataset) config.getParam("LdDatasetMain"));
+    public DBpediaLdManager(Config config) throws Exception {
+        super((LdDataset) config.getParam(ConfigParam.LdDatasetMain));
         
-        this.useIndex = (Boolean) config.getParam("useIndexes");
-        this.dataSetInitial = (LdDataset) config.getParam("LdDatasetMain");
+        this.useIndex = (Boolean) config.getParam(ConfigParam.useIndexes);
+        this.dataSetInitial = (LdDataset) config.getParam(ConfigParam.LdDatasetMain);
         
         endpointURI = (String) config.getParam("endpointURI");
         defaultGraph = (String) config.getParam("defaultGraph");

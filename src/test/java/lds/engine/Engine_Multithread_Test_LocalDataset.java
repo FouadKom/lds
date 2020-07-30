@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
@@ -38,10 +40,10 @@ public class Engine_Multithread_Test_LocalDataset {
         
         List<LdResourcePair> pairs = new ArrayList<>();
         
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSet);
-        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSet);
+        config.addParam(ConfigParam.resourcesCount , 2350906); //used only for PICSS number of resources in DBpedia
         
         
         for(int i = 0 ; i < listOfResources1.size() ; i++){

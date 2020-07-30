@@ -5,13 +5,13 @@
  */
 package lds.benchmark;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import test.utility.Util;
 
 /**
  *
@@ -32,9 +32,9 @@ public class writingResults_Test {
           
         LdBenchmark benchmark = new LdBenchmark(source);
         
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSet);
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSet);
 
         engine.load(Measure.LDSD_cw, config);
         

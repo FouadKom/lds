@@ -5,11 +5,11 @@
  */
 package lds.measures.epics;
 
+import lds.config.Config;
 import lds.measures.picss.PICSS;
 import lds.resource.R;
 import org.junit.Test;
-import slib.utils.i.Conf;
-import lds.conf.LdConfFactory;
+import lds.config.LdConfigFactory;
 import lds.measures.Measure;
 
 /**
@@ -24,7 +24,7 @@ public class measureTest_DBpedia {
         R r1 = new R("http://dbpedia.org/resource/Money");
         R r2 = new R("http://dbpedia.org/resource/Cash");
                 
-        Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS);
+        Config config = LdConfigFactory.createDeafaultConf(Measure.PICSS);
         
         PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);

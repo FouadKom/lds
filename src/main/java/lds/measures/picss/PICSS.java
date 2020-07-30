@@ -10,9 +10,10 @@ import java.util.List;
 
 import lds.LdManager.PicssLdManager;
 import lds.LdManager.ontologies.Ontology;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import sc.research.ldq.*;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 /**
@@ -23,13 +24,13 @@ public class PICSS implements LdSimilarity {
     protected boolean useIndexes;
     protected int NumberOfResources;
 
-    public PICSS(Conf config) throws Exception {
-        if (config.getParam("LdDatasetMain") == null || config.getParam("useIndexes") == null || config.getParam("resourcesCount") == null)
+    public PICSS(Config config) throws Exception {
+        if (config.getParam(ConfigParam.LdDatasetMain) == null || config.getParam(ConfigParam.useIndexes) == null || config.getParam(ConfigParam.resourcesCount) == null)
             throw new Exception("Some configuration parameters missing");
 
-        this.ldManager = new PicssLdManager((LdDataset) config.getParam("LdDatasetMain"), (Boolean) config.getParam("useIndexes"));
-        this.useIndexes = (Boolean) config.getParam("useIndexes");
-        this.NumberOfResources = (Integer) config.getParam("resourcesCount");
+        this.ldManager = new PicssLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain), (Boolean) config.getParam(ConfigParam.useIndexes));
+        this.useIndexes = (Boolean) config.getParam(ConfigParam.useIndexes);
+        this.NumberOfResources = (Integer) config.getParam(ConfigParam.resourcesCount);
     }
 
     @Override

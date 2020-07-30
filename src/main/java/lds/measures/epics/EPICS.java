@@ -9,8 +9,8 @@ package lds.measures.epics;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lds.config.Config;
 import lds.resource.R;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 import lds.measures.picss.PICSS;
 
@@ -20,7 +20,7 @@ import lds.measures.picss.PICSS;
  */
 public class EPICS extends PICSS {
     
-    public EPICS(Conf config) throws Exception{
+    public EPICS(Config config) throws Exception{
         super(config);
     }
     

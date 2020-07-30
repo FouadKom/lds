@@ -5,13 +5,14 @@
  */
 package lds.measures.epics;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.measures.picss.PICSS;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -26,10 +27,10 @@ public class measureTest_localRDF {
         R r1 = new R("http://www.example.org#Fish");
         R r2 = new R("http://www.example.org#Whale");
 
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSet);
-        config.addParam("resourcesCount" , 9); 
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSet);
+        config.addParam(ConfigParam.resourcesCount , 9); 
         
         PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);

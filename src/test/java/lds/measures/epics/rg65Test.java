@@ -8,11 +8,11 @@ package lds.measures.epics;
 import lds.benchmark.BenchmarkFile;
 import lds.benchmark.Correlation;
 import lds.benchmark.LdBenchmark;
-import lds.conf.LdConfFactory;
+import lds.config.Config;
+import lds.config.LdConfigFactory;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import org.junit.Test;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -40,7 +40,7 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         
         benchmark.checkMappingInDBpedia();
         
-        Conf config = LdConfFactory.createDeafaultConf(Measure.EPICS);
+        Config config = LdConfigFactory.createDeafaultConf(Measure.EPICS);
 
         engine.load(Measure.EPICS , config);
                        
@@ -60,7 +60,7 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
-        config = LdConfFactory.createDeafaultConf(Measure.PICSS);
+        config = LdConfigFactory.createDeafaultConf(Measure.PICSS);
         
         engine.load(Measure.PICSS , config);
         

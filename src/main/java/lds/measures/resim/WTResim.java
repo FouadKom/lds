@@ -7,10 +7,12 @@
 package lds.measures.resim;
 
 import java.util.List;
+import lds.LdManager.ontologies.Ontology;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
 
 
 /**
@@ -19,9 +21,9 @@ import slib.utils.i.Conf;
  */
 public class WTResim extends ResourceSimilarity{
     
-     public WTResim(Conf config) throws Exception {
+     public WTResim(Config config) throws Exception {
         super(config);
-        if( config.getParam("LdDatasetSpecific")== null || config.getParam("WeightMethod") == null)
+        if( config.getParam(ConfigParam.LdDatasetSpecific)== null || config.getParam(ConfigParam.WeightMethod) == null)
             throw new Exception("Some configuration parameters missing"); 
     }
 
@@ -99,7 +101,10 @@ public class WTResim extends ResourceSimilarity{
             List<String> commonSubjects = resimLDLoader.getCommonSubjects(a, b) ;
             
             for(String resource:commonSubjects){
-                R k = LdResourceFactory.getInstance().uri(resource).create();
+ //                R k = LdResourceFactory.getInstance().uri(resource).create();
+                String string[] =  resource.split("\\|");
+                String uri = string[0];
+                R k = new R(Ontology.decompressValue(uri));
 
                 wtcii_li_lj = wtcii_li_lj + Cii(li , lj ,k);
             }
@@ -148,7 +153,10 @@ public class WTResim extends ResourceSimilarity{
             List<String> commonObjects = resimLDLoader.getCommonObjects(a, b);
             
             for(String resource: commonObjects){
-               R k = LdResourceFactory.getInstance().uri(resource).create();
+ //                R k = LdResourceFactory.getInstance().uri(resource).create();
+                String string[] =  resource.split("\\|");
+                String uri = string[0];
+                R k = new R(Ontology.decompressValue(uri));
 
                wtcio_li_lj = wtcio_li_lj + Cio(li , lj ,k);
             }

@@ -8,13 +8,14 @@ package lds.measures.ldsd;
 import java.util.List;
 import lds.LdManager.LdsdLdManager;
 import lds.LdManager.ontologies.Ontology;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.measures.LdSimilarity;
 import lds.measures.weight.Weight;
 import lds.measures.weight.WeightMethod;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -27,8 +28,8 @@ public abstract class LDSD implements LdSimilarity {
     protected Weight weight;
     protected boolean useIndeses;
     
-    public LDSD(Conf config) throws Exception {
-        int confsize = config.getParams().size();
+    public LDSD(Config config) throws Exception {
+        int confsize = config.getSize();
         switch(confsize){
             case 0:
                 throw new Exception("Configuration parameters missing"); 
@@ -37,18 +38,19 @@ public abstract class LDSD implements LdSimilarity {
                 throw new Exception("Some configuration parameters missing"); 
                 
             case 2:
-                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-                this.useIndeses = (Boolean) config.getParam("useIndexes");
+                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+                this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
                 break;
                 
             case 3:
                 throw new Exception("Some configuration parameters missing"); 
 
             default:
-                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-                this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
-                this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
-                this.useIndeses = (Boolean) config.getParam("useIndexes");
+                this.LDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+                this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetSpecific) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+                
+                this.weight = new Weight((WeightMethod)config.getParam(ConfigParam.WeightMethod) , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam(ConfigParam.useIndexes));
+                this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
                 break;            
         }
 

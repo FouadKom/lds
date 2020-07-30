@@ -5,14 +5,14 @@
  */
 package lds.measures.picss;
 
+import lds.config.Config;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
-import lds.conf.LdConfFactory;
+import lds.config.LdConfigFactory;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -28,7 +28,7 @@ public class PICSSTest {
         
         //You can create conf in several ways:
         //1- You can create default conf 
-        Conf config = LdConfFactory.createDeafaultConf(Measure.PICSS); 
+        Config config = LdConfigFactory.createDeafaultConf(Measure.PICSS); 
                  
         //2- Or Create conf objects and pass needed configuration parameters
         

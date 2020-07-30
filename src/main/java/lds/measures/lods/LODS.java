@@ -10,8 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 /**
@@ -23,11 +24,11 @@ public class LODS implements LdSimilarity{
     private List<O> ontologyList;
     private boolean dataAugmentation;
     
-    private Conf config;
+    private Config config;
     
-    public LODS(Conf config) throws Exception{
-        if(config.getParam("useIndexes") == null || config.getParam("ontologyList") == null || config.getParam("dataAugmentation") == null || config.getParam("datasetMain") == null
-                || config.getParam("sup") == null || config.getParam("sub") == null)
+    public LODS(Config config) throws Exception{
+        if(config.getParam(ConfigParam.useIndexes) == null || config.getParam(ConfigParam.ontologyList) == null || config.getParam(ConfigParam.dataAugmentation) == null || config.getParam(ConfigParam.LdDatasetMain) == null
+                || config.getParam(ConfigParam.sup) == null || config.getParam(ConfigParam.sub) == null)
             throw new Exception("Some configuration parameters missing"); 
         
         this.config = config;

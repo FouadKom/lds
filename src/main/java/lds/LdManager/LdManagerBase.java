@@ -16,7 +16,6 @@ import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.vocabulary.OWL;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -25,7 +24,6 @@ import slib.utils.i.Conf;
 public class LdManagerBase implements LdManager{
     
     protected LdDataset dataset;
-    protected Conf config = null;
     protected String baseClassPath = "lds.LdManager.LdManagerBase.";
 
     
@@ -147,8 +145,9 @@ public class LdManagerBase implements LdManager{
                                                                            + " where {<" + a.getUri() + "> ?property1 ?object . "
                                                                            + "[] ?property2 ?object. "
                                                                            + "filter( isuri(?object))}");
-
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+        
+        
 
         while (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();

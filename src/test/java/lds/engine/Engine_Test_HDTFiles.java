@@ -7,12 +7,13 @@ package lds.engine;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 import test.utility.Util;
 
 /**
@@ -39,12 +40,12 @@ public static final String dataSetDir = System.getProperty("user.dir") + "/src/t
             List<R> listOfResources1 = sp.getFirstList();
             List<R> listOfResources2 = sp.getSecondList();
             
-            Conf config = new Conf();
+            Config config = new Config();
             LdSimilarityEngine engine = new LdSimilarityEngine();
             
             ///////////////////////LDSD_cw////////////////////////////////////////////////////////////////////////
-            config.addParam("useIndexes", false);
-            config.addParam("LdDatasetMain" , hdt);
+            config.addParam(ConfigParam.useIndexes, false);
+            config.addParam(ConfigParam.LdDatasetMain , hdt);
             
             double sum = 0;            
             

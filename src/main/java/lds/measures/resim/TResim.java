@@ -5,15 +5,13 @@
  */
 package lds.measures.resim;
 
-import java.util.ArrayList;
-import java.util.List;
-import lds.LdManager.LdManager;
-import lds.LdManager.ontologies.Ontology;
-import lds.resource.LdResourceFactory;
-import lds.resource.R;
 
+import java.util.List;
+import lds.LdManager.ontologies.Ontology;
+import lds.config.Config;
+import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
+
 
 
 /**
@@ -23,8 +21,8 @@ import slib.utils.i.Conf;
 public class TResim extends ResourceSimilarity{
    
     
-    public TResim(Conf configuration) throws Exception {
-        super(configuration);
+    public TResim(Config config) throws Exception {
+        super(config);
     }
 
     @Override

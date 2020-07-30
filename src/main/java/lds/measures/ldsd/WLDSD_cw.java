@@ -5,9 +5,10 @@
  */
 package lds.measures.ldsd;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -15,9 +16,9 @@ import slib.utils.i.Conf;
  */
 public class WLDSD_cw extends LDSD_cw{
     
-    public WLDSD_cw(Conf config) throws Exception {
+    public WLDSD_cw(Config config) throws Exception {
         super(config);
-        if( config.getParam("LdDatasetSpecific")== null && config.getParam("WeightMethod") == null)
+        if( config.getParam(ConfigParam.LdDatasetSpecific)== null && config.getParam(ConfigParam.WeightMethod) == null)
             throw new Exception("Some configuration parameters missing"); 
     }
     

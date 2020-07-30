@@ -5,30 +5,27 @@
  */
 package lds.engine;
 
-import test.utility.Util;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.concurrent.ExecutionException;
 import lds.benchmark.BenchmarkFile;
 import lds.measures.Measure;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import lds.benchmark.LdBenchmark;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
+import org.junit.Test;
 /**
  *
  * @author Fouad Komeiha
  */
 public class Engine_BenchMark_Test {
     
-    public static void main(String args[]) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
-        
+    @Test
+    public void runEngineOnSpecificLdMeasureTest() throws Exception {           
         
         LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
             
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSetMain);
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSetMain);
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 

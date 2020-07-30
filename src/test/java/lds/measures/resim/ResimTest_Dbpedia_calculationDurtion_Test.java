@@ -9,6 +9,8 @@ import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.DBpediaChapter;
 import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
@@ -39,9 +41,9 @@ public class ResimTest_Dbpedia_calculationDurtion_Test {
             List<R> listOfResources2 = sp.getSecondList();
 
             LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
-            Conf config = new Conf();
-            config.addParam("useIndexes", false);
-            config.addParam("LdDatasetMain" , dataset);
+            Config config = new Config();
+            config.addParam(ConfigParam.useIndexes, false);
+            config.addParam(ConfigParam.LdDatasetMain , dataset);
             
             try {
             //Checking Time to calculate similarity using Dbpedia       
@@ -77,8 +79,8 @@ public class ResimTest_Dbpedia_calculationDurtion_Test {
             Util.DeleteFilesForFolder(Indexesfolder , false);
             //start timing
             startTime = System.nanoTime();
-            config.removeParam("useIndexes");
-            config.addParam("useIndexes", true);
+            config.removeParam(ConfigParam.useIndexes);
+            config.addParam(ConfigParam.useIndexes, true);
             
             resim.loadIndexes();
 
@@ -102,8 +104,8 @@ public class ResimTest_Dbpedia_calculationDurtion_Test {
             //start timing
             startTime = System.nanoTime();
 
-            config.removeParam("useIndexes");
-            config.addParam("useIndexes", true);
+            config.removeParam(ConfigParam.useIndexes);
+            config.addParam(ConfigParam.useIndexes, true);
             
             resim.loadIndexes();
 

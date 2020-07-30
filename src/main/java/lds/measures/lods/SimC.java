@@ -5,8 +5,8 @@
  */
 package lds.measures.lods;
 
+import lds.config.Config;
 import lds.resource.R;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 /**
@@ -15,7 +15,7 @@ import lds.measures.LdSimilarity;
  */
 public class SimC implements LdSimilarity{
 
-    public SimC(Conf config) {
+    public SimC(Config config) {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
 

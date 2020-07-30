@@ -5,29 +5,13 @@
  */
 package lds.measures.lods.ontologies;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import lds.LdManager.ontologies.DBpediaLdManager;
 import lds.LdManager.ontologies.YagoLdManager;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
-import org.apache.jena.query.ParameterizedSparqlString;
-import org.apache.jena.query.QuerySolution;
-import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Resource;
-import org.apache.jena.shared.PrefixMapping;
-import org.apache.jena.shared.impl.PrefixMappingImpl;
-import static org.junit.Assert.fail;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.graph.model.graph.G;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -42,13 +26,13 @@ public class O_Yago implements O{
     private YagoLdManager yagoldManager;
     
     @Override
-    public void initializeOntology(Conf config) throws Exception {
-        if(config.getParam("useIndexes") == null)
+    public void initializeOntology(Config config) throws Exception {
+        if(config.getParam(ConfigParam.useIndexes) == null)
             throw new Exception("Some configuration parameters missing");
 
-        this.useIndexes = (Boolean) config.getParam("useIndexes");
-        this.dataAugmentation = (Boolean) config.getParam("dataAugmentation");
-        this.datasetInitial = (LdDataset) config.getParam("LdDatasetMain");
+        this.useIndexes = (Boolean) config.getParam(ConfigParam.useIndexes);
+        this.dataAugmentation = (Boolean) config.getParam(ConfigParam.dataAugmentation);
+        this.datasetInitial = (LdDataset) config.getParam(ConfigParam.LdDatasetMain);
                 
         this.yagoldManager = new YagoLdManager(datasetInitial , useIndexes);
         if(useIndexes){

@@ -10,6 +10,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lds.LdManager.ResimLdManager;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.dataset.DBpediaChapter;
 import lds.dataset.LdDatasetCreator;
 import test.utility.Util;
@@ -42,11 +44,11 @@ public class ResimTest_Dbpedia_valueEquality_Test {
         Map<String, Double> list = new HashMap<>();
         
         LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
-        Conf config = new Conf();
+        Config config = new Config();
         
-        //Checking similarity using Dbpedia       
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataset);
+        //Checking similarity using Dbpedia      
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataset);
         
         Resim resim = new Resim(config);
         
@@ -66,9 +68,9 @@ public class ResimTest_Dbpedia_valueEquality_Test {
         resim.closeIndexes();
         
         //Checking similarity using Indexes
-        config.removeParam("useIndexes");
-        config.addParam("useIndexes", true);
-        config.addParam("LdDatasetMain" , dataset);
+        config.removeParam(ConfigParam.useIndexes);
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataset);
         resim = new Resim(config);
         
         resim.loadIndexes();

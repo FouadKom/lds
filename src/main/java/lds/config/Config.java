@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.conf;
+package lds.config;
 
 import slib.utils.i.Conf;
 /**
@@ -26,12 +26,21 @@ public class Config {
         return this;
     }
     
+    public Config addParam(String name, Object object){
+        conf.addParam(name , object);
+        return this;
+    }
+    
     public void removeParam(ConfigParam param) {
         conf.removeParam(param.toString());
     }
     
     public Object getParam(ConfigParam param){
         return conf.getParam(param.toString());
+    }
+    
+    public Object getParam(String name){
+        return conf.getParam(name);
     }
     
     public int getSize(){

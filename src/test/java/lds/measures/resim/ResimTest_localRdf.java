@@ -5,16 +5,15 @@
  */
 package lds.measures.resim;
 
-import lds.measures.resim.Resim;
 import lds.LdManager.ResimLdManager;
-import lds.measures.resim.ResourceSimilarity;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -41,9 +40,9 @@ public class ResimTest_localRdf {
 			fail(e.getMessage());
 		}
 
-		Conf config = new Conf();
-		config.addParam("useIndexes", false);
-                config.addParam("LdDatasetMain" , dataSet);
+		Config config = new Config();
+                config.addParam(ConfigParam.useIndexes, false);
+                config.addParam(ConfigParam.LdDatasetMain , dataSet);
 
 		ResourceSimilarity resim = new Resim(config);
                 

@@ -8,11 +8,11 @@ package lds.measures.epics;
 import lds.benchmark.BenchmarkFile;
 import lds.benchmark.Correlation;
 import lds.benchmark.LdBenchmark;
-import lds.conf.LdConfFactory;
+import lds.config.Config;
+import lds.config.LdConfigFactory;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import org.junit.Test;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -37,7 +37,7 @@ public class mc30Test {
         LdBenchmark benchmark = new LdBenchmark(source , result);
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
-        Conf config = LdConfFactory.createDeafaultConf(Measure.EPICS);
+        Config config = LdConfigFactory.createDeafaultConf(Measure.EPICS);
 
         engine.load(Measure.EPICS , config);
                        

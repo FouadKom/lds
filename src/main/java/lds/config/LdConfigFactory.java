@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package lds.conf;
+package lds.config;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -12,38 +12,31 @@ import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.measures.weight.WeightMethod;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import lds.conf.Config;
 /**
  *
  * @author Fouad Komeiha
  */
-public class LdConfFactory {
+public class LdConfigFactory {
     
-    public static Conf createDeafaultConf(Measure measure){
-        Conf config = new Conf();
+    public static Config createDeafaultConf(Measure measure){
+        Config config = new Config();
         
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , LdDatasetCreator.getDBpediaDataset(DBpediaChapter.En));
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , LdDatasetCreator.getDBpediaDataset(DBpediaChapter.En));
         
         if(Measure.getName(measure).equals("PICSS") || Measure.getName(measure).equals("EPICS"))
-            config.addParam("resourcesCount" , 2350906);
+            config.addParam(ConfigParam.resourcesCount , 2350906);
         
         if(Measure.getName(measure).contains("W")){
-            System.out.println("Using default conf creator for weighted similarity measures requires providing specific datset");
-            config.addParam("WeightMethod" , WeightMethod.ITW);
+            System.out.println("Using default conf creator for weighted similarity measures requires providing specific dataset");
+            config.addParam(ConfigParam.WeightMethod , WeightMethod.ITW);
         }
             
         return config;
     }
-    
-    public static Config createDeafaultConfig(Measure measure){
-        Conf config = createDeafaultConf(measure);            
-        return new Config(config);
-    }
         
-    public static Conf createConf(Object... params){
-        Conf config = new Conf();
+    public static Config createConf(Object... params){
+        Config config = new Config();
         String key = null;
         Boolean useIndex = null;
         LdDataset dataset = null;
@@ -96,9 +89,11 @@ public class LdConfFactory {
         return config;
     }
     
-    public static Conf createConf(HashMap<String, Object> params){
-        Conf config = new Conf();
-        config.setParams(params);
+    public static Config createConf(HashMap<ConfigParam , Object> params){
+        Config config = new Config();
+        for (Map.Entry<ConfigParam , Object> entry : params.entrySet())  {
+            config.addParam(entry.getKey() ,entry.getValue()); 
+        }
         return config;
     }
       
