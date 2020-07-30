@@ -5,31 +5,33 @@
  */
 package lds.measures.resim;
 
+import java.util.List;
 import lds.measures.weight.WeightMethod;
-import lds.measures.weight.Weight;
-import java.util.Set;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.ResimLdManager;
+import lds.LdManager.ontologies.Ontology;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
+import lds.measures.weight.Weight;
 
 /**
  *
  * @author Fouad Komeiha
  */
 public abstract class ResourceSimilarity implements LdSimilarity {
-    protected Set<URI> edges;
+    protected List<URI> edges;
     protected ResimLdManager resimLDLoader;
     protected ResimLdManager SpecificResimLdLoader;
     protected Weight weight;
     protected boolean useIndeses;
     
-    public ResourceSimilarity(Conf config) throws Exception{
-        int confsize = config.getParams().size();
+    public ResourceSimilarity(Config config) throws Exception{
+        int confsize = config.getSize();
         switch(confsize){
             case 0:
                 throw new Exception("Configuration parameters missing"); 
@@ -38,20 +40,50 @@ public abstract class ResourceSimilarity implements LdSimilarity {
                 throw new Exception("Some configuration parameters missing");  
                 
             case 2:
-                this.resimLDLoader = new ResimLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-                this.useIndeses = (Boolean) config.getParam("useIndexes");
+                this.resimLDLoader = new ResimLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+                this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
                 break;
                 
             case 3:
                 throw new Exception("Some configuration parameters missing");
                 
             default:
-                this.resimLDLoader = new ResimLdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-                this.SpecificResimLdLoader = new ResimLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
-                this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , resimLDLoader , SpecificResimLdLoader , (Boolean)config.getParam("useIndexes"));
-                this.useIndeses = (Boolean) config.getParam("useIndexes");
+                this.resimLDLoader = new ResimLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+                this.SpecificResimLdLoader = new ResimLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetSpecific) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+                this.weight = new Weight((WeightMethod)config.getParam(ConfigParam.WeightMethod) , resimLDLoader , SpecificResimLdLoader , (Boolean)config.getParam(ConfigParam.useIndexes));
+                this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
                 break;
             
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
+//            default:
+//                throw new Exception("Some configuration parameters missing");                           
 //            default:
 //                throw new Exception("Some configuration parameters missing");               
         }            
@@ -69,6 +101,10 @@ public abstract class ResourceSimilarity implements LdSimilarity {
             }
         }
         
+        //close prefixes and namespaces index
+        Ontology.closeIndexes();
+        
+        
     }
     
     @Override
@@ -81,10 +117,14 @@ public abstract class ResourceSimilarity implements LdSimilarity {
                 weight.loadIndexes();
             }
         }
+        
+        //load prefixes and namespaces index
+        Ontology.loadIndexes();
     }
 
     @Override
     public double compare(R a, R b) {
+               
         double sim = 0;
         try {
 
@@ -95,12 +135,12 @@ public abstract class ResourceSimilarity implements LdSimilarity {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        
         return sim;
     }
     
     
     public double compare(R a, R b , int w1 , int w2) {
+        
         double sim = 0;
         try {
                 sim = Resim(a, b , w1 , w2);
@@ -109,7 +149,6 @@ public abstract class ResourceSimilarity implements LdSimilarity {
         } catch (Exception ex) {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
         }
-        
         
         return sim;
     }

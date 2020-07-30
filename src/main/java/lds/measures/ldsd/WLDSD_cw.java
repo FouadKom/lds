@@ -5,52 +5,22 @@
  */
 package lds.measures.ldsd;
 
-import lds.LdManager.LdsdLdManager;
-import lds.measures.weight.Weight;
-import lds.measures.weight.WeightMethod;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
  * @author Fouad Komeiha
  */
 public class WLDSD_cw extends LDSD_cw{
-//    private LdsdLdManager SpecificLDSDLDLoader;
-//    private Weight weight;
-//    private boolean useIndeses;
     
-    public WLDSD_cw(Conf config) throws Exception {
+    public WLDSD_cw(Config config) throws Exception {
         super(config);
-        if( config.getParam("LdDatasetSpecific")== null && config.getParam("WeightMethod") == null)
+        if( config.getParam(ConfigParam.LdDatasetSpecific)== null && config.getParam(ConfigParam.WeightMethod) == null)
             throw new Exception("Some configuration parameters missing"); 
-//        this.SpecificLDSDLDLoader = new LdsdLdManager((LdDataset) config.getParam("LdDatasetSpecific") , (Boolean) config.getParam("useIndexes") );
-//        this.weight = new Weight((WeightMethod)config.getParam("WeightMethod") , LDSDLDLoader , SpecificLDSDLDLoader , (Boolean)config.getParam("useIndexes"));
-//        this.useIndeses = (Boolean) config.getParam("useIndexes");
     }
-    
-//    @Override
-//    public void closeIndexes(){
-//        super.closeIndexes();
-//        if(SpecificLDSDLDLoader != null && weight != null){
-//            SpecificLDSDLDLoader.closeIndexes();
-//            weight.closeIndexes();
-//        }
-//
-//    }
-//    
-//    
-//    @Override
-//    public void loadIndexes() throws Exception{
-//        super.loadIndexes();
-//        if(SpecificLDSDLDLoader != null && weight != null){
-//            SpecificLDSDLDLoader.loadIndexes();
-//            weight.loadIndexes();
-//        }
-//    }
-    
     
     @Override
     public double Cd_normalized(URI l, R a, R b) {

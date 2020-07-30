@@ -7,18 +7,18 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Literal;
 import sc.research.ldq.LdDataset;
 
 /**
  *
- * @author Fouad Komeiha
+ * @author Fouad komeiha
  */
-public class HybridMeasuresLdManager extends LdManagerBase{
+public class HybridMeasuresLdManager extends LdManagerBase {
     protected String baseClassPath = "lds.LdManager.HybridMeasuresLdManager.";
     
     public HybridMeasuresLdManager(LdDataset dataset) {
@@ -33,7 +33,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         ParameterizedSparqlString query_cmd = dataset.prepareQuery(); 
 
-        query_cmd.setCommandText("select distinct ?property ?subject\n"
+        query_cmd.setCommandText("select distinct ?property ?subject\n "
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
                                     + "where {?subject ?property <" + a.getUri() + ">  }");
 
@@ -42,8 +42,8 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                subject = qs.getResource("subject").getURI();
-                edge = qs.getResource("property").getURI();
+                subject = Ontology.compressValue(qs.getResource("subject"));
+                edge = Ontology.compressValue(qs.getResource("property"));
                 features.add(edge + "|" + subject + "|" + "In");
 
         }
@@ -64,9 +64,9 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
-        query_cmd.setCommandText("select distinct ?property ?object\n"
+        query_cmd.setCommandText("select distinct ?property ?object\n "
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {<" + a.getUri() + "> ?property ?object."
+                                    + "where {<" + a.getUri() + "> ?property ?object. "
                                     + "filter isuri(?object)}");
 
 
@@ -74,8 +74,8 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
         while (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                object = qs.getResource("object").getURI();
-                edge = qs.getResource("property").getURI();
+                object = Ontology.compressValue(qs.getResource("object"));
+                edge = Ontology.compressValue(qs.getResource("property"));
                 features.add(edge + "|" +  object + "|" + "Out");
 
         }
@@ -96,7 +96,7 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         
         String query = "select (count(?subject) as ?count)\n"
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {?subject  <" + property + "> <" + resource + ">}";
+                                    + "where {?subject  <" + Ontology.decompressValue(property) + "> <" + Ontology.decompressValue(resource) + ">}";
         
         query_cmd.setCommandText(query);
         
@@ -105,8 +105,6 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-            dataset.close();
-//          return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
 
@@ -122,15 +120,16 @@ public class HybridMeasuresLdManager extends LdManagerBase{
         
        query_cmd.setCommandText("select (count(?object) as ?count)\n"
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
-                                    + "where {<" + resource + ">  <" + property + "> ?object}");
-       
+                                    + "where {<" + Ontology.decompressValue(resource) + ">  <" + Ontology.decompressValue(property) + "> ?object. "
+                                    + "filter isuri(?object)}");
+               
+
        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+       
        
        if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
             count = qs.getLiteral("count").getInt();
-            dataset.close();
-//            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
 
@@ -139,35 +138,29 @@ public class HybridMeasuresLdManager extends LdManagerBase{
 
     }
     
-    @Override
-    public  int countResource() {
-        int count = 0;
-        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
-
-        query_cmd.setCommandText("select (count(distinct ?s) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
-                                   + " WHERE\n" +
-                                "  {\n" +
-                                "    ?s ?p ?o .\n" +
-                                "    FILTER ( REGEX (STR (?s), \"resource\" ) )\n" +
-                               "  }");
-        
-        
-        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
-
-        if (resultSet.hasNext()) {
-                QuerySolution qs = resultSet.nextSolution();
-                count =  qs.getLiteral("count").getInt();
-                // dataset.close();
-//                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
-
-        }
-        
-
-        // dataset.close();
-        return count;
-        
-    }
     
-
-    
+//    @Override
+//    public  int countResource() {
+//        int count = 0;
+//        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+//
+//        query_cmd.setCommandText("select (count(distinct ?s) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") 
+//                                   + " WHERE\n" +
+//                                "  {\n" +
+//                                "    ?s ?p ?o .\n" +
+//                                "    FILTER ( REGEX (STR (?s), \"resource\" ) )\n" +
+//                               "  }");
+//        
+//        
+//        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+//
+//        if (resultSet.hasNext()) {
+//                QuerySolution qs = resultSet.nextSolution();
+//                count =  qs.getLiteral("count").getInt();
+//
+//        }
+//
+//        return count;
+//        
+//    }
 }

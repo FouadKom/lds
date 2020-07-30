@@ -5,8 +5,8 @@
  */
 package lds.measures.ldsd;
 
+import lds.config.Config;
 import lds.resource.R;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -14,15 +14,17 @@ import slib.utils.i.Conf;
  */
 public class LDSD_d extends LDSD{
 
-    public LDSD_d(Conf config) throws Exception {
+    public LDSD_d(Config config) throws Exception {
         super(config);
         
     }
 
     @Override
     public double compare(R a, R b) {
-       edges = LDSDLDLoader.getEdges(a, b);
-       return LDSD_d_sim(a , b);
+     
+      edges = LDSDLDLoader.getEdges(a, b);       
+
+      return LDSD_d_sim(a , b);
     }    
     
     public double LDSD_d(R a, R b) {

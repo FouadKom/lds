@@ -7,8 +7,10 @@ package lds.measures.lods.ontologies;
 
 import java.util.Arrays;
 import java.util.List;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
-import slib.utils.i.Conf;
+
 
 /**
  *
@@ -21,8 +23,8 @@ public class O_DBpedia_cs extends O_DBpedia{
     private String endpointURI = "https://cs.dbpedia.org/sparql";
     
    @Override
-    public void initializeOntology(Conf config) throws Exception {
-        if(config.getParam("useIndexes") == null)
+    public void initializeOntology(Config config) throws Exception {
+        if(config.getParam(ConfigParam.useIndexes) == null)
             throw new Exception("Some configuration parameters missing");
 
         config.addParam("endpointURI", endpointURI);

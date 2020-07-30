@@ -10,6 +10,10 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import lds.LdManager.ResimLdManager;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.DBpediaChapter;
+import lds.dataset.LdDatasetCreator;
 import test.utility.Util;
 import lds.measures.resim.Resim;
 import lds.resource.LdResourceFactory;
@@ -30,7 +34,7 @@ public class ResimTest_Dbpedia_valueEquality_Test {
 
     public static void Resim_valueEquality_Test(int pairNumbers) throws Exception{
         
-        SplitedList sp = Util.splitList(Util.getDbpediaResources(pairNumbers * 2));
+        SplitedList sp = Util.splitList(LdDatasetCreator.getDbpediaResources(DBpediaChapter.En , pairNumbers * 2));
 
         //get two list of Dbpedia resources
         List<R> listOfResources1 = sp.getFirstList();
@@ -39,12 +43,12 @@ public class ResimTest_Dbpedia_valueEquality_Test {
         //create a map to hold the compared resources as a key and their similarity as a value
         Map<String, Double> list = new HashMap<>();
         
-        LdDataset dataset = Util.getDBpediaDataset();
-        Conf config = new Conf();
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
+        Config config = new Config();
         
-        //Checking similarity using Dbpedia       
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataset);
+        //Checking similarity using Dbpedia      
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataset);
         
         Resim resim = new Resim(config);
         
@@ -64,9 +68,9 @@ public class ResimTest_Dbpedia_valueEquality_Test {
         resim.closeIndexes();
         
         //Checking similarity using Indexes
-        config.removeParam("useIndexes");
-        config.addParam("useIndexes", true);
-        config.addParam("LdDatasetMain" , dataset);
+        config.removeParam(ConfigParam.useIndexes);
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataset);
         resim = new Resim(config);
         
         resim.loadIndexes();

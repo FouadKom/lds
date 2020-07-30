@@ -6,10 +6,11 @@
 package lds.measures.resim;
 
 import java.util.List;
-import lds.resource.LdResourceFactory;
+import lds.LdManager.ontologies.Ontology;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -17,9 +18,9 @@ import slib.utils.i.Conf;
  */
 public class WResim extends ResourceSimilarity{
 
-        public WResim(Conf config) throws Exception {
+        public WResim(Config config) throws Exception {
         super(config);
-        if( config.getParam("LdDatasetSpecific")== null || config.getParam("WeightMethod") == null)
+        if( config.getParam(ConfigParam.LdDatasetSpecific)== null || config.getParam(ConfigParam.WeightMethod) == null)
             throw new Exception("Some configuration parameters missing");  
         
         
@@ -88,7 +89,9 @@ public class WResim extends ResourceSimilarity{
             List<String> commonObjects = resimLDLoader.getCommonSubjects(a, b);
 
             for(String resource: commonObjects){
-                R k = LdResourceFactory.getInstance().uri(resource).create();
+                String string[] =  resource.split("\\|");
+                String uri = string[0];
+                R k = new R(Ontology.decompressValue(uri));
                 wciil = wciil + Cio(l , k);
             }
             
@@ -125,7 +128,9 @@ public class WResim extends ResourceSimilarity{
             List<String> commonObjects = resimLDLoader.getCommonObjects(a, b);
 
             for(String resource: commonObjects){
-                R k = LdResourceFactory.getInstance().uri(resource).create();
+                String string[] =  resource.split("\\|");
+                String uri = string[0];
+                R k = new R(Ontology.decompressValue(uri));
                 wciol = wciol + Cio(l , k);
             }
             

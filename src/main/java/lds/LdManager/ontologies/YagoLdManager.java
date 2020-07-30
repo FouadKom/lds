@@ -7,7 +7,7 @@ package lds.LdManager.ontologies;
 
 import java.util.List;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 
@@ -19,7 +19,7 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
     
     private boolean useIndex;
     private LdIndex conceptsIndex;
-    private LdIndexer manager;
+    private LdIndexerManager manager;
     private LdDataset dataSetInitial;
     
     public YagoLdManager(LdDataset dataSetInitial , boolean useIndex) throws Exception {
@@ -30,7 +30,7 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
     }
     
     public void loadIndexes() throws Exception {
-        manager = LdIndexer.getManager();
+        manager = LdIndexerManager.getManager();
         String conceptsIndexFile = System.getProperty("user.dir") + "/Indexes/Ontologies/Yago/concepts_index_" + dataSetInitial.getName().toLowerCase().replace(" ", "_") + ".db";
         conceptsIndex = manager.loadIndex(conceptsIndexFile);
              

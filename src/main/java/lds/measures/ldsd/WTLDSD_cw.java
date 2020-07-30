@@ -5,9 +5,10 @@
  */
 package lds.measures.ldsd;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -15,9 +16,9 @@ import slib.utils.i.Conf;
  */
 public class WTLDSD_cw extends LDSD_cw{
     
-    public WTLDSD_cw(Conf config) throws Exception {
+    public WTLDSD_cw(Config config) throws Exception {
         super(config);
-        if( config.getParam("LdDatasetSpecific")== null && config.getParam("WeightMethod") == null)
+        if( config.getParam(ConfigParam.LdDatasetSpecific)== null && config.getParam(ConfigParam.WeightMethod) == null)
             throw new Exception("Some configuration parameters missing"); 
     }
     
@@ -58,7 +59,7 @@ public class WTLDSD_cw extends LDSD_cw{
     }
      
      public int Cii(URI li , URI lj , R a, R b) {
-        return LDSDLDLoader.countShareTyplessCommonSubjects(li , lj , a , b);
+        return LDSDLDLoader.countTyplessCommonSubjects(li , lj , a , b);
           
     }
     
@@ -87,7 +88,7 @@ public class WTLDSD_cw extends LDSD_cw{
     }
     
     public int Cio(URI li , URI lj , R a, R b) {
-        return LDSDLDLoader.countShareTyplessCommonObjects(li , lj , a , b);
+        return LDSDLDLoader.countTyplessCommonObjects(li , lj , a , b);
     }
     
     public double Cio_normalized(URI li , URI lj , R a, R b) {

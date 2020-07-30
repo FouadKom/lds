@@ -5,13 +5,13 @@
  */
 package lds.measures.resim;
 
-import java.util.List;
-import lds.LdManager.LdManager;
-import lds.resource.LdResourceFactory;
-import lds.resource.R;
 
+import java.util.List;
+import lds.LdManager.ontologies.Ontology;
+import lds.config.Config;
+import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
+
 
 
 /**
@@ -21,8 +21,8 @@ import slib.utils.i.Conf;
 public class TResim extends ResourceSimilarity{
    
     
-    public TResim(Conf configuration) throws Exception {
-        super(configuration);
+    public TResim(Config config) throws Exception {
+        super(config);
     }
 
     @Override
@@ -66,14 +66,14 @@ public class TResim extends ResourceSimilarity{
     
     @Override
     public int Cii(URI li , URI lj , R a, R b) {
-        return resimLDLoader.countShareTyplessCommonSubjects(li , lj , a , b);
+        return resimLDLoader.countTyplessCommonSubjects(li , lj , a , b);
           
     }
 
     
     @Override
     public int Cii(URI li , URI lj , R k) {
-        return resimLDLoader.countShareTyplessCommonSubjects(li , lj , k);
+        return resimLDLoader.countTyplessCommonSubjects(li , lj , k);
     }
 
     
@@ -85,11 +85,20 @@ public class TResim extends ResourceSimilarity{
         tcii = Cii(li , lj , a, b);
 
         if(tcii != 0){
-            List<String> commonSubjects = resimLDLoader.getTyplessCommonSubjects(a, b);
-            
+            List<String> commonSubjects = resimLDLoader.getCommonSubjects(a, b);
+//            List<R> traversedResorces = new ArrayList<>();
+             
                 for(String resource:commonSubjects){
-                    R k = LdResourceFactory.getInstance().uri(resource).create();
-                    tcii_li_lj = tcii_li_lj + Cii(li , lj , k);
+                    String string[] =  resource.split("\\|");
+                    String uri = string[0];
+                    
+                    R k = new R(Ontology.decompressValue(uri));
+//                    if(! traversedResorces.contains(k)){
+//                        traversedResorces.add(k);
+                        tcii_li_lj = tcii_li_lj + Cii(li , lj , k);
+                        
+//                    }
+                    
                 }
 
                 if(tcii_li_lj != 0){
@@ -109,13 +118,13 @@ public class TResim extends ResourceSimilarity{
     
     @Override
     public int Cio(URI li , URI lj , R a, R b) {
-        return resimLDLoader.countShareTyplessCommonObjects(li , lj , a , b);
+        return resimLDLoader.countTyplessCommonObjects(li , lj , a , b);
     }
 
     
     @Override
     public int Cio(URI li , URI lj , R k) {
-        return resimLDLoader.countShareTyplessCommonObjects(li , lj , k);
+        return resimLDLoader.countTyplessCommonObjects(li , lj , k);
     }
 
     
@@ -128,22 +137,27 @@ public class TResim extends ResourceSimilarity{
 
         if(tcio != 0)
         {
-            List<String> commonObjects = resimLDLoader.getTyplessCommonObjects(a, b);
-            
+            List<String> commonObjects = resimLDLoader.getCommonObjects(a, b);
+//            List<R> traversedResorces = new ArrayList<>();
                 for(String resource: commonObjects){
-                    R k = LdResourceFactory.getInstance().uri(resource).create();
-                    tcio_li_lj = tcio_li_lj + Cio(li , lj , k);
+                    
+                    String string[] =  resource.split("\\|");
+                    String uri = string[0];
+                    R k = new R(Ontology.decompressValue(uri));
+//                    if(! traversedResorces.contains(k)){
+//                        traversedResorces.add(k);
+                        tcio_li_lj = tcio_li_lj + Cio(li , lj , k);
+                        
+//                    }
                 }
                 
-                if(tcio_li_lj != 0){
-                    
+                if(tcio_li_lj != 0){                    
                     x = 1 + Math.log10(tcio_li_lj);
                     tcio_norm = ((double) tcio / x);
                 }
                 
                 else 
-                    tcio_norm = (double) tcio ;
-                
+                    tcio_norm = (double) tcio ;              
             
         }  
 

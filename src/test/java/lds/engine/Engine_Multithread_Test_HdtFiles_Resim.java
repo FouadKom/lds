@@ -5,21 +5,16 @@
  */
 package lds.engine;
 
-import test.utility.Util;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 import java.util.concurrent.ExecutionException;
+import lds.benchmark.BenchmarkFile;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.measures.Measure;
-import lds.resource.R;
-import lds.resource.LdResourcePair;
 import static org.junit.Assert.fail;
 import sc.research.ldq.LdDataset;
 import sc.research.ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 import org.junit.Test;
-import lds.benchmark.LdBenchmark;
-import lds.resource.LdResourceTriple;
 
 /**
  *
@@ -33,7 +28,6 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
 
    @Test
     public void engine_multithread_test_hdtfiles() throws InterruptedException , ExecutionException , Exception {
-   // public static void main(String args[]) throws InterruptedException, ExecutionException, Exception{
         double startTime , endTime , duration;
         
         LdDataset dataSet = null;
@@ -59,10 +53,11 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
 //            pairs.add(pair);
 //        }       
         
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSet);
-//        config.addParam("resourcesCount" , 2350906); //used only for PICSS number of resources in DBpedia
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSet);
+
+        BenchmarkFile sourceFile = new BenchmarkFile(resourcesFilePath1);
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
@@ -70,7 +65,7 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
         
         startTime = System.nanoTime();
         
-        engine.similarity(resourcesFilePath1 , true , false);
+        engine.similarity(sourceFile , 4 , false);
         
         //end timing
         endTime = System.nanoTime();
@@ -80,7 +75,7 @@ public class Engine_Multithread_Test_HdtFiles_Resim {
         
         startTime = System.nanoTime();
         
-//        engine.similarity(resourcesFilePath1 , false , false);
+        engine.similarity(sourceFile , 1 , false);
         
         //end timing
         endTime = System.nanoTime();

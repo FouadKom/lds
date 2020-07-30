@@ -5,14 +5,14 @@
  */
 package lds.measures.picss;
 
+import lds.config.Config;
+import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
+import lds.config.LdConfigFactory;
 import lds.measures.Measure;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import test.utility.Util;
 
 /**
  *
@@ -23,10 +23,16 @@ public class PICSSTest {
     
     @Test
     public void PICSSTest() throws Exception{
+    
+        LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
         
-        LdDataset dataset = Util.getDBpediaDataset();
-                
-        Conf config = new Conf();
+        //You can create conf in several ways:
+        //1- You can create default conf 
+        Config config = LdConfigFactory.createDeafaultConf(Measure.PICSS); 
+                 
+        //2- Or Create conf objects and pass needed configuration parameters
+        
+       /* Conf config = new Conf();
         //using indexes for calculation, change to false of no data indexing is wanted
         config.addParam("useIndexes", false);
         
@@ -34,10 +40,10 @@ public class PICSSTest {
         config.addParam("LdDatasetMain" , dataset);
         
         //specifiying the number of resources -only resources and not literals- found in the dataset to be used in calculation
-        config.addParam("resourcesCount" , 2350906);
-        
-        R r1 = new R("http://dbpedia.org/resource/The_Noah");
-        R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
+        config.addParam("resourcesCount" , 2350906);*/
+                
+        R r1 = new R("http://dbpedia.org/resource/Coast");
+        R r2 = new R("http://dbpedia.org/resource/Shore");
         
         
         //Initialzie the engine class object
@@ -45,8 +51,7 @@ public class PICSSTest {
         
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //PICSS similarity calculaton
-        engine.load(Measure.PICSS , config);
-        
+        engine.load(Measure.PICSS , config);        
         System.out.println( engine.similarity(r1 , r2) );
         
         //ends calculation for the chosen similaarity and closes all indexes if created

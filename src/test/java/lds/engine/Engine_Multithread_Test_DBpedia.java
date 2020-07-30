@@ -1,41 +1,33 @@
 package lds.engine;
 
 import test.utility.Util;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.ExecutionException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
-import static lds.engine.Engine_Multithread_Test_HdtFiles_PICSS.resourcesFilePath1;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.LdDatasetCreator;;
 import lds.measures.Measure;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import static org.junit.Assert.*;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.ex.SLIB_Ex_Critic;
-import slib.utils.i.Conf;
 
 public class Engine_Multithread_Test_DBpedia {
 
-//	@Test
-//	public void runEngineOnSpecificLdMeasureTest() {        
-        
-        public static void main(String args[]) throws InterruptedException, ExecutionException, Exception{
+	@Test
+	public void runEngineOnSpecificLdMeasureTest() {        
             
             double startTime , endTime , duration;
             
-            LdDataset dataSetMain = Util.getDBpediaDataset();
+            LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
             
-            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(20));
+            Util.SplitedList sp = Util.splitList(LdDatasetCreator.getDbpediaResources(20));
 
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();
             List<R> listOfResources2 = sp.getSecondList();
             
-            Conf config = new Conf();
-            config.addParam("useIndexes", true);
-            config.addParam("LdDatasetMain" , dataSetMain);
+            Config config = new Config();
+            config.addParam(ConfigParam.useIndexes, false);
+            config.addParam(ConfigParam.LdDatasetMain , dataSetMain);
             LdSimilarityEngine engine = new LdSimilarityEngine();
             
             ///////////////////////LDSD_cw////////////////////////////////////////////////////////////////////////

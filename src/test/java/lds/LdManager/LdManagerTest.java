@@ -1,5 +1,6 @@
 package lds.LdManager;
 
+import lds.dataset.LdDatasetCreator;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 import org.junit.After;
@@ -7,7 +8,7 @@ import org.junit.Test;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
-import test.utility.Util;
+
 
 public class LdManagerTest {
 	
@@ -16,7 +17,7 @@ public class LdManagerTest {
 	@Test
 	public void sameAsTest() throws Exception {
 
-		LdDataset dataset = Util.getDBpediaDataset();
+		LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
 
 		resimLdManager = new ResimLdManager(dataset, true);
 
@@ -36,5 +37,5 @@ public class LdManagerTest {
 	public void deleteOutputFile() {
 		resimLdManager.closeIndexes();
 	}
-
+    
 }

@@ -6,10 +6,10 @@
 package lds.measures.weight;
 
 
-import java.util.Set;
-import lds.LdManager.LdManager;
+import java.util.List;
+import lds.LdManager.DistanceMeasuresLdManager;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import org.openrdf.model.URI;
 
@@ -19,17 +19,17 @@ import org.openrdf.model.URI;
  */
 public class Weight {
     private static WeightMethod method;
-    private static LdManager datasetLoader;
-    private static LdManager specificClassLoader;   
+    private static DistanceMeasuresLdManager datasetLoader;
+    private static DistanceMeasuresLdManager specificClassLoader;   
     private static LdIndex weightsIndex;
-    private static LdIndexer manager;
+    private static LdIndexerManager manager;
     private static boolean useIndex;
     
     private String baseClassPath = "lds.measures.weight.Weight.";
                                     
     
     
-    public Weight(WeightMethod method , LdManager ldManagerMain , LdManager ldManagerSpecific , boolean useIndexes) throws Exception{
+    public Weight(WeightMethod method , DistanceMeasuresLdManager ldManagerMain , DistanceMeasuresLdManager ldManagerSpecific , boolean useIndexes) throws Exception{
         this.method = method;
         this.datasetLoader = ldManagerMain;
         this.specificClassLoader = ldManagerSpecific;
@@ -44,7 +44,7 @@ public class Weight {
     
     
     public void loadIndexes() throws Exception {
-        manager = LdIndexer.getManager();
+        manager = LdIndexerManager.getManager();
         String weightsIndexFile = System.getProperty("user.dir") + "/Indexes/Weights/weight_index.db";
         weightsIndex = manager.loadIndex(weightsIndexFile);
         
@@ -88,7 +88,7 @@ public class Weight {
             }
         }
         return 1;
-    }   
+    }    
     
     public double RSLAW(URI link){ 
         return (double) specificClassLoader.countPropertyOccurrence(link)/datasetLoader.countPropertyOccurrence(link);
@@ -134,7 +134,7 @@ public class Weight {
     
     public void calculateWeights_ITW(R a , R b){
         
-        Set<URI> edges = datasetLoader.getEdges(a, b);
+        List<URI> edges = datasetLoader.getEdges(a, b);
         double min = ITW(edges.iterator().next() , a , b) , max = 0 , weight = 0;
         
         for(URI edge:datasetLoader.getEdges(a, b)){
@@ -165,7 +165,7 @@ public class Weight {
     
     public double getMinWeight(R a , R b){
         double min = 0 , weight = 0;
-        Set<URI> edges = datasetLoader.getEdges(a, b);
+        List<URI> edges = datasetLoader.getEdges(a, b);
         
         if(useIndex){
             min = weightsIndex.getDoubleFromIndex("minWeight:" + a.getUri().stringValue() + ":" + b.getUri().stringValue() , "lds.measures.resim.Weight.calculateWeights_ITW" , a , b);

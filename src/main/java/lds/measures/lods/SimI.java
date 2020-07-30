@@ -13,9 +13,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.LdManager.SimILdManager;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 /**
@@ -28,17 +29,17 @@ public class SimI implements LdSimilarity {
     private List<O> commonOntologies;
     private boolean dataAugmentation;
     private SimILdManager simIldManager;
-    private Conf config;
-
+    private Config config;
     
-    public SimI(Conf config) throws Exception{
-        if(config.getParam("useIndexes") == null || config.getParam("ontologyList") == null || config.getParam("dataAugmentation") == null)
+    
+    public SimI(Config config) throws Exception{
+        if(config.getParam(ConfigParam.useIndexes) == null || config.getParam(ConfigParam.ontologyList) == null || config.getParam(ConfigParam.dataAugmentation) == null)
             throw new Exception("Some configuration parameters missing"); 
 
-        this.simIldManager = new SimILdManager((LdDataset) config.getParam("LdDatasetMain") , (Boolean) config.getParam("useIndexes") );
-        this.useIndeses = (Boolean) config.getParam("useIndexes");
-        this.ontologyList = (List<O>) config.getParam("ontologyList");
-        this.dataAugmentation = (Boolean) config.getParam("dataAugmentation");
+        this.simIldManager = new SimILdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
+        this.useIndeses = (Boolean) config.getParam(ConfigParam.useIndexes);
+        this.ontologyList = (List<O>) config.getParam(ConfigParam.ontologyList);
+        this.dataAugmentation = (Boolean) config.getParam(ConfigParam.dataAugmentation);
         this.config = config;
     }
 
@@ -74,6 +75,12 @@ public class SimI implements LdSimilarity {
         for (O commonOntology : commonOntologies) {
             List<String> o_concepts = commonOntology.getConcepts(a);
             
+//            System.out.println("Concepts from for Resource " + a.toString() + " from ontology " + commonOntology);
+//            for(String concept : o_concepts){
+//                System.out.println(concept);
+//            }
+//            System.out.println();
+
             String ontologyName = commonOntology.toString();
 
             if(ontologyName.contains("DBpedia") && !o_concepts.isEmpty())
@@ -83,6 +90,14 @@ public class SimI implements LdSimilarity {
                 concepts.put(commonOntology.toString() , o_concepts);
         }
         
+//        System.out.println("Concepts of Resource " + a.toString() + " are:");
+//        for(Map.Entry<String , List<String>> entry: concepts.entrySet()){
+//            for(String concept: entry.getValue()){
+//                System.out.println(concept);
+//            }
+//        }
+//        System.out.println();
+
         return concepts;
 
     }
@@ -100,10 +115,13 @@ public class SimI implements LdSimilarity {
         
         for (O commonOntology : commonOntologies) {
             String ontologyName = commonOntology.toString();
+            
             if(ontologyName.contains("DBpedia"))
                 ontologyName = "DBpedia";
+            
             List<String> concepts_a_O = concepts_a.get(ontologyName);
             List<String> concepts_b_O = concepts_b.get(ontologyName);
+            
             score = score + Utility.TverskySimilarity_mod(concepts_a_O, concepts_b_O);
         }
         

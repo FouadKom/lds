@@ -5,12 +5,13 @@
  */
 package lds.measures.picss;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
+import static lds.dataset.LdDatasetCreator.getDBpediaHDTDataset;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -21,21 +22,16 @@ public class PICSSTest_hdtFiles {
     
     @Test
     public void isPICSSWorksCorrectlyOnPaperExample() throws Exception{
-//    public static void main(String args[]) throws Exception{
         
-        LdDataset dataset = LdDatasetFactory.getInstance()
-                    .name("example")
-                    .file(System.getProperty("user.dir") + "/src/test/resources/dbpedia2016-04en.hdt")
-//                    .file(System.getProperty("user.dir") + "/src/test/resources/swdf-2012-11-28.hdt")
-                    .create();  
-                
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906);
+        LdDataset dataset = getDBpediaHDTDataset("/src/test/resources/dbpedia2016-04en.hdt" , "example");
+
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataset);
+        config.addParam(ConfigParam.resourcesCount , 2350906);
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Bob_Dylan").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Ronnie_Hawkins").create();
+        R r1 = new R("http://dbpedia.org/resource/Bob_Dylan");
+        R r2 = new R("http://dbpedia.org/resource/Ronnie_Hawkins");
         
         PICSS picss = new PICSS(config);
         

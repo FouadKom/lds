@@ -6,17 +6,11 @@
 package lds.engine;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.util.concurrent.Callable;
-import lds.LdManager.LdManagerBase;
+import lds.benchmark.BenchmarkFile;
 import lds.benchmark.LdBenchmark;
-import lds.indexing.LdIndexer;
-import lds.measures.Measure;
 import lds.resource.LdResourceTriple;
 import lds.resource.LdResult;
-import lds.resource.R;
-import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 import lds.measures.LdSimilarity;
 
 /**
@@ -26,14 +20,14 @@ import lds.measures.LdSimilarity;
 public class SimilarityCompareTask implements Callable<String> {
     private LdSimilarity measure;
     private LdResourceTriple triple;
-    private String resultsFilePath = null;
+    private BenchmarkFile resultsFilePath = null;
     
     public SimilarityCompareTask(LdSimilarity measure , LdResourceTriple triple){
         this.measure = measure;
         this.triple = triple;
     }
     
-    public SimilarityCompareTask(LdSimilarity measure , LdResourceTriple triple , String resultsFilePath){
+    public SimilarityCompareTask(LdSimilarity measure , LdResourceTriple triple , BenchmarkFile resultsFilePath){
         this.measure = measure;
         this.triple = triple;
         this.resultsFilePath = resultsFilePath;

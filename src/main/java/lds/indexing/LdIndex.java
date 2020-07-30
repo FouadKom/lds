@@ -7,6 +7,7 @@ package lds.indexing;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.NavigableSet;
 import java.util.Set;
 import java.util.logging.Level;
@@ -46,6 +47,7 @@ public class LdIndex {
             db = DBMaker.fileDB(this.indexFilePath)
                     .fileChannelEnable()
                     .closeOnJvmShutdown()
+                    .checksumHeaderBypass()
                     .make();
 
             return db;
@@ -59,6 +61,13 @@ public class LdIndex {
     public void close() {
 	db.close();
     }
+    
+    public void addMap(Map<String, List<String>> map) {
+       for(Map.Entry<String, List<String>> entry : map.entrySet()){
+           addList(entry.getKey() , entry.getValue());
+       }
+    }
+    
     
     public  void addList(String key, List<String> values) {
 
@@ -116,6 +125,44 @@ public class LdIndex {
             }
             return result;
     }
+    
+    public String generateRandomKey(int keySize){
+        int tries = 0;
+        int maxTries = 4;
+        String key = Utility.getAlphaNumericString(keySize);
+        
+        while( getValue(key) != null && getList(key) != null && tries != maxTries) {
+            key = Utility.getAlphaNumericString(keySize);
+            tries++;
+        }
+        
+        if(tries == maxTries){
+            keySize++;
+            return generateRandomKey(keySize);
+        }
+        
+        return key;
+        
+    }
+    
+    public String generateRandomKey(int keySize , int maxTries){
+        int tries = 0;
+        String key = Utility.getAlphaNumericString(keySize);
+        
+        while( getValue(key) != null && getList(key) != null && tries != maxTries) {
+            key = Utility.getAlphaNumericString(keySize);
+            tries++;
+        }
+        
+        if(tries == maxTries){
+            keySize++;
+            return generateRandomKey(keySize , maxTries);
+        }
+        
+        return key;
+        
+    }
+    
 
     public List<String> getListFromIndex(LdDataset dataset, String key , String methodPath , Object... args) {
 
@@ -273,5 +320,7 @@ public class LdIndex {
         String methodName = Utility.getMethodName(methodPath);
         Utility.executeMethod(classPath , methodName , args);
     }
+
+    
             
 }

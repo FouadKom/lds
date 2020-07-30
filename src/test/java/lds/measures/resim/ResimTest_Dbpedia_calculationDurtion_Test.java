@@ -9,6 +9,10 @@ import java.io.File;
 import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.DBpediaChapter;
+import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import lds.measures.resim.Resim;
@@ -30,16 +34,16 @@ public class ResimTest_Dbpedia_calculationDurtion_Test {
             
             double startTime , endTime , duration;
         
-            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(numberOfPairs * 2));
+            Util.SplitedList sp = Util.splitList(LdDatasetCreator.getDbpediaResources(DBpediaChapter.En , numberOfPairs * 2));
 
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();
             List<R> listOfResources2 = sp.getSecondList();
 
-            LdDataset dataset = Util.getDBpediaDataset();
-            Conf config = new Conf();
-            config.addParam("useIndexes", false);
-            config.addParam("LdDatasetMain" , dataset);
+            LdDataset dataset = LdDatasetCreator.getDBpediaDataset();
+            Config config = new Config();
+            config.addParam(ConfigParam.useIndexes, false);
+            config.addParam(ConfigParam.LdDatasetMain , dataset);
             
             try {
             //Checking Time to calculate similarity using Dbpedia       
@@ -75,8 +79,8 @@ public class ResimTest_Dbpedia_calculationDurtion_Test {
             Util.DeleteFilesForFolder(Indexesfolder , false);
             //start timing
             startTime = System.nanoTime();
-            config.removeParam("useIndexes");
-            config.addParam("useIndexes", true);
+            config.removeParam(ConfigParam.useIndexes);
+            config.addParam(ConfigParam.useIndexes, true);
             
             resim.loadIndexes();
 
@@ -100,8 +104,8 @@ public class ResimTest_Dbpedia_calculationDurtion_Test {
             //start timing
             startTime = System.nanoTime();
 
-            config.removeParam("useIndexes");
-            config.addParam("useIndexes", true);
+            config.removeParam(ConfigParam.useIndexes);
+            config.addParam(ConfigParam.useIndexes, true);
             
             resim.loadIndexes();
 

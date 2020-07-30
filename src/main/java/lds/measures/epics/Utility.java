@@ -5,27 +5,12 @@
  */
 package lds.measures.epics;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
-import java.util.concurrent.Callable;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.Future;
-import lds.engine.SimilarityCompareTask;
-import lds.engine.SimilarityCompareTaskRunnable;
-import lds.measures.Measure;
-import static lds.measures.Measure.LDSD_i;
-import lds.measures.ldsd.*;
-import lds.resource.LdResourceFactory;
-import lds.resource.R;
-import lds.resource.LdResourcePair;
-import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import lds.measures.LdSimilarity;
+import java.util.Map;
+import java.util.Optional;
+import lds.LdManager.ontologies.Ontology;
 
 /**
  *
@@ -45,142 +30,27 @@ public class Utility {
         return result;
     }
     
-    public static List<String> similarFeatures(List<String> a, List<String> b , Conf config) throws Exception {
+    public static List<String> similarFeatures(List<String> a, List<String> b) throws Exception {
         List<String> result = new ArrayList<>();
-        String node_a , node_b ,link_a , link_b , direction_a , direction_b;
-        double sim;
         
-        LdDataset dataset = (LdDataset) config.getParam("LdDatasetMain");
-        boolean useIndex = (Boolean) config.getParam("useIndexes");
-        String extendingMeasure = (String) config.getParam("extendingMeasure");
-                
-        Conf ldsd_conf = new Conf();
-        ldsd_conf.addParam("useIndexes", useIndex);
-        ldsd_conf.addParam("LdDatasetMain" , dataset); 
-        
-        LDSD ldsd = null;
-        
-        switch (extendingMeasure) {
-            case "LDSD_d":
-                ldsd = new LDSD_d(ldsd_conf);
-                break;
-                
-            case "LDSD_dw":
-                ldsd = new LDSD_dw(ldsd_conf);
-                break;
-                
-            case "LDSD_i":
-                ldsd = new LDSD_i(ldsd_conf);
-                break;
-            
-            case "LDSD_iw":
-                ldsd = new LDSD_iw(ldsd_conf);
-                break;
-                
-            case "LDSD_cw":
-                ldsd = new LDSD_cw(ldsd_conf);
-                break;
-                
-            
-        }                
-        
-        ldsd.loadIndexes();
-        
-       
-        HashMap<String, String> map_a = new HashMap();
-        HashMap<String, String> map_b = new HashMap();
-        
-//        for(String fa : a){
-//           node_a = getVertex(fa);
-//           link_a = getLink(fa);
-//           direction_a = getDirection(fa);
-//           map_a.put(node_a , link_a + "|" + direction_a);
-//        }
-        
-        for(String fb : b){
-           node_b = getVertex(fb);
-           link_b = getLink(fb);
-           direction_b = getDirection(fb);
-           map_b.put(node_b , link_b + "|" + direction_b);
+        Map<String , List<String>> map_b = createFeaturesMap(b);
+        Map<String , List<String>> map_a = createFeaturesMap(a);
+
+        for(Map.Entry<String , List<String>> entry : map_a.entrySet()){
+            String key = entry.getKey();                
+            List<String> features_b = map_b.get(key);
+
+            if(features_b != null && ! features_b.isEmpty()){
+                List<String> features_a = entry.getValue();
+                Optional.ofNullable(features_a).ifPresent(result::addAll);
+                Optional.ofNullable(features_b).ifPresent(result::addAll);
+            }
+
         }
         
-        for(String fa : a){
-           node_a = getVertex(fa);
-           link_a = getLink(fa);
-           direction_a = getDirection(fa);
-           
-           if(map_b.containsKey(node_a)){
-               
-           }
-               
-            
-        }
-        
-        
-//        for (Entry entry : map_a.entrySet()) {
-//            String f = entry.getValue().toString();
-//            
-//            
-//            if(map_b.containsValue(f)){
-//                String node_1 = entry.getKey().toString();
-//                
-//            }
-//            
-//        }
-
-       //To use multithread uncomment this part and comment the part after it
-       /*SearchTask[] threads = new SearchTask[a.size()];
-
-       int i = 0;
-
-       for(String fa: a){
-            threads[i] = new SearchTask(ldsd.getMeasure() , fa , b , result);
-            threads[i].start();
-
-            i++;
-       }
-
-       try{
-           for(int j = 0 ; j < i ; j++){
-               threads[j].join();
-           }
-       }catch(InterruptedException ie) {
-           ie.printStackTrace();
-       }*/
-       //////////////////////////////////////////////////////////////////////
-           
-        //To use singlethread uncomment this part and comment the part before it
-        /*for(String fa : a){
-           link_a = getLink(fa);
-           direction_a = getDirection(fa);
-           
-           for (String fb : b) {
-                link_b = getLink(fb);
-                direction_b = getDirection(fb);
-
-                if(link_a.equals(link_b) && direction_a.equals(direction_b)){
-
-                    R r1 = LdResourceFactory.getInstance().uri(getVertex(fa)).create();
-                    R r2 = LdResourceFactory.getInstance().uri(getVertex(fb)).create();
-        
-                    sim = ldsd.compare(r1 , r2);
-
-                    if( sim >= 0.5){
-                        result.add(fa);
-                        result.add(fb);
-                    }
-                }
-            
-            } 
-        }*/
-        ///////////////////////////////////////////////////////////////////////
-
-        ldsd.closeIndexes();
         return result;
-        
     }
-    
-    
+        
     public static List<String> commonFeatures(List<String> a, List<String> b){
         List<String> result = new ArrayList<>(a);
         
@@ -188,7 +58,7 @@ public class Utility {
         
         return result;
     }
-    
+   
     public static String getLink(String s){
           String string[] =  s.split("\\|");
           return string[0].trim();
@@ -205,63 +75,51 @@ public class Utility {
     }	 
     
 	
-    // Function that matches input str with 
-    // given wildcard pattern 
-    static boolean strmatch(String str, String pattern, int n, int m) 
-    { 
-            // empty pattern can only match with 
-            // empty string 
-            if (m == 0) 
-                    return (n == 0); 
+    private static Map<String , List<String>> createFeaturesMap(List<String> features){
+        List<String> list = features;
+        String link_a , node_a , direction_a;
+        Map<String , List<String>> map = new HashMap<>();
+        
+        for(String feature : list){
+           List<String> nodes = new ArrayList<>();
+           link_a = Ontology.decompressValue(getLink(feature));
+           direction_a = getDirection(feature);
+           node_a = Ontology.decompressValue(getVertex(feature));
+           
+           String key = link_a+"|"+direction_a; //create key
+         
+           if(map ==null || map.isEmpty()){
+//                nodes.add(node_a);// add node to the list to be added to the map
+                nodes.add(link_a+"|"+node_a+"|"+direction_a);// add node to the list to be added to the map
+                map.put(key, nodes); 
+           }
+           
+           else{
+               nodes = map.get(key);
+               
+               if(nodes == null || nodes.isEmpty()){
+                   nodes = new ArrayList<>();
+//                   nodes.add(node_a);
+                   nodes.add(link_a+"|"+node_a+"|"+direction_a);                   
+                   map.put(key , nodes);
+               }
+               
+               else if(! nodes.contains(node_a)){
+//                    nodes.add(node_a);
+                    nodes.add(link_a+"|"+node_a+"|"+direction_a);  
+                    map.put(key , nodes);
+               }
+            }
+        }
+                
+        return map;
+    }
+    
+    public static double log2(double N){ 
 
-            // lookup table for storing results of 
-            // subproblems 
-            boolean[][] lookup = new boolean[n + 1][m + 1]; 
+            double result = (double)(Math.log(N) / Math.log(2)); 
 
-            // initailze lookup table to false 
-            for(int i = 0; i < n + 1; i++) 
-                    Arrays.fill(lookup[i], false); 
-
-
-            // empty pattern can match with empty string 
-            lookup[0][0] = true; 
-
-            // Only '*' can match with empty string 
-            for (int j = 1; j <= m; j++) 
-                    if (pattern.charAt(j - 1) == '*') 
-                            lookup[0][j] = lookup[0][j - 1]; 
-
-            // fill the table in bottom-up fashion 
-            for (int i = 1; i <= n; i++) 
-            { 
-                    for (int j = 1; j <= m; j++) 
-                    { 
-                            // Two cases if we see a '*' 
-                            // a) We ignore '*'' character and move 
-                            // to next character in the pattern, 
-                            //	 i.e., '*' indicates an empty sequence. 
-                            // b) '*' character matches with ith 
-                            //	 character in input 
-                            if (pattern.charAt(j - 1) == '*') 
-                                    lookup[i][j] = lookup[i][j - 1] || 
-                                                            lookup[i - 1][j]; 
-
-                            // Current characters are considered as 
-                            // matching in two cases 
-                            // (a) current character of pattern is '?' 
-                            // (b) characters actually match 
-                            else if (pattern.charAt(j - 1) == '?' || 
-                                    str.charAt(i - 1) == pattern.charAt(j - 1)) 
-                                    lookup[i][j] = lookup[i - 1][j - 1]; 
-
-                            // If characters don't match 
-                            else lookup[i][j] = false; 
-                    } 
-            } 
-
-            return lookup[n][m]; 
+            return result;
     } 
-
-
-     
+    
 }

@@ -6,16 +6,15 @@
 package lds.measures.resim;
 
 
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.config.LdConfigFactory;
+import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
-import lds.measures.weight.WeightMethod;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
-import test.utility.Util;
 
 /**
  *
@@ -28,67 +27,62 @@ public class ResimTest {
     
     @Test
     public void ResimTest() throws Exception{ 
-        
-             
+           
         R r1 = new R("http://dbpedia.org/resource/The_Noah");
         R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");
         
         
-        Conf configSim = new Conf();
-        
-        LdDataset datasetMain = Util.getDBpediaDataset();
-        
-        LdDataset datasetSpecific  = LdDatasetFactory.getInstance()
-                                                     .name("specificSet")
-                                                     .file(datasetDir)
-                                                     .defaultGraph("http://specificSet/dataset")
-                                                     .create();
-        
-        //specifying the main dataset that will be used for querying, in our case DBpedia
-        configSim.addParam("LdDatasetMain" , datasetMain); 
-        
-        //using indexes for calculation, change to false of no data indexing is wanted
-        configSim.addParam("useIndexes" , true);
-        
+        LdDataset datasetSpecific = LdDatasetCreator.getLocalDataset(datasetDir, "Resim_example");        
         
         //Initialzie the engine class object
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
-        
+        /*Intiialize the conf object which contains the necessary parameters for the measure
+        you can use the default conf as follows. This creattes a conf with default parameters and no indexing by default*/
+        Config config = LdConfigFactory.createDeafaultConf(Measure.Resim);   
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //Resim similarity calculaton
-        engine.load(Measure.Resim , configSim);
+        engine.load(Measure.Resim , config);
         
         System.out.println( engine.similarity(r1 , r2) );
         
         //ends calculation for the chosen similaarity and closes all indexes if created
         engine.close();
         
+        
+        config = LdConfigFactory.createDeafaultConf(Measure.TResim);
         //TResim similarity calculation
-        engine.load(Measure.TResim , configSim);
+        engine.load(Measure.TResim , config);
         
         System.out.println( engine.similarity(r1 , r2) ); 
         
-        engine.close();
-        
+        engine.close();      
     
-        //addidng new parameters to the config whichh are needed for WResim and WTResim measures
-        //specifiying the specific dataset that is used to calculate weights for links
-        configSim.addParam("LdDatasetSpecific" , datasetSpecific);
+        config = LdConfigFactory.createDeafaultConf(Measure.WResim);
         
-        //providing thw weighting method that will calculate weights for links 
-        configSim.addParam("WeightMethod" , WeightMethod.RSLAW);
+        /*Note:
+        Using the default conf for measures that use weighting algorithims such as : WResm, WTResim 
+        requires adding the specific dataset object which is used for weight calculation.
+        To add the specific dataset use the following:
+        */ 
+        config.addParam(ConfigParam.LdDatasetSpecific , datasetSpecific);        
         
+        /*Note:
+        Using the default conf for measures that use weighting algorithims such as : WResm, WTResim uses ITW algorithim by default.
+        To change the weighting algorithim use the following:
+        
+        config.addParam("WeightMethod" , WeightMethod.RSLAW);        
+        */ 
         
         //WResim similarity calculation
-        engine.load(Measure.WResim , configSim);
+        engine.load(Measure.WResim , config);
         
         System.out.println( engine.similarity(r1 , r2) );
         
         engine.close();
         
         //WTResim similarity calculation
-        engine.load(Measure.WTResim , configSim);
+        engine.load(Measure.WTResim , config);
         
         System.out.println( engine.similarity(r1 , r2) );
 

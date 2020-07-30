@@ -7,13 +7,13 @@ package lds.engine;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
 import test.utility.Util;
 
 /**
@@ -28,22 +28,22 @@ public class Engine_Test_HDTvsDBpedia {
             
             double startTime , endTime , duration;
             
-            LdDataset dbpedia = Util.getDBpediaDataset();
+            LdDataset dbpedia = LdDatasetCreator.getDBpediaDataset();
             
-            LdDataset hdt = Util.getDBpediaHDTDataset(dataSetDir);
+            LdDataset hdt = LdDatasetCreator.getDBpediaHDTDataset(dataSetDir , "HDTDbpedia");
             
-            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(20));
+            Util.SplitedList sp = Util.splitList(LdDatasetCreator.getDbpediaResources(20));
 
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();
             List<R> listOfResources2 = sp.getSecondList();
             
-            Conf config = new Conf();
+            Config config = new Config();
             LdSimilarityEngine engine = new LdSimilarityEngine();
             
             ///////////////////////LDSD_cw////////////////////////////////////////////////////////////////////////
-            config.addParam("useIndexes", false);
-            config.addParam("LdDatasetMain" , dbpedia);
+            config.addParam(ConfigParam.useIndexes, false);
+            config.addParam(ConfigParam.LdDatasetMain , dbpedia);
             
             double sum = 0;
             engine.load(Measure.LDSD_cw, config);

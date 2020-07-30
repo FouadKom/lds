@@ -28,15 +28,29 @@ public class LdResourcePair {
     
     @Override
     public String toString(){
-       return firstResource.getUri().toString() + " , " + secondResource.getUri().toString();
+       return firstResource.toString() + " , " + secondResource.toString();
     }
     
     public String toString(char separator){
-       return firstResource.getUri().toString() + " " + separator + " " + secondResource.getUri().toString();
+       return firstResource.toString() + " " + separator + " " + secondResource.toString();
     }
     
-    public boolean equals(LdResourcePair pair){
-        return this.firstResource.equals(pair.getFirstresource()) && this.secondResource.equals(pair.getSecondresource());
+    public String toString(char separator , char quote){
+       return quote + firstResource.toString() + quote + " " + separator + " " + quote + secondResource.toString() + quote;
     }
     
+    
+    @Override
+    public boolean equals(Object o){
+        if(o == this){
+            return true;
+        }
+        
+        if (!(o instanceof LdResourcePair)) { 
+            return false; 
+        } 
+        
+        LdResourcePair pair = (LdResourcePair) o;
+                return this.firstResource.equals(pair.getFirstresource()) && this.secondResource.equals(pair.getSecondresource());
+    }
 }

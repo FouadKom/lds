@@ -6,11 +6,12 @@
 package lds.LdManager.ontologies;
 
 import java.util.List;
+import lds.config.Config;
+import lds.config.ConfigParam;
 import lds.indexing.LdIndex;
-import lds.indexing.LdIndexer;
+import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -19,11 +20,11 @@ import slib.utils.i.Conf;
 public class DBpediaLdManager extends DBpediaOntologiesLdManager {
 
     private boolean useIndex;
-    private LdIndexer manager;
     private LdIndex conceptsIndex;
     private LdDataset dataSetInitial;
     private String endpointURI;
     private String defaultGraph;
+    private LdIndexerManager manager;
     
    
     public DBpediaLdManager(LdDataset dataSetInitial , boolean useIndex) throws Exception {
@@ -35,11 +36,11 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     }
     
     
-    public DBpediaLdManager(Conf config) throws Exception {
-        super((LdDataset) config.getParam("LdDatasetMain"));
+    public DBpediaLdManager(Config config) throws Exception {
+        super((LdDataset) config.getParam(ConfigParam.LdDatasetMain));
         
-        this.useIndex = (Boolean) config.getParam("useIndexes");
-        this.dataSetInitial = (LdDataset) config.getParam("LdDatasetMain");
+        this.useIndex = (Boolean) config.getParam(ConfigParam.useIndexes);
+        this.dataSetInitial = (LdDataset) config.getParam(ConfigParam.LdDatasetMain);
         
         endpointURI = (String) config.getParam("endpointURI");
         defaultGraph = (String) config.getParam("defaultGraph");
@@ -56,8 +57,7 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     }
     
     public void loadIndexes() throws Exception {
-        manager = LdIndexer.getManager();
-        
+        manager = LdIndexerManager.getManager();
         String conceptsIndexFile = System.getProperty("user.dir") + "/Indexes/Ontologies/DBpedia/concepts_index_" + dataSetInitial.getName().toLowerCase().replace(" ", "_") + ".db";
         conceptsIndex = manager.loadIndex(conceptsIndexFile);
              

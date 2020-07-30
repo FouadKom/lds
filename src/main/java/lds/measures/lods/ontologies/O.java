@@ -1,14 +1,14 @@
 package lds.measures.lods.ontologies;
 
 import java.util.List;
+import lds.config.Config;
 import lds.resource.R;
-import slib.utils.i.Conf;
 
 public interface O {
 	
     public List<String> getConcepts(R r); 
     
-    public void initializeOntology(Conf config) throws Exception;
+    public void initializeOntology(Config config) throws Exception;
     
     
     public O getOntology();

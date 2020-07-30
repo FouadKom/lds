@@ -5,14 +5,14 @@
  */
 package lds.measures.epics;
 
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.picss.PICSS;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -22,24 +22,15 @@ public class measureTest_localRDF {
     
     @Test
     public void runEngineOnSpecificLdMeasureTest() throws Exception{  
-//    public static void main(String args[]) throws Exception{
-        LdDataset dataSet = null;
+        LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir , "example");
 
         R r1 = new R("http://www.example.org#Fish");
         R r2 = new R("http://www.example.org#Whale");
 
-        try {
-                dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir)
-                                .defaultGraph("http://graphResim/dataset").create();
-
-        } catch (Exception e) {
-                fail(e.getMessage());
-        }
-
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSet);
-        config.addParam("resourcesCount" , 9); 
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSet);
+        config.addParam(ConfigParam.resourcesCount , 9); 
         
         PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);

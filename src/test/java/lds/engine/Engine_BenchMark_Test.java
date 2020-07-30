@@ -5,35 +5,35 @@
  */
 package lds.engine;
 
-import test.utility.Util;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.util.List;
-import java.util.concurrent.ExecutionException;
+import lds.benchmark.BenchmarkFile;
 import lds.measures.Measure;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import lds.benchmark.LdBenchmark;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.LdDatasetCreator;
+import org.junit.Test;
 /**
  *
  * @author Fouad Komeiha
  */
 public class Engine_BenchMark_Test {
     
-    public static void main(String args[]) throws FileNotFoundException, IOException, InterruptedException, ExecutionException{
+    @Test
+    public void runEngineOnSpecificLdMeasureTest() throws Exception {           
         
-        
-        LdDataset dataSetMain = Util.getDBpediaDataset();
+        LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
             
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSetMain);
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSetMain);
         
         LdSimilarityEngine engine = new LdSimilarityEngine();
 
         engine.load(Measure.LDSD_cw , config);
         
-        engine.similarity("C:\\Users\\LENOVO\\Downloads\\test.txt" , false , true);
+        BenchmarkFile sourceFile = new BenchmarkFile("C:\\Users\\LENOVO\\Downloads\\test.txt");
+        
+        engine.similarity(sourceFile , 1 , true);
         
         engine.close();
        

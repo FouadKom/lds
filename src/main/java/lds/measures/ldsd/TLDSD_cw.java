@@ -5,11 +5,9 @@
  */
 package lds.measures.ldsd;
 
-import java.util.List;
-import lds.resource.LdResourceFactory;
+import lds.config.Config;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -17,7 +15,7 @@ import slib.utils.i.Conf;
  */
 public class TLDSD_cw extends LDSD_cw{
     
-    public TLDSD_cw(Conf config) throws Exception {
+    public TLDSD_cw(Config config) throws Exception {
         super(config);
     }
     
@@ -41,7 +39,7 @@ public class TLDSD_cw extends LDSD_cw{
     
     
     public int Cii(URI li , URI lj , R a, R b) {
-        return LDSDLDLoader.countShareTyplessCommonSubjects(li , lj , a , b);
+        return LDSDLDLoader.countTyplessCommonSubjects(li , lj , a , b);
           
     }
     
@@ -62,7 +60,7 @@ public class TLDSD_cw extends LDSD_cw{
     }
     
     public int Cio(URI li , URI lj , R a, R b) {
-        return LDSDLDLoader.countShareTyplessCommonObjects(li , lj , a , b);
+        return LDSDLDLoader.countTyplessCommonObjects(li , lj , a , b);
     }
     
     public double Cio_normalized(URI li , URI lj , R a, R b) {

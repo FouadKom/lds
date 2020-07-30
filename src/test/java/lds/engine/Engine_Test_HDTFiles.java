@@ -7,11 +7,13 @@ package lds.engine;
 
 import java.util.List;
 import java.util.concurrent.ExecutionException;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
 import test.utility.Util;
 
 /**
@@ -27,23 +29,23 @@ public static final String dataSetDir = System.getProperty("user.dir") + "/src/t
             
             double startTime , endTime , duration;
             
-            LdDataset dbpedia = Util.getDBpediaDataset();
+            LdDataset dbpedia = LdDatasetCreator.getDBpediaDataset();
             
-            LdDataset hdt = Util.getDBpediaHDTDataset(dataSetDir);
+            LdDataset hdt = LdDatasetCreator.getDBpediaHDTDataset(dataSetDir , "HDTDbpedia");
             
-            Util.SplitedList sp = Util.splitList(Util.getHDTResources(2, dataSetDir));
+            Util.SplitedList sp = Util.splitList(LdDatasetCreator.getHDTResources(dataSetDir , "HDTDbpedia2" , 2));
 //            Util.SplitedList sp = Util.splitList(Util.getDbpediaResources(2));
 
             //get two list of Dbpedia resources
             List<R> listOfResources1 = sp.getFirstList();
             List<R> listOfResources2 = sp.getSecondList();
             
-            Conf config = new Conf();
+            Config config = new Config();
             LdSimilarityEngine engine = new LdSimilarityEngine();
             
             ///////////////////////LDSD_cw////////////////////////////////////////////////////////////////////////
-            config.addParam("useIndexes", false);
-            config.addParam("LdDatasetMain" , hdt);
+            config.addParam(ConfigParam.useIndexes, false);
+            config.addParam(ConfigParam.LdDatasetMain , hdt);
             
             double sum = 0;            
             

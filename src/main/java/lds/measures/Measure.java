@@ -68,13 +68,16 @@ public enum Measure {
         }
         if(measure == LODS){
             return "lds.measures.lods.LODS" ;
-        }
-        
+        }        
         if(measure == EPICS){
             return "lds.measures.epics.EPICS" ;
         }
         
         return null;
+    }
+    
+    public static String getName(Measure measure){
+        return measure.toString();
     }
     
 }

@@ -5,16 +5,12 @@
  */
 package lds.measures.epics;
 
-import java.util.ArrayList;
-import java.util.List;
+import lds.config.Config;
 import lds.measures.picss.PICSS;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
-import test.utility.Util;
+import lds.config.LdConfigFactory;
+import lds.measures.Measure;
 
 /**
  *
@@ -23,33 +19,26 @@ import test.utility.Util;
 public class measureTest_DBpedia {
     
     @Test
-    public void runEngineOnSpecificLdMeasureTest() throws Exception{  
-//    public static void main(String args[]) throws Exception{
-      
-        LdDataset dataset = Util.getDBpediaDataset();
+    public void runEngineOnSpecificLdMeasureTest() throws Exception{        
         
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Automobile").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Car").create();
+        R r1 = new R("http://dbpedia.org/resource/Money");
+        R r2 = new R("http://dbpedia.org/resource/Cash");
                 
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906);
-        config.addParam("extendingMeasure" , "LDSD_d");
+        Config config = LdConfigFactory.createDeafaultConf(Measure.PICSS);
         
         PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);
         
         
         picss.loadIndexes();
-//        epics.loadIndexes();
+        epics.loadIndexes();
         
-//        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
+        System.out.println("PICSS(r1 , r2) = " + picss.compare(r1, r2));
         System.out.println("EPICS(r1 , r2) = " + epics.compare(r1, r2));
         
         picss.closeIndexes();
-//        epics.closeIndexes();
-        
+        epics.closeIndexes();
+    
     }
     
 }

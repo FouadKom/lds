@@ -6,8 +6,8 @@
 package lds.measures.lods.ontologies;
 
 import java.util.List;
+import lds.config.Config;
 import lds.resource.R;
-import slib.utils.i.Conf;
 
 /**
  *
@@ -21,7 +21,7 @@ public class O_Umbel implements O {
     }
     
     @Override
-    public void initializeOntology(Conf config) throws Exception {
+    public void initializeOntology(Config config) throws Exception {
         throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     

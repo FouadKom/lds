@@ -7,11 +7,11 @@ package lds.measures.LODS;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.lods.ontologies.*;
 import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import test.utility.Util;
 import lds.measures.lods.SimI;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
@@ -27,13 +27,12 @@ public class SimI_Test {
     
     @Test
     public void SimI_Test() throws Exception{
-        LdDataset dataSetMain = Util.getDBpediaDataset();
-        
-        Conf config = new Conf();
-        config.addParam("useIndexes", false);
-        config.addParam("LdDatasetMain" , dataSetMain);
-        config.addParam("dataAugmentation" , true);
-
+        LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
+                
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.LdDatasetMain , dataSetMain);
+        config.addParam(ConfigParam.dataAugmentation , false);
         
         List<O> ontologyList = new ArrayList<>();
         
@@ -52,7 +51,7 @@ public class SimI_Test {
 //        O wikiData = new O_WikiData();
 //        ontologyList.add(wikiData);        
         
-        config.addParam("ontologyList" , ontologyList);
+        config.addParam(ConfigParam.ontologyList, ontologyList);
         
         SimI simi = new SimI(config);
         

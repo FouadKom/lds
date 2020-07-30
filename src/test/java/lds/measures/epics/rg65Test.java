@@ -5,17 +5,14 @@
  */
 package lds.measures.epics;
 
-import java.io.FileWriter;
-import java.util.List;
+import lds.benchmark.BenchmarkFile;
+import lds.benchmark.Correlation;
 import lds.benchmark.LdBenchmark;
-import lds.measures.picss.PICSS;
-import lds.resource.LdResourcePair;
-import lds.resource.LdResourceTriple;
-import lds.resource.R;
+import lds.config.Config;
+import lds.config.LdConfigFactory;
+import lds.engine.LdSimilarityEngine;
+import lds.measures.Measure;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
-import slib.utils.i.Conf;
-import test.utility.Util;
 
 /**
  *
@@ -23,222 +20,58 @@ import test.utility.Util;
  */
 public class rg65Test {
     
-static String datsetpath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65.txt";
+static String sourcepath = System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65/rg-65_DBpedia.csv";
     
     @Test
-    public void rg65Test() throws Exception{  
-        String outputFilePath = System.getProperty("user.dir") + "/src/test/resources/rg65/rg_DBpedia.csv"; 
-        if(! lds.benchmark.Utility.checkPath(outputFilePath) )
-            return;
+    public void rg65Test() throws Exception{
+
+        LdSimilarityEngine engine = new LdSimilarityEngine();
         
+        BenchmarkFile source = new BenchmarkFile(sourcepath , ',' , '"');
+        /* for normalizing the benchmark values between 0 and 1 */
+        source.setMaxValue(3);
+        source.setMinValue(0);
+        /**/
         
-        LdDataset dataset = Util.getDBpediaDataset();
-//        LdDataset dataset = Util.getDBpediaHDTDataset(dataSetDir);
+        BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65/rg-65_Results_EPICS.csv" , ',' , '"');        
         
-        double startTime , endTime , duration;
+        LdBenchmark benchmark = new LdBenchmark(source , result);
+        benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
-        Conf config = new Conf();
-        config.addParam("useIndexes", true);
-        config.addParam("LdDatasetMain" , dataset);
-        config.addParam("resourcesCount" , 2350906); 
+        benchmark.checkMappingInDBpedia();
         
+        Config config = LdConfigFactory.createDeafaultConf(Measure.EPICS);
+
+        engine.load(Measure.EPICS , config);
+                       
+        System.out.println("EPICS Pearson Correlation: " + engine.correlation(benchmark , true));
         
-        PICSS picss = new PICSS(config);
-        EPICS epics = new EPICS(config); 
+        benchmark.setCorrelationMethod(Correlation.SpearmanCorrelation);
         
-        picss.loadIndexes();
-        epics.loadIndexes();
+        System.out.println("EPICS Spearman Correlation: " + engine.correlation(benchmark , true));
         
-        String epicsVal = null;
+        engine.close();
         
-        FileWriter results_writer = new FileWriter(outputFilePath , true);
-        
-        results_writer.write("Pair | Benchmark | EPICS_LDSD_d | Duration | EPICS_LDSD_dw | Duration | EPICS_LDSD_i | Duration | EPICS_LDSD_iw | Duration | EPICS_LDSD_cw | Duration | PICSS | Duration");
-        results_writer.write(System.getProperty("line.separator")); 
-        
-        results_writer.close();
-        
-        List<LdResourceTriple> triples= LdBenchmark.readRowsFromBenchmarks(datsetpath , 0.0 , 4.0);
-        
-        for(LdResourceTriple triple: triples ){
-            
-                
-            String row = new String();
-            
-            LdResourcePair pair= triple.getResourcePair();
-            R r1 = pair.getFirstresource();
-            R r2 = pair.getSecondresource();
-            
-            String benchMark = Double.toString(triple.getSimilarityResult());
-            
-            row = row + pair.toString(' ') + " | " + benchMark + " | ";
-            
-            
-            /////////////////////////////////EPICS_LDSD_d/////////////////////////////////////////////////////
-            try{
-                
-            config.addParam("extendingMeasure", "LDSD_d");
-        
-            epics = new EPICS(config); 
-            
-            startTime = System.nanoTime();
-            
-            epicsVal = Double.toString(epics.compare(r1, r2));
-        
-            //end timing
-            endTime = System.nanoTime();
-            duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("EPICS with LDSD_d finished in " + duration + " second(s) ");
-            System.out.println(); 
-            
-            row = row + epicsVal +  " | " + duration + " | ";
-            
-            }
-            
-            catch(Exception ex){
-                System.out.println(ex.toString());
-                row = row + "Error | Error | ";
-            }
-            
-            ////////////////////////////////EPICS_LDSD_dw//////////////////////////////////////////////////////
-            try{
-            config.addParam("extendingMeasure", "LDSD_dw");
-        
-            epics = new EPICS(config); 
-            
-            startTime = System.nanoTime();
-            
-            epicsVal = Double.toString(epics.compare(r1, r2));
-        
-            //end timing
-            endTime = System.nanoTime();
-            duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("EPICS with LDSD_dw finished in " + duration + " second(s) ");
-            System.out.println(); 
-             
-            row = row + epicsVal +  " | " + duration + " | ";
-            
-            }
-            
-            catch(Exception ex){
-                System.out.println(ex.toString());
-                row = row + "Error | Error | ";
-            }
-            
-            ////////////////////////////////EPICS_LDSD_i//////////////////////////////////////////////////////
-            try{
-                
-            config.addParam("extendingMeasure", "LDSD_i");
-        
-            epics = new EPICS(config);
-            
-            startTime = System.nanoTime();
-            
-            epicsVal = Double.toString(epics.compare(r1, r2));
-        
-            //end timing
-            endTime = System.nanoTime();
-            duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("EPICS with LDSD_i finished in " + duration + " second(s) ");
-            System.out.println();
-            
-            row = row + epicsVal +  " | " + duration + " | ";
-            
-            }
-            
-            catch(Exception ex){
-                System.out.println(ex.toString());
-                row = row + "Error | Error | ";
-            }
-            
-            ///////////////////////////////EPICS_LDSD_iw////////////////////////////////////////////////////////
-            try{
-                
-            config.addParam("extendingMeasure", "LDSD_iw");
-        
-            epics = new EPICS(config);
-            
-            startTime = System.nanoTime();
-            
-            epicsVal = Double.toString(epics.compare(r1, r2));
-        
-            //end timing
-            endTime = System.nanoTime();
-            duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("EPICS with LDSD_iw finished in " + duration + " second(s) ");
-            System.out.println();
-            
-            row = row + epicsVal +  " | " + duration + " | ";
-            
-            }
-            
-            catch(Exception ex){
-                System.out.println(ex.toString());
-                row = row + "Error | Error | ";
-            }            
-            
-            ///////////////////////////////EPICS_LDSD_cw///////////////////////////////////////////////////////
-            try{
-                
-            config.addParam("extendingMeasure", "LDSD_cw");
-        
-            epics = new EPICS(config);
-            
-            startTime = System.nanoTime();
-            
-            epicsVal = Double.toString(epics.compare(r1, r2));
-        
-            //end timing
-            endTime = System.nanoTime();
-            duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("EPICS with LDSD_cw finished in " + duration + " second(s) ");
-            System.out.println(); 
-            
-            row = row + epicsVal +  " | " + duration + " | ";
-            
-            }
-            
-            catch(Exception ex){
-                System.out.println(ex.toString());
-                row = row + "Error | Error | ";
-            }
-            
-            ///////////////////////////////PICSS////////////////////////////////////////////////////////
-            try{
-                
-            startTime = System.nanoTime();
-            
-            String picssVal = Double.toString(picss.compare(r1, r2));
-            
-            //end timing
-            endTime = System.nanoTime();
-            duration = (endTime - startTime) / 1000000000 ;
-            System.out.println("PICSS finished in " + duration + " second(s) ");
-            System.out.println(); 
-            
-            row = row + picssVal +  " | " + duration;
-            
-            }
-            
-            catch(Exception ex){
-                System.out.println(ex.toString());
-                row = row + "Error | Error | ";
-            }
-            
-            //Write Results to the final file///////////////////////////////////////////////////////////
-            results_writer = new FileWriter(outputFilePath , true);
-            results_writer.write(row);
-            results_writer.write(System.getProperty("line.separator"));            
-            results_writer.close();
 
         
-        }
+        /* PICSS */
+        result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65/rg-65_Results_PICSS.csv" , ',' , '"');
+        benchmark = new LdBenchmark(source , result);
         
-        picss.closeIndexes();
-        epics.closeIndexes();
-    
+        benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
+        
+        config = LdConfigFactory.createDeafaultConf(Measure.PICSS);
+        
+        engine.load(Measure.PICSS , config);
+        
+        System.out.println("PICSS Pearson Correlation: " + engine.correlation(benchmark , true));
+        
+        benchmark.setCorrelationMethod(Correlation.SpearmanCorrelation);
+        
+        System.out.println("PICSS Spearman Correlation: " + engine.correlation(benchmark , true));
+        
+        engine.close(); 
+        
+
     }
-    
-    
 }
-

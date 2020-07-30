@@ -6,14 +6,13 @@
 package lds.measures.ldsd;
 
 
+import lds.config.Config;
+import lds.config.ConfigParam;
+import lds.dataset.LdDatasetCreator;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.fail;
 import org.junit.Test;
 import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
-import slib.utils.i.Conf;
-
 /**
  *
  * @author Fouad Komeiha
@@ -25,25 +24,14 @@ public class LDSDTest_localRDF {
     @Test
     public void isLDSDWorksCorrectlyOnPaperExample() throws Exception{
     
-//    public static void main(String args[]) throws Exception{
-
-    
-        LdDataset dataSet = null;
+        LdDataset dataSet = LdDatasetCreator.getLocalDataset(dataSetDir, "example");
 
         R r1 = new R("http://www.example.org#Fish");
         R r2 = new R("http://www.example.org#Whale");
 
-        try {
-                dataSet = LdDatasetFactory.getInstance().name("example").file(dataSetDir)
-                                .defaultGraph("http://graphResim/dataset").create();
-
-        } catch (Exception e) {
-                fail(e.getMessage());
-        }
-
-        Conf config = new Conf();
-        config.addParam("useIndexes", true);
-        config.addParam("LdDatasetMain" , dataSet);
+        Config config = new Config();
+        config.addParam(ConfigParam.useIndexes, true);
+        config.addParam(ConfigParam.LdDatasetMain , dataSet);
         
         double ldsd_dSim = 0 , ldsd_dwSim = 0 , ldsd_iSim = 0 , ldsd_iwSim = 0 , ldsd_cwSim = 0 , tldsd_cwSim = 0 ;
 
