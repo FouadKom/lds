@@ -15,6 +15,8 @@
 
 * *PICSS:* Partitioned Information Content Semantic Similarity [5]
 
+A general explanation of the library and its components is avilable [here](./doc/General_Explanation_of_the_Library.md)
+
 ## Getting Started
 
 ### Prerequisites
@@ -26,7 +28,7 @@
 mvn clean install -DskipTests
 ```
 ## Running the tests
-Tests were created for each implemented similarity measure.
+Tests were created for each implemented similarity measure, to execute tests use commands below:
 
 ### LDSD measure test
 
@@ -51,6 +53,7 @@ mvn test -Dtest=lds.measures.LODS.SimI_Test
 ```
 mvn test -Dtest=lds.measures.picss.PICSSTest
 ```
+
 
 ## Built With
 * [Java](https://www.java.com/download/)
