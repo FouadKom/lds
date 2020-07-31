@@ -18,7 +18,7 @@
 For more information see: <br>
 [General explanation of the library](./doc/General_Explanation_of_the_Library.md)<br>
 [Similarity calculation using LDS](./doc/Similarity_Calculation_using_LDS.md)<br>
-[Calculating similarity using resource files.md](./doc/Calculating_Similarity_Using_Files.md)<br>
+[Calculating similarity using resource files](./doc/Calculating_Similarity_Using_Files.md)<br>
 [Correlation calculation using LdBenchmark](./doc/Calculating_Similarity_Using_Files.md)
 
 
