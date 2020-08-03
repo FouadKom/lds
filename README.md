@@ -67,7 +67,7 @@ mvn test -Dtest=lds.measures.picss.PICSSTest
 * [MapDB](http://www.mapdb.org/)
 * [Apache Jena](https://jena.apache.org/)
 
-## Licence
+<!-- ## Licence -->
 
 ## References:
 [1] Passant, Alexandre. “Measuring Semantic Distance on Linking Data and Using it for Resources Recommendations.” AAAI Spring Symposium: Linked Data Meets Artificial Intelligence (2010).
