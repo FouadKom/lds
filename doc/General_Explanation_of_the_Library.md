@@ -22,7 +22,7 @@
 ## Architecture
 ![LDS Architecture](./img/lds_arch.png)
 
-LDS is madeup of four main components:
+<!-- LDS is madeup of four main components: -->
 
 ### **Similarity Engine (LdSimilarityEngine):**
 The similarity engine is considered the entry point to similarity calculation. The user of the library uses it to specify his desired measure in addition to other configuration parameters. 
