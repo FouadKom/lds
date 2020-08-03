@@ -5,10 +5,10 @@ To extend LDS and add a new measure, there are set of steps and guidelines that 
 The first step is to to create a new class for the similarity measure algorithm that implements LdSimilarity. LdSimilarity is the interface containing methods needed for all similarity measure classes. When adding a new measure, a user must implement LdSimilarity and create his similarity measure class. 
 
 The created similarity class must contain all the methods to implement the new measure's algorithm. The next step will be to implement the data retrieval class. For more info see classes:
-1. [LDSD](./code_Examples/LDSD.md)
-2. [LODS](./code_Examples/LODS.md)
-3. [PICSS](./code_Examples/PICSS.md)
-4. [ResourceSimilarity](./code_Examples/ResourceSimilarity.md)
+1. [LDSD](./src/main/java/lds/measures/ldsd/LDSD.java)
+2. [LODS](./src/main/java/lds/measures/lods/LODS.java)
+3. [PICSS](./src/main/java/lds/measures/picss/PICSS.java)
+4. [ResourceSimilarity](./src/main/java/lds/measures/resim/ResourceSimilarity.java)
 
 - - -
 
