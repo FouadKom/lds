@@ -15,7 +15,7 @@
 
 * *PICSS:* Partitioned Information Content Semantic Similarity [5]
 
-For more information see: <br>
+## Tutorials
 [General explanation of the library](./doc/General_Explanation_of_the_Library.md)<br>
 [Similarity calculation using LDS](./doc/Similarity_Calculation_using_LDS.md)<br>
 [Calculating similarity using resource files](./doc/Calculating_Similarity_Using_Files.md)<br>
