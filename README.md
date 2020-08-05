@@ -20,7 +20,7 @@
 * [Similarity calculation using LDS](./doc/Similarity_Calculation_using_LDS.md)
 * [Calculating similarity using resource files](./doc/Calculating_Similarity_Using_Files.md)
 * [Correlation calculation using LdBenchmark](./doc/Calculationg_Correlation_Using_LdBenchmark.md)
-
+* [Adding your similarity measure](./doc/Adding_Your_Measure.md)
 
 ## Getting Started
 
