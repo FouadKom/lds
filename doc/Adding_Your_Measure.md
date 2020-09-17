@@ -8,7 +8,7 @@ The created similarity class must contain all the methods to implement the new m
 1. [LDSD](./code_Examples/LDSD.md)
 2. [LODS](./code_Examples/LODS.md)
 3. [PICSS](./code_Examples/PICSS.md)
-4. [ResourceSimilarity](./code_Examples/ResourceSimilarity.md)
+4. [ResourceSimilarity](./code_Examples/ResourceSimilarity.md) 
 
 - - -
 
