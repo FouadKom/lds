@@ -23,7 +23,11 @@ public class LDSD_cw extends LDSD{
     public double compare(R a, R b) {
         
         edges = LDSDLDLoader.getEdges(a, b);
-        return LDSD_cw_sim(a, b);
+        
+        if(edges == null)
+            return 0;
+        else
+            return LDSD_cw_sim(a, b);
     }
     
   

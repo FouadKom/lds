@@ -156,6 +156,9 @@ public class DistanceMeasuresLdManager extends LdManagerBase{
         
         List<String> edges_b = getEdges(b);
         
+        if(( edges_a == null || edges_a.contains("-1")) ||  ( edges_b == null || edges_b.contains("-1")) )
+            return null;
+        
         if(! edges_a.contains("-1") && ! edges_b.contains("-1")){
             edges_a.addAll(edges_b);
         

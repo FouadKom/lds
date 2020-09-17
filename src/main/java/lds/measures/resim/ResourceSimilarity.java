@@ -127,6 +127,9 @@ public abstract class ResourceSimilarity implements LdSimilarity {
             double x = 0, y = 0;
 
             this.edges = resimLDLoader.getEdges(a , b);
+            
+            if(edges == null)
+                return 0;
             // TODO: if we're in the same dataset, it's not necessary to check sameAs ?
             if (a.equals(b) || resimLDLoader.isSameAs(a, b))
                     return 1;

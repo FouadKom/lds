@@ -22,6 +22,8 @@ public class LDSD_dw extends LDSD{
     @Override
     public double compare(R a, R b) {
        edges = LDSDLDLoader.getEdges(a, b);
+       if(edges == null)
+            return 0;
        return LDSD_dw_sim(a, b);
     }
     

@@ -18,11 +18,11 @@ import sc.research.ldq.LdDataset;
  * @author Fouad Komeiha
  */
 public class writingResults_Test {
-    public static final String resourcesFileText = System.getProperty("user.dir") + "/src/test/resources/Test.txt";
+    public static final String resourcesFileText = System.getProperty("user.dir") + "/src/test/resources/yahoo_movies_resources.txt";
     public static final String resourcesFileCsv = System.getProperty("user.dir") + "/src/test/resources/missing_resources_2.csv";
     
     @Test
-    public void test() throws Exception{
+    public void test() throws Exception{    
 
         LdDataset dataSet = LdDatasetCreator.getDBpediaDataset();
         
@@ -32,13 +32,14 @@ public class writingResults_Test {
           
         LdBenchmark benchmark = new LdBenchmark(source);
         
+        
         Config config = new Config();
         config.addParam(ConfigParam.useIndexes, false);
         config.addParam(ConfigParam.LdDatasetMain , dataSet);
 
         engine.load(Measure.LDSD_cw, config);
         
-        engine.similarity(benchmark , false);
+        engine.similarity(benchmark , true);
         
         engine.close();
     }
