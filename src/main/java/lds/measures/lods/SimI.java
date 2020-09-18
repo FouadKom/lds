@@ -54,6 +54,7 @@ public class SimI implements LdSimilarity {
             
         } catch (Exception ex) {
             Logger.getLogger(SimI.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
         }
 
         if(commonOntologies == null || commonOntologies.isEmpty())

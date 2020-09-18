@@ -7,6 +7,8 @@ package lds.measures.picss;
 
 
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 import lds.LdManager.PicssLdManager;
 import lds.LdManager.ontologies.Ontology;
@@ -55,9 +57,14 @@ public class PICSS implements LdSimilarity {
 
     @Override
     public double compare(R a, R b) {
-        double sim = 0;
-        sim = PICSS(a, b);
-        return sim;
+        try{
+            double sim = 0;
+            sim = PICSS(a, b);
+            return sim;
+        } catch (Exception ex) {
+                Logger.getLogger(PICSS.class.getName()).log(Level.SEVERE, null, ex);
+                return -1;
+        }
 
     }
 

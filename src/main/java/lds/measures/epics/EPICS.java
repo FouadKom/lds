@@ -32,7 +32,8 @@ public class EPICS extends PICSS {
         try {
             sim= EPICS(a , b);
         } catch (Exception ex) {
-            Logger.getLogger(EPICS.class.getName()).log(Level.SEVERE, null, ex + " comparing resources " + a.toString() + " and " + b.toString());
+            Logger.getLogger(EPICS.class.getName()).log(Level.SEVERE, null, ex);
+            return -1;
         }
 
 

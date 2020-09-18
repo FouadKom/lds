@@ -5,6 +5,8 @@
  */
 package lds.measures.ldsd;
 
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lds.config.Config;
 import lds.resource.R;
 import org.openrdf.model.URI;
@@ -21,10 +23,15 @@ public class LDSD_dw extends LDSD{
 
     @Override
     public double compare(R a, R b) {
-       edges = LDSDLDLoader.getEdges(a, b);
-       if(edges == null)
-            return 0;
-       return LDSD_dw_sim(a, b);
+       try{
+           edges = LDSDLDLoader.getEdges(a, b);
+           if(edges == null)
+                return 0;
+           return LDSD_dw_sim(a, b);
+       } catch (Exception ex) {
+                Logger.getLogger(LDSD_dw.class.getName()).log(Level.SEVERE, null, ex);
+                return -1;
+       }
     }
     
     public double LDSD_dw(R a, R b) {

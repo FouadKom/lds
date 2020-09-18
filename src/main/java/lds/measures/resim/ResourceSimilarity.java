@@ -100,6 +100,7 @@ public abstract class ResourceSimilarity implements LdSimilarity {
 
         } catch (Exception ex) {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
+                return -1;
         }
         
         return sim;
@@ -115,6 +116,7 @@ public abstract class ResourceSimilarity implements LdSimilarity {
 
         } catch (Exception ex) {
                 Logger.getLogger(Resim.class.getName()).log(Level.SEVERE, null, ex);
+                return -1;
         }
         
         return sim;
