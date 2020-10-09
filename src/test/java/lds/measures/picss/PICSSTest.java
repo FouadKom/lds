@@ -45,7 +45,6 @@ public class PICSSTest {
         R r1 = new R("http://dbpedia.org/resource/Coast");
         R r2 = new R("http://dbpedia.org/resource/Shore");
         
-        
         //Initialzie the engine class object
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
