@@ -617,7 +617,7 @@ public class LdBenchmark {
             ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
             query_cmd.setCommandText("ask {<" + r1 + ">  <http://dbpedia.org/ontology/abstract> ?abstract . }");
-            
+//            System.out.println(query_cmd.toString());
             if( ! dataset.executeAskQuery(query_cmd.toString())){
                 unmapped.add(r1);
             }

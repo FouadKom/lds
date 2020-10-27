@@ -23,7 +23,9 @@ public enum Measure {
     WLDSD_cw ,
     WTLDSD_cw ,
     PICSS ,
+    WPICS ,
     EPICS ,
+    WEPICS,
     LODS ;
     
     public static String getPath(Measure measure){
@@ -71,6 +73,12 @@ public enum Measure {
         }        
         if(measure == EPICS){
             return "lds.measures.epics.EPICS" ;
+        }
+        if(measure == WPICS){
+            return "lds.measures.picss.WPICS" ;
+        }
+        if(measure == WEPICS){
+            return "lds.measures.epics.WEPICS" ;
         }
         
         return null;

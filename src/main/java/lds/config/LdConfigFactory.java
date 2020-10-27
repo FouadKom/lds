@@ -24,12 +24,12 @@ public class LdConfigFactory {
         config.addParam(ConfigParam.useIndexes, false);
         config.addParam(ConfigParam.LdDatasetMain , LdDatasetCreator.getDBpediaDataset(DBpediaChapter.En));
         
-        if(Measure.getName(measure).equals("PICSS") || Measure.getName(measure).equals("EPICS"))
+        if(Measure.getName(measure).equals("PICSS") || Measure.getName(measure).equals("EPICS") || Measure.getName(measure).equals("WPICS") || Measure.getName(measure).equals("WEPICS"))
             config.addParam(ConfigParam.resourcesCount , 2350906);
         
         if(Measure.getName(measure).contains("W")){
             System.out.println("Using default conf creator for weighted similarity measures requires providing specific dataset");
-            config.addParam(ConfigParam.WeightMethod , WeightMethod.ITW);
+            config.addParam(ConfigParam.WeightMethod , WeightMethod.RSLAW);
         }
             
         return config;

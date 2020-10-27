@@ -36,8 +36,7 @@ public class HybridMeasuresLdManager extends LdManagerBase {
         query_cmd.setCommandText("select distinct ?property ?subject\n "
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
                                     + "where {?subject ?property <" + a.getUri() + ">  }");
-
-
+        
         ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
 
         while (resultSet.hasNext()) {
