@@ -12,13 +12,13 @@ The follwoing figure represents a flow chart on how the similarity operation wor
 The following code presents a small example for similarity calculation using Resim similarity measure.
 In any calculation case, the steps needed to perform the calculation are:
 
-1- [Initialize the resources](#1-initialize-the-resources-) <br>
-2- [Initialize the dataset object](#2-initialize-the-dataset-object-) <br>
-3- [Initialize the config object](#3-initialize-the-config-object-) <br>
-4- [Initialize the LdSimilarityEngine object](#4-initialize-the-ldsimilarityengine-object-) <br>
-5- [Load the engine object](#5-load-the-engine-object-) <br>
-6- [Call the similarity method](#6-call-the-similarity-method-) <br>
-7- [Close the engine object](#7-close-the-engine-object-)
+1- [Initialize the resources](#1-initialize-the-resources) <br>
+2- [Initialize the dataset object](#2-initialize-the-dataset-object) <br>
+3- [Initialize the config object](#3-initialize-the-config-object) <br>
+4- [Initialize the LdSimilarityEngine object](#4-initialize-the-ldsimilarityengine-object) <br>
+5- [Load the engine object](#5-load-the-engine-object) <br>
+6- [Call the similarity method](#6-call-the-similarity-method) <br>
+7- [Close the engine object](#7-close-the-engine-object)
 
 ```java
 import lds.engine.LdSimilarityEngine;

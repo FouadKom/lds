@@ -5,14 +5,14 @@ To perform similarity calculation using LDS on files of resources, a user must f
 ## Code Example:
 The following code presents a small example for a similarity calculation using PICSS similarity measure using a file of resources.
 In any calculation case, the steps needed to perform the calculation are: <br>
-1- [Initialize the dataset object](#1-initialize-the-dataset-object-) <br>
-2- [Initialize the BenchmarkFile object](#2-initialize-the-BenchmarkFile-object-) <br>
-3- [Initialize the LdBenchmark object](#3-initialize-the-LdBenchmark-object-) <br>
-4- [Initialize the config object](#4-initialize-the-config-object-) <br>
-5- [Initialize the LdSimilarityEngine object](#5-initialize-the-ldsimilarityengine-object-) <br>
-6- [Load the engine object](#6-load-the-engine-object-) <br>
-7- [Call the similarity method](#7-call-the-similarity-method-) <br>
-8- [Close the engine object](#8-close-the-engine-object-)
+1- [Initialize the dataset object](#1-initialize-the-dataset-object) <br>
+2- [Initialize the BenchmarkFile object](#2-initialize-the-BenchmarkFile-object) <br>
+3- [Initialize the LdBenchmark object](#3-initialize-the-LdBenchmark-object) <br>
+4- [Initialize the config object](#4-initialize-the-config-object) <br>
+5- [Initialize the LdSimilarityEngine object](#5-initialize-the-ldsimilarityengine-object) <br>
+6- [Load the engine object](#6-load-the-engine-object) <br>
+7- [Call the similarity method](#7-call-the-similarity-method) <br>
+8- [Close the engine object](#8-close-the-engine-object)
 
 ```Java
 import lds.benchmark.BenchmarkFile;

@@ -5,15 +5,15 @@ To perform a correlation calculation using LDS library a user must first initial
 ## Code Example:
 The following code presents a small example for a correlation calculation using PICSS similarity measure.
 In any calculation case, the steps needed to perform the calculation are: <br>
-1- [Initialize the dataset object](#1-initialize-the-dataset-object-) <br>
-2- [Initialize the BenchmarkFile object](#2-initialize-the-BenchmarkFile-object-) <br>
-3- [Initialize the LdBenchmark object](#3-initialize-the-LdBenchmark-object-) <br>
-4- [Set the needed correlation method](#4-set-the-needed-correlation-method-) <br>
-5- [Initialize the config object](#5-initialize-the-config-object-) <br>
-6- [Initialize the LdSimilarityEngine object](#6-initialize-the-ldsimilarityengine-object-) <br>
-7- [Load the engine object](#7-load-the-engine-object-) <br>
-8- [Call the correlation method](#8-call-the-correlation-method-) <br>
-9- [Close the engine object](#9-close-the-engine-object-)
+1- [Initialize the dataset object](#1-initialize-the-dataset-object) <br>
+2- [Initialize the BenchmarkFile object](#2-initialize-the-BenchmarkFile-object) <br>
+3- [Initialize the LdBenchmark object](#3-initialize-the-LdBenchmark-object) <br>
+4- [Set the needed correlation method](#4-set-the-needed-correlation-method) <br>
+5- [Initialize the config object](#5-initialize-the-config-object) <br>
+6- [Initialize the LdSimilarityEngine object](#6-initialize-the-ldsimilarityengine-object) <br>
+7- [Load the engine object](#7-load-the-engine-object) <br>
+8- [Call the correlation method](#8-call-the-correlation-method) <br>
+9- [Close the engine object](#9-close-the-engine-object)
 
 ```Java
 import lds.benchmark.BenchmarkFile;
