@@ -1,6 +1,13 @@
 # Similarity Calculation:
 To perform a similarity calculation using LDS library a user must first initialize a LdSimilarityEngine object, select the LOD measure wanted, and provide the configuration (config) object which will contain all necessary parameters for a measure to perform the calculation.
 
+The follwoing figure represents a flow chart on how the similarity operation works:
+
+<p align="center">
+<!-- ![LDS Flow_Chart](./img/LDS_flow_chart.png) -->
+<img width="700" height="1100" src="./img/LDS_flow_chart.png">
+</p>
+
 ## Code Example:
 The following code presents a small example for similarity calculation using Resim similarity measure.
 In any calculation case, the steps needed to perform the calculation are:

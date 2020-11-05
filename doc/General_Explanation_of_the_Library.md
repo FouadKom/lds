@@ -60,8 +60,8 @@ LdBenchmark is not a main component of LDS, in the sense that it is not a part o
 
 A full explanation on correlation calculation using LdBenchmark is avilable [here](./Calculationg_Correlation_Using_LdBenchmark.md).
 
-## **Flow Chart:**
-The follwoing figure represents a flow chart on how the similarity operation works.
+## **Similarity Calculation Process:**
+The follwoing figure represents a flow chart on how the similarity operation works:
 
 <p align="center">
 <!-- ![LDS Flow_Chart](./img/LDS_flow_chart.png) -->
