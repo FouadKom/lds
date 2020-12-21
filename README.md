@@ -11,7 +11,7 @@
   * *WResim:* Weighted Resource Similarity [2]
   * *WTResim:* Weighted Typeless Resource Similarity [2]
 
-* *LODS:* Linked Open Data Similarity (simI submeasure only) [4]
+* *LODS:* Linked Open Data Similarity (SimI and SimP submeasures only) [4]
 
 * *PICSS:* Partitioned Information Content Semantic Similarity [5]
 
@@ -47,10 +47,16 @@ mvn test -Dtest=lds.measures.ldsd.LDSDTest
 mvn test -Dtest=lds.measures.resim.ResimTest
 ```
 
-### LODS (simI submeasure) test
+### LODS (SimI submeasure) test
 
 ```
 mvn test -Dtest=lds.measures.LODS.SimI_Test
+```
+
+### LODS (SimP submeasure) test
+
+```
+mvn test -Dtest=lds.measures.LODS.SimP_Test
 ```
 
 ### PICSS measure test
