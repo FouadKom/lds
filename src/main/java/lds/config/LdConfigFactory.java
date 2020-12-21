@@ -18,13 +18,13 @@ import sc.research.ldq.LdDataset;
  */
 public class LdConfigFactory {
     
-    public static Config createDeafaultConf(Measure measure){
+    public static Config createDefaultConf(Measure measure){
         Config config = new Config();
         
         config.addParam(ConfigParam.useIndexes, false);
         config.addParam(ConfigParam.LdDatasetMain , LdDatasetCreator.getDBpediaDataset(DBpediaChapter.En));
         
-        if(Measure.getName(measure).equals("PICSS") || Measure.getName(measure).equals("EPICS"))
+        if(Measure.getName(measure).equals("PICSS") || Measure.getName(measure).equals("EPICS") || Measure.getName(measure).equals("SimP"))
             config.addParam(ConfigParam.resourcesCount , 2350906);
         
         if(Measure.getName(measure).contains("W")){

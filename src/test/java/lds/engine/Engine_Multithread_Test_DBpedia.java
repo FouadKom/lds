@@ -4,7 +4,7 @@ import test.utility.Util;
 import java.util.List;
 import lds.config.Config;
 import lds.config.ConfigParam;
-import lds.dataset.LdDatasetCreator;;
+import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;

@@ -24,7 +24,7 @@ public class measureTest_DBpedia {
         R r1 = new R("http://dbpedia.org/resource/Money");
         R r2 = new R("http://dbpedia.org/resource/Cash");
                 
-        Config config = LdConfigFactory.createDeafaultConf(Measure.PICSS);
+        Config config = LdConfigFactory.createDefaultConf(Measure.PICSS);
         
         PICSS picss = new PICSS(config);
         EPICS epics = new EPICS(config);

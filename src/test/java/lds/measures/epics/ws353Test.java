@@ -27,10 +27,11 @@ public class ws353Test {
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
         BenchmarkFile source = new BenchmarkFile(sourcepath , ',' , '"');
-        /* for normalizing the benchmark values between 0 and 1 */
-        source.setMaxValue(10);
-        source.setMinValue(0);
-        /**/
+        
+//        /* for normalizing the benchmark values between 0 and 1 */
+//        source.setMaxValue(10);
+//        source.setMinValue(0);
+//        /**/
         
         BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/wikipediaSimilarity-353/wordsim-353_Results_EPICS.csv" , ',' , '"');        
         
@@ -39,7 +40,7 @@ public class ws353Test {
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
         
-        Config config = LdConfigFactory.createDeafaultConf(Measure.EPICS);
+        Config config = LdConfigFactory.createDefaultConf(Measure.EPICS);
 
         engine.load(Measure.EPICS , config);
         

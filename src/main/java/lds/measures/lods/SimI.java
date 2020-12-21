@@ -15,6 +15,7 @@ import java.util.logging.Logger;
 import lds.LdManager.SimILdManager;
 import lds.config.Config;
 import lds.config.ConfigParam;
+import lds.feature.Feature;
 import lds.resource.R;
 import sc.research.ldq.LdDataset;
 import lds.measures.LdSimilarity;
@@ -123,7 +124,7 @@ public class SimI implements LdSimilarity {
             List<String> concepts_a_O = concepts_a.get(ontologyName);
             List<String> concepts_b_O = concepts_b.get(ontologyName);
             
-            score = score + Utility.TverskySimilarity_mod(concepts_a_O, concepts_b_O);
+            score = score + this.TverskySimilarity_mod(concepts_a_O, concepts_b_O);
         }
         
         return score/commonOntologies.size();
@@ -151,7 +152,7 @@ public class SimI implements LdSimilarity {
         if(features_a.isEmpty() && features_b.isEmpty())
             commonOntologies.remove(ontology);
 
-        score = Utility.TverskySimilarity_mod(features_a, features_b);
+        score = this.TverskySimilarity_mod(features_a, features_b);
 
         return score;
         
@@ -217,7 +218,25 @@ public class SimI implements LdSimilarity {
     }
     
    
-    
+    private double TverskySimilarity_mod(List<String> features_a, List<String> features_b) {
+        List<String> a = Feature.uniqueFeatures(features_b, features_b);
+        int features_a_not_b = a.size();
+
+        List<String> b = Feature.uniqueFeatures(features_b, features_a);
+        int features_b_not_a = b.size();
+
+        List<String> c = Feature.commonFeatures(features_a, features_b);
+        int commonFeatures = c.size();
+
+        double similarity = 0.0;
+
+        if (commonFeatures == 0)
+                similarity = 0;
+        else
+                similarity = (double) commonFeatures / ( (double) commonFeatures + (double) features_a_not_b + (double) features_b_not_a );
+
+        return similarity;
+    }
     
     
     

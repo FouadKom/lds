@@ -24,7 +24,10 @@ public enum Measure {
     WTLDSD_cw ,
     PICSS ,
     EPICS ,
-    LODS ;
+    LODS ,
+    SimI ,
+    SimP ,
+    SimC ;
     
     public static String getPath(Measure measure){
         if(measure == Resim){
@@ -71,6 +74,15 @@ public enum Measure {
         }        
         if(measure == EPICS){
             return "lds.measures.epics.EPICS" ;
+        }
+        if(measure == SimI){
+            return "lds.measures.lods.SimI" ;
+        }
+        if(measure == SimP){
+            return "lds.measures.lods.SimP" ;
+        }
+        if(measure == SimC){
+            return "lds.measures.lods.SimC" ;
         }
         
         return null;

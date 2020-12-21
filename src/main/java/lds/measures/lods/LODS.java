@@ -12,6 +12,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.config.Config;
 import lds.config.ConfigParam;
+import lds.feature.Feature;
 import lds.resource.R;
 import lds.measures.LdSimilarity;
 
@@ -23,6 +24,10 @@ public class LODS implements LdSimilarity{
     private boolean useIndeses;
     private List<O> ontologyList;
     private boolean dataAugmentation;
+    
+    private SimI lods_simI = null;
+    private SimC lods_simC = null;
+    private SimP lods_simP = null;
     
     private Config config;
     
@@ -39,10 +44,6 @@ public class LODS implements LdSimilarity{
     @Override
     public double compare(R a, R b) {
         double LODS = 0.0 , simI = 0.0 , simC = 0.0 , simP = 0.0;
-        
-        SimI lods_simI = null;
-        SimC lods_simC = null;
-        SimP lods_simP = null;
         
         try {
             
@@ -87,17 +88,23 @@ public class LODS implements LdSimilarity{
 
     @Override
     public void closeIndexes() {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        lods_simI.closeIndexes();
+        lods_simP.closeIndexes();
+        lods_simC.closeIndexes();
+        
     }
 
     @Override
     public void loadIndexes() throws Exception {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        lods_simI.loadIndexes();
+        lods_simP.loadIndexes();
+        lods_simC.loadIndexes();
+      
     }
 
     @Override
     public LdSimilarity getMeasure() {
         return this;
     }
-    
+        
 }

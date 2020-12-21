@@ -27,17 +27,18 @@ public class mc30Test {
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
         BenchmarkFile source = new BenchmarkFile(sourcepath , ',' , '"');
-        /* for normalizing the benchmark values between 0 and 1 */
-        source.setMaxValue(4); 
-        source.setMinValue(0);
-        /**/
+        
+//        /* for normalizing the benchmark values between 0 and 1 */
+//        source.setMaxValue(4); 
+//        source.setMinValue(0);
+//        /**/
         
         BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/mc-30/mc-30_Results_EPICS.csv" , ',' , '"');        
         
         LdBenchmark benchmark = new LdBenchmark(source , result);
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
-        Config config = LdConfigFactory.createDeafaultConf(Measure.EPICS);
+        Config config = LdConfigFactory.createDefaultConf(Measure.EPICS);
 
         engine.load(Measure.EPICS , config);
                        

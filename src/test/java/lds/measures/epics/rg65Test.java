@@ -28,10 +28,11 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         LdSimilarityEngine engine = new LdSimilarityEngine();
         
         BenchmarkFile source = new BenchmarkFile(sourcepath , ',' , '"');
-        /* for normalizing the benchmark values between 0 and 1 */
-        source.setMaxValue(3);
-        source.setMinValue(0);
-        /**/
+        
+//        /* for normalizing the benchmark values between 0 and 1 */
+//        source.setMaxValue(3);
+//        source.setMinValue(0);
+//        /**/
         
         BenchmarkFile result = new BenchmarkFile(System.getProperty("user.dir") + "/src/test/resources/benchmarks/rg-65/rg-65_Results_EPICS.csv" , ',' , '"');        
         
@@ -40,7 +41,7 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         
         benchmark.checkMappingInDBpedia();
         
-        Config config = LdConfigFactory.createDeafaultConf(Measure.EPICS);
+        Config config = LdConfigFactory.createDefaultConf(Measure.EPICS);
 
         engine.load(Measure.EPICS , config);
                        
@@ -60,7 +61,7 @@ static String sourcepath = System.getProperty("user.dir") + "/src/test/resources
         
         benchmark.setCorrelationMethod(Correlation.PearsonCorrelation);
         
-        config = LdConfigFactory.createDeafaultConf(Measure.PICSS);
+        config = LdConfigFactory.createDefaultConf(Measure.PICSS);
         
         engine.load(Measure.PICSS , config);
         

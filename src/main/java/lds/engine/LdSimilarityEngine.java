@@ -51,7 +51,7 @@ public class LdSimilarityEngine {
         
         public void load(Measure measureName){
             
-            load(measureName , LdConfigFactory.createDeafaultConf(measureName));
+            load(measureName , LdConfigFactory.createDefaultConf(measureName));
 
 
         }

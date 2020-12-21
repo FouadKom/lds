@@ -15,9 +15,9 @@ public class BenchmarkFile {
     private String filePath;
     private char separator;
     private char quote;
-    //used only for benchmarks
-    private double minValue;
-    private double maxValue;
+//    //optional for benchmarks
+//    private double minValue;
+//    private double maxValue;
     
     public BenchmarkFile(String filePath){
         if(checkPath(filePath))
@@ -51,21 +51,21 @@ public class BenchmarkFile {
         return this.quote;
     }
     
-    public void setMinValue(double value){
-        this.minValue = value;
-    }
-    
-    public void setMaxValue(double value){
-        this.maxValue = value;
-    }
-    
-    public double getMinValue(){
-        return this.minValue;
-    }
-    
-    public double getMaxValue(){
-        return this.maxValue;
-    }
+//    public void setMinValue(double value){
+//        this.minValue = value;
+//    }
+//    
+//    public void setMaxValue(double value){
+//        this.maxValue = value;
+//    }
+//    
+//    public double getMinValue(){
+//        return this.minValue;
+//    }
+//    
+//    public double getMaxValue(){
+//        return this.maxValue;
+//    }
     
    
     

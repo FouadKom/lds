@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import lds.config.Config;
+import lds.feature.Feature;
 import lds.resource.R;
 import lds.measures.LdSimilarity;
 import lds.measures.picss.PICSS;
@@ -49,7 +50,7 @@ public class EPICS extends PICSS {
         if(features_a.isEmpty() ||  features_b.isEmpty())
             return 0;
         
-        List<String> common_features = Utility.commonFeatures(features_a, features_b);        
+        List<String> common_features = Feature.commonFeatures(features_a, features_b);        
         
         if(common_features == null || common_features.isEmpty())
             return 0;
@@ -57,13 +58,13 @@ public class EPICS extends PICSS {
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
         
-        List<String> similar_features = Utility.similarFeatures(features_a , features_b);        
+        List<String> similar_features = EPICS_Feature.similarFeatures(features_a , features_b);        
         
         features_a.removeAll(similar_features);
         features_b.removeAll(similar_features);
         
-	List<String> unique_features_a = Utility.uniqueFeatures(features_a , features_b);
-	List<String> unique_features_b = Utility.uniqueFeatures(features_b, features_a);
+	List<String> unique_features_a = Feature.uniqueFeatures(features_a , features_b);
+	List<String> unique_features_b = Feature.uniqueFeatures(features_b, features_a);
         
         double x = PIC(common_features);
 	double y = PIC(unique_features_a);

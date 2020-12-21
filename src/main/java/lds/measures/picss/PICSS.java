@@ -14,9 +14,11 @@ import lds.LdManager.PicssLdManager;
 import lds.LdManager.ontologies.Ontology;
 import lds.config.Config;
 import lds.config.ConfigParam;
+import lds.feature.Feature;
 import lds.resource.R;
 import sc.research.ldq.*;
 import lds.measures.LdSimilarity;
+import lds.utility.Utility;
 
 /**
  * @author Fouad Komeiha
@@ -76,7 +78,7 @@ public class PICSS implements LdSimilarity {
         if (features_a.isEmpty() && features_b.isEmpty())
             return 0;
 
-        List<String> common_features = Utility.commonFeatures(features_a, features_b);
+        List<String> common_features = Feature.commonFeatures(features_a, features_b);
 
         if (common_features == null || common_features.isEmpty())
             return 0;
@@ -84,8 +86,8 @@ public class PICSS implements LdSimilarity {
         features_a.removeAll(common_features);
         features_b.removeAll(common_features);
 
-        List<String> unique_features_a = Utility.uniqueFeatures(features_a, features_b);
-        List<String> unique_features_b = Utility.uniqueFeatures(features_b, features_a);
+        List<String> unique_features_a = Feature.uniqueFeatures(features_a, features_b);
+        List<String> unique_features_b = Feature.uniqueFeatures(features_b, features_a);
 
         double x = PIC(common_features);
         double y = PIC(unique_features_a);
@@ -121,15 +123,15 @@ public class PICSS implements LdSimilarity {
 
         int count = 0;
 
-        String direction = Utility.getDirection(feature);
+        String direction = Feature.getDirection(feature);
         if (direction == null)
             return count;
 
-        String property = Utility.getLink(feature);
+        String property = Feature.getLink(feature);
         if (property == null)
             return count;
 
-        String resource = Utility.getVertex(feature);
+        String resource = Feature.getVertex(feature);
         if (resource == null)
             return count;
 

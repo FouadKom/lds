@@ -121,8 +121,8 @@ public class LdBenchmark {
         
         String filePath = file.getFilePath();
         
-        double minValue = file.getMinValue();
-        double maxValue = file.getMaxValue();
+//        double minValue = file.getMinValue();
+//        double maxValue = file.getMaxValue();
                 
         BufferedReader reader = Files.newBufferedReader(Paths.get(filePath));
 
@@ -136,8 +136,9 @@ public class LdBenchmark {
             i++;
             try{
                 c3 = record.get(2);                    
-                result = Double.toString(normalizeValue(Double.parseDouble(c3) , minValue , maxValue));
-                results.add(result);
+//                result = Double.toString(normalizeValue(Double.parseDouble(c3) , minValue , maxValue));
+//                results.add(result);
+                result = c3.trim();
             }
             catch(Exception e){
                 System.out.println("Exception " + e.toString() + " at line " + i + " while reading benchmark file \"" + file.getFilePath() + "\"");
@@ -228,8 +229,8 @@ public class LdBenchmark {
         
         String filePath = file.getFilePath();
         
-        double minValue = file.getMinValue();
-        double maxValue = file.getMaxValue();
+//        double minValue = file.getMinValue();
+//        double maxValue = file.getMaxValue();
         
         List<LdResourceTriple> listTriples = new ArrayList<>();
         
@@ -253,7 +254,8 @@ public class LdBenchmark {
                 c2 = record.get(1);
                 c3 = record.get(2);
                     
-                result = normalizeValue(Double.parseDouble(c3) , minValue , maxValue);
+//                result = normalizeValue(Double.parseDouble(c3) , minValue , maxValue);
+                result = Double.parseDouble(c3);
                 
                 if(c1.contains("http://")){ 
                     firstResource = new R(c1.replace(quote , ' ').trim());

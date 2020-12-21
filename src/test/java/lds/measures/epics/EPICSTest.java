@@ -30,7 +30,7 @@ public class EPICSTest {
         
         //You can create conf in several ways:
         //1- You can create default conf 
-        Config config = LdConfigFactory.createDeafaultConf(Measure.EPICS); 
+        Config config = LdConfigFactory.createDefaultConf(Measure.EPICS); 
                  
         //2- Or Create conf objects and pass needed configuration parameters
         

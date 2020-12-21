@@ -12,7 +12,6 @@ import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
-import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.vocabulary.OWL;
 import org.openrdf.model.URI;
 import sc.research.ldq.LdDataset;
@@ -87,7 +86,7 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public int countPropertyOccurrence(URI link){
-        Literal count = null;
+        int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
         query_cmd.setCommandText("select (count(?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> ?object. filter(isuri(?object))}");
@@ -97,9 +96,10 @@ public class LdManagerBase implements LdManager{
 
         if (resultSet.hasNext()) {
             QuerySolution qs = resultSet.nextSolution();
-            count = (Literal) qs.getLiteral("count");
+            count = qs.getLiteral("count").getInt();
             // dataset.close();
-            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+            return count;
+//            return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
 
         }
 
@@ -288,7 +288,7 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public int countShareCommonObjects(URI link , R a){
-        Literal count = null;
+        int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
         query_cmd.setCommandText("select (count(distinct ?subject) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where {<" + a.getUri() + "> <" + link + "> ?object . "
@@ -300,9 +300,9 @@ public class LdManagerBase implements LdManager{
 
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                count = qs.getLiteral("count").getInt();
                 // dataset.close();
-                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                return count;
 
         }
 
@@ -312,7 +312,7 @@ public class LdManagerBase implements LdManager{
     
     @Override
     public int countShareCommonSubjects(URI link , R a){
-        Literal count = null;
+        int count = 0;
         ParameterizedSparqlString query_cmd = dataset.prepareQuery();
 
         query_cmd.setCommandText("select (count(distinct ?object) as ?count) " + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ ">") + " where { ?subject <" + link + "> <" + a.getUri() + ">. "
@@ -324,9 +324,9 @@ public class LdManagerBase implements LdManager{
 
         if (resultSet.hasNext()) {
                 QuerySolution qs = resultSet.nextSolution();
-                count = (Literal) qs.getLiteral("count");
+                count = qs.getLiteral("count").getInt();
                 // dataset.close();
-                return Integer.parseInt(count.toString().substring(0, count.toString().indexOf("^^")));
+                return count;
 
         }
 

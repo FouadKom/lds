@@ -32,7 +32,7 @@ public class SimI_Test {
         Config config = new Config();
         config.addParam(ConfigParam.useIndexes, false);
         config.addParam(ConfigParam.LdDatasetMain , dataSetMain);
-        config.addParam(ConfigParam.dataAugmentation , false);
+        config.addParam(ConfigParam.dataAugmentation , true);
         
         List<O> ontologyList = new ArrayList<>();
         
@@ -56,9 +56,9 @@ public class SimI_Test {
         SimI simi = new SimI(config);
         
         simi.loadIndexes();
-        
-        R r1 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("Paris").create();
-        R r2 = LdResourceFactory.getInstance().baseUri("http://dbpedia.org/resource/").name("New_York").create();
+                
+        R r1 = new R("http://dbpedia.org/resource/Paris");
+        R r2 = new R("http://dbpedia.org/resource/New_York");
        
         System.out.println(simi.compare(r1, r2)); 
 

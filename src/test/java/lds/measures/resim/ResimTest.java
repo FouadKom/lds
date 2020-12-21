@@ -39,7 +39,7 @@ public class ResimTest {
         
         /*Intiialize the conf object which contains the necessary parameters for the measure
         you can use the default conf as follows. This creattes a conf with default parameters and no indexing by default*/
-        Config config = LdConfigFactory.createDeafaultConf(Measure.Resim);   
+        Config config = LdConfigFactory.createDefaultConf(Measure.Resim);   
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //Resim similarity calculaton
         engine.load(Measure.Resim , config);
@@ -50,7 +50,7 @@ public class ResimTest {
         engine.close();
         
         
-        config = LdConfigFactory.createDeafaultConf(Measure.TResim);
+        config = LdConfigFactory.createDefaultConf(Measure.TResim);
         //TResim similarity calculation
         engine.load(Measure.TResim , config);
         
@@ -58,7 +58,7 @@ public class ResimTest {
         
         engine.close();      
     
-        config = LdConfigFactory.createDeafaultConf(Measure.WResim);
+        config = LdConfigFactory.createDefaultConf(Measure.WResim);
         
         /*Note:
         Using the default conf for measures that use weighting algorithims such as : WResm, WTResim 

@@ -19,32 +19,33 @@ import sc.research.ldq.LdDataset;
  */
 public class PicssLdManager extends HybridMeasuresLdManager {
     
-    private boolean useIndex;
+    protected boolean useIndex;
         
-    private LdIndex ingoingFeaturesIndex;
+//    private LdIndex ingoingFeaturesIndex;
     private LdIndex outgoingFeaturesIndex;
-    private LdIndex countIngoingFeaturesIndex;
-    private LdIndex countOutgoingFeaturesIndex;
-    private LdIndex countResourcesIndex;
+    protected LdIndex countIngoingFeaturesIndex;
+    protected LdIndex countOutgoingFeaturesIndex;
+//    private LdIndex countResourcesIndex;
     
     private LdIndexerManager manager;
     
      
     public PicssLdManager(LdDataset dataset , boolean useIndex) throws Exception {                
-            super(dataset);
+            super(dataset , useIndex);
             this.useIndex = useIndex;             
     }
     
     public void loadIndexes() throws Exception{
+        super.loadIndexes();
         manager = LdIndexerManager.getManager();
         
-        String ingoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_ingoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+//        String ingoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_ingoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String outgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_outgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String countOutgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_countOutgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         String countIngoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/PICSS/picss_countIngoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
 //        String countResourcesIndexFile = System.getProperty("user.dir") + "/Indexes/All_Measures/countResources_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
         
-        ingoingFeaturesIndex = manager.loadIndex(ingoingFeaturesIndexFile);
+//        ingoingFeaturesIndex = manager.loadIndex(ingoingFeaturesIndexFile);
         outgoingFeaturesIndex = manager.loadIndex(outgoingFeaturesIndexFile);
         countIngoingFeaturesIndex = manager.loadIndex(countOutgoingFeaturesIndexFile);
         countOutgoingFeaturesIndex = manager.loadIndex(countIngoingFeaturesIndexFile);
@@ -53,9 +54,10 @@ public class PicssLdManager extends HybridMeasuresLdManager {
     }
     
     public void closeIndexes(){
+        super.closeIndexes();
         if (useIndex) {
             
-            manager.closeIndex(ingoingFeaturesIndex);
+//            manager.closeIndex(ingoingFeaturesIndex);
             manager.closeIndex(outgoingFeaturesIndex);
             manager.closeIndex(countIngoingFeaturesIndex);
             manager.closeIndex(countOutgoingFeaturesIndex);            
@@ -79,14 +81,14 @@ public class PicssLdManager extends HybridMeasuresLdManager {
     }
     
     
-    @Override
-    public List<String> getIngoingFeatures(R a){
-        if (useIndex) {
-              return ingoingFeaturesIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getIngoingFeatures" , a );
-        }
-
-        return super.getIngoingFeatures(a);
-    }
+//    @Override
+//    public List<String> getIngoingFeatures(R a){
+//        if (useIndex) {
+//              return ingoingFeaturesIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getIngoingFeatures" , a );
+//        }
+//
+//        return super.getIngoingFeatures(a);
+//    }
    
    
     @Override
@@ -117,14 +119,5 @@ public class PicssLdManager extends HybridMeasuresLdManager {
 
        return super.getOutgoingFeatureFrequency(property , resource);
     }
-    
-    @Override /////////////////////////////////////////////////// to be checked for correctness
-    public int countResource(){
-         if (useIndex) {
-               return countResourcesIndex.getIntegerFromIndex(dataset , "resources" , baseClassPath + "countResource" );
-         }
-         
-         return super.countResource();
-    }
-    
+        
 }

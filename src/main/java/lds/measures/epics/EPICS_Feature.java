@@ -11,23 +11,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import lds.LdManager.ontologies.Ontology;
+import lds.feature.Feature;
 
 /**
  *
  * @author Fouad Komeiha
  */
-public class Utility {  
+public class EPICS_Feature extends Feature{
     
-    public static List<String> uniqueFeatures(List<String> a, List<String> b) {
-        List<String> result = new ArrayList<>(a);
-        
-        for (String f : b) {
-            if (result.contains(f)) {
-                result.remove(f);
-            }
-        }
-        
-        return result;
+    public EPICS_Feature(String link, String vertex, String direction) {
+        super(link, vertex, direction);
     }
     
     public static List<String> similarFeatures(List<String> a, List<String> b) throws Exception {
@@ -50,31 +43,7 @@ public class Utility {
         
         return result;
     }
-        
-    public static List<String> commonFeatures(List<String> a, List<String> b){
-        List<String> result = new ArrayList<>(a);
-        
-        result.retainAll(b);
-        
-        return result;
-    }
-   
-    public static String getLink(String s){
-          String string[] =  s.split("\\|");
-          return string[0].trim();
-    }
     
-    public static String getVertex(String s){
-          String string[] =  s.split("\\|");
-          return string[1].trim();
-    }
-    
-    public static String getDirection(String s){
-        String string[] =  s.split("\\|");
-        return string[2].trim();
-    }	 
-    
-	
     private static Map<String , List<String>> createFeaturesMap(List<String> features){
         List<String> list = features;
         String link_a , node_a , direction_a;
@@ -114,12 +83,5 @@ public class Utility {
                 
         return map;
     }
-    
-    public static double log2(double N){ 
-
-            double result = (double)(Math.log(N) / Math.log(2)); 
-
-            return result;
-    } 
     
 }

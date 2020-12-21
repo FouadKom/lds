@@ -36,7 +36,7 @@ public class LDSDTest {
         
         /*Intiialize the conf object which contains the necessary parameters for the measure
         you can use the default conf as follows. This creattes a conf with default parameters and no indexing by default*/
-        Config config = LdConfigFactory.createDeafaultConf(Measure.LDSD_cw);
+        Config config = LdConfigFactory.createDefaultConf(Measure.LDSD_cw);
 
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //LDSD similarity calculation
@@ -65,13 +65,13 @@ public class LDSDTest {
         //ends calculation for the chosen similarity and closes all indexes if created
         engine.close();
         
-        config = LdConfigFactory.createDeafaultConf(Measure.TLDSD_cw);
+        config = LdConfigFactory.createDefaultConf(Measure.TLDSD_cw);
         
         engine.load(Measure.TLDSD_cw , config);
         System.out.println( engine.similarity(r1 , r2) );
         engine.close();
         
-        config = LdConfigFactory.createDeafaultConf(Measure.WLDSD_cw);       
+        config = LdConfigFactory.createDefaultConf(Measure.WLDSD_cw);       
         
         /*Note:
         Using the default conf for measures that use weighting algorithims such as : WLDSD_cw, WTLDSD_cw 
