@@ -137,8 +137,8 @@ public class LdBenchmark {
             try{
                 c3 = record.get(2);                    
 //                result = Double.toString(normalizeValue(Double.parseDouble(c3) , minValue , maxValue));
-//                results.add(result);
                 result = c3.trim();
+                results.add(result);
             }
             catch(Exception e){
                 System.out.println("Exception " + e.toString() + " at line " + i + " while reading benchmark file \"" + file.getFilePath() + "\"");
