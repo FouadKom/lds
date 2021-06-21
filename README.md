@@ -75,6 +75,10 @@ mvn test -Dtest=lds.measures.picss.PICSSTest
 
 <!-- ## Licence -->
 
+## Cite our work
+
+Fouad Komeiha, Nasredine Cheniki, Yacine Sam, Ali Jaber, Nizar Messai, et al.. LDS: Java Library for Linked Open Data Based Similarity Measures. WI-IAT 2020, Dec 2020, Melbourne, Australia.
+
 ## References:
 [1] Passant, Alexandre. “Measuring Semantic Distance on Linking Data and Using it for Resources Recommendations.” AAAI Spring Symposium: Linked Data Meets Artificial Intelligence (2010).
 
