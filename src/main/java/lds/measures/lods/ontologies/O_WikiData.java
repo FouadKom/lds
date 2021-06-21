@@ -53,6 +53,21 @@ public class O_WikiData implements O {
         
     }
     
+    @Override
+    public List<String> getCategories(R a) {
+        return wikiDataldManager.getCategories(a , dataAugmentation);
+    }
+    
+    @Override
+    public List<String> getBroaderCategories(R r , int level) {
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public List<String> getNarrowerCategories(R r , int level) {
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
     public void closeIndexes(){
         if(useIndex){
             try {
@@ -90,5 +105,5 @@ public class O_WikiData implements O {
         return ontology.toString().equals("WikiData");
         
     }
-    
+
 }

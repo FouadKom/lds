@@ -8,8 +8,13 @@ public interface O {
 	
     public List<String> getConcepts(R r); 
     
-    public void initializeOntology(Config config) throws Exception;
+    public List<String> getCategories(R r); 
     
+    public List<String> getBroaderCategories(R r , int level);
+    
+    public List<String> getNarrowerCategories(R r , int level);
+    
+    public void initializeOntology(Config config) throws Exception;
     
     public O getOntology();
     

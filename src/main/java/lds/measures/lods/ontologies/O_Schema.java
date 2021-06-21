@@ -52,6 +52,21 @@ public class O_Schema implements O {
         
     }
 
+    @Override
+    public List<String> getCategories(R r) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public List<String> getBroaderCategories(R r , int level) {
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public List<String> getNarrowerCategories(R r , int level) {
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     
     
 }

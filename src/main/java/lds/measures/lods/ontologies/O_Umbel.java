@@ -51,5 +51,20 @@ public class O_Umbel implements O {
         return ontology.toString().equals("Umbel");
         
     }
+
+    @Override
+    public List<String> getBroaderCategories(R r , int level) {
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+    
+    @Override
+    public List<String> getNarrowerCategories(R r , int level) {
+       throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
+    @Override
+    public List<String> getCategories(R r) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
     
 }

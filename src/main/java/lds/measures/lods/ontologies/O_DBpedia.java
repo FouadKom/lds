@@ -48,7 +48,32 @@ public class O_DBpedia implements O {
     protected List<String> getConcepts(R a , List<String> namespacesInitial , List<String> namespacesAugmented , boolean dataAugmentation){
         return dbpedialdManager.getConcepts(a , namespacesInitial , namespacesAugmented , dataAugmentation); 
     }
-        
+    
+//    @Override
+//    public List<String> getCategories(R r) {
+//       return this.getCategories(r , namespaces , dataAugmentation);  
+//    }
+//    
+//    
+//    protected List<String> getCategories(R a , List<String> namespacesInitial, boolean dataAugmentation){
+//        return dbpedialdManager.getCategories(a , namespacesInitial  , dataAugmentation); 
+//    }
+    
+    @Override
+    public List<String> getCategories(R r) {
+       return dbpedialdManager.getCategories(r);  
+    }
+    
+    @Override
+    public List<String> getBroaderCategories(R r , int level) {
+       return dbpedialdManager.getBroaderCategories(r , level);  
+    }
+    
+    @Override
+    public List<String> getNarrowerCategories(R r , int level) {
+       return dbpedialdManager.getNarrowerCategories(r , level);  
+    }
+       
     
     public void closeIndexes(){
         if(useIndexes){
@@ -87,7 +112,7 @@ public class O_DBpedia implements O {
           
         return ontology.toString().equals("DBpedia");
         
-    }   
+    }    
 
     
 }

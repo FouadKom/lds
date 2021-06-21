@@ -30,12 +30,17 @@ public class SimP implements LdSimilarity{
     private int NumberOfResources;
     
     public SimP(Config config) throws Exception {
+
         if (config.getParam(ConfigParam.LdDatasetMain) == null || config.getParam(ConfigParam.useIndexes) == null || config.getParam(ConfigParam.resourcesCount) == null)
             throw new Exception("Some configuration parameters missing");
 
         this.simPldManager = new SimPLdManager((LdDataset) config.getParam(ConfigParam.LdDatasetMain) , (Boolean) config.getParam(ConfigParam.useIndexes) );
         this.useIndexes = (Boolean) config.getParam(ConfigParam.useIndexes);
         this.NumberOfResources = (Integer) config.getParam(ConfigParam.resourcesCount);
+        if(config.getParam(ConfigParam.dataAugmentation) == null)
+            this.dataAugmentation = false;
+        else
+            this.dataAugmentation = (Boolean) config.getParam(ConfigParam.dataAugmentation);
     }
 
     @Override

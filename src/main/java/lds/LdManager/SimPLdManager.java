@@ -18,12 +18,12 @@ import sc.research.ldq.LdDataset;
  * @author Fouad Komeiha
  */
 public class SimPLdManager extends HybridMeasuresLdManager {
-    protected boolean useIndex;
+    private boolean useIndex;
         
     private LdIndex ingoingFeaturesIndex;
     private LdIndex outgoingFeaturesIndex;
-    protected LdIndex countIngoingFeaturesIndex;
-    protected LdIndex countOutgoingFeaturesIndex;
+    private LdIndex countIngoingFeaturesIndex;
+    private LdIndex countOutgoingFeaturesIndex;
     private LdIndex countResourcesIndex;
     
     private LdIndexerManager manager;

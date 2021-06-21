@@ -69,8 +69,49 @@ public class Ontology {
         }
         return ontology;
     }
+    
+    public static O getOntologyFromDefaultGraph(String defaultGraph) {
+        O ontology = null;
+        
+        switch (defaultGraph) {            
+            case "http://dbpedia.org":
+                ontology = new O_DBpedia();
+                break;
+            case "https://query.wikidata.org":
+                ontology = new O_WikiData();
+                break;
+            case "https://yago-knowledge.org":
+                ontology = new O_Yago();
+                break;
+            case "http://de.dbpedia.org":
+                ontology = new O_DBpedia_de();
+                break;
+            case "http://cs.dbpedia.org":
+                ontology = new O_DBpedia_cs();
+                break;
+            case "http://el.dbpedia.org":
+                ontology = new O_DBpedia_el();
+                break;
+            case "http://es.dbpedia.org":
+                ontology = new O_DBpedia_es();
+                break;
+            case "http://eu.dbpedia.org":
+                ontology = new O_DBpedia_eu();
+                break;
+            case "http://fr.dbpedia.org":
+                ontology = new O_DBpedia_fr();
+                break;
+            default:
+                break;
+            
+        }
+        return ontology;
+    } 
 
     public static List<O> getListOntologyFromPrefixes(List<String> listPrefixes) {
+        if(listPrefixes == null)
+            return null;
+        
         List<O> ontologies = new ArrayList<>();
         for (String ontologyPrefix : listPrefixes) {
             O ontology = null;
@@ -81,6 +122,7 @@ public class Ontology {
         }
         return ontologies;
     }
+
     
     public static String getPrefixFromNamespace(R r) {
         return Ontology.getPrefixFromNamespace(r.getNamespace());

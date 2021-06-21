@@ -32,6 +32,7 @@ public class WikiDataLdManager {
     
     private LdIndexerManager manager;
     private LdIndex conceptsIndex;
+    private LdIndex categoriesIndex;
                       
     
     public WikiDataLdManager(LdDataset dataSetInitial , boolean useIndex) {
@@ -242,10 +243,25 @@ public class WikiDataLdManager {
         return extraConcepts;
         
     }
+    
+    public List<String> getCategories(R a , boolean dataAugmentation){
+        if(useIndex){
+            
+            return categoriesIndex.getListFromIndex(dataSetInitial , a.getUri().stringValue() , baseClassPath + "getCategories" , dataSetInitial , a , dataAugmentation);
+        }
+        
+        return this.getCategories(dataSetInitial , a , dataAugmentation);
+    }
+    
+    private List<String> getCategories(LdDataset dataSetInitial, R a, boolean dataAugmentation) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
 
     public void loadIndexes() throws Exception {
         manager = LdIndexerManager.getManager();
         String conceptsIndexFile = System.getProperty("user.dir") + "/Indexes/Ontologies/DBpedia/concepts_index_" + dataSetInitial.getName().toLowerCase().replace(" ", "_") + ".db";
+        String categoriesIndexFile = System.getProperty("user.dir") + "/Indexes/Ontologies/DBpedia/categories_index_" + dataSetInitial.getName().toLowerCase().replace(" ", "_") + ".db";
+        categoriesIndex = manager.loadIndex(categoriesIndexFile);
         conceptsIndex = manager.loadIndex(conceptsIndexFile);
     }
 
@@ -255,6 +271,8 @@ public class WikiDataLdManager {
         }
         
     }
+
+    
     
     
 }
