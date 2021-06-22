@@ -17,7 +17,7 @@ import lds.measures.Measure;
 import lds.resource.R;
 import lds.resource.LdResourcePair;
 import static org.junit.Assert.fail;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 import slib.utils.i.Conf;
 
 /**

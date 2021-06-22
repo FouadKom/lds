@@ -16,8 +16,8 @@ import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.vocabulary.OWL;
-import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
+import ldq.LdDataset;
+import ldq.LdDatasetFactory;
 
 /**
  *

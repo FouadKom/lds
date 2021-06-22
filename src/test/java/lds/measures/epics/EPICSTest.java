@@ -13,7 +13,7 @@ import lds.config.LdConfigFactory;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 
 /**

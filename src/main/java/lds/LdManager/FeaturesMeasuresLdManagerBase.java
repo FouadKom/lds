@@ -12,7 +12,7 @@ import org.apache.jena.query.ParameterizedSparqlString;
 import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.vocabulary.OWL;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

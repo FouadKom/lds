@@ -12,7 +12,7 @@ import lds.measures.picss.PICSS;
 import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

@@ -11,8 +11,8 @@ import lds.config.Config;
 import lds.config.ConfigParam;
 import lds.measures.Measure;
 import static org.junit.Assert.fail;
-import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
+import ldq.LdDataset;
+import ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 import org.junit.Test;
 

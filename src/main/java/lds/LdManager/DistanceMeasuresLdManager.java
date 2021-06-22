@@ -7,12 +7,12 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import ldq.LdDataset;
 import lds.LdManager.ontologies.Ontology;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import sc.research.ldq.LdDataset;
 import slib.graph.model.impl.repo.URIFactoryMemory;
 import slib.graph.model.repo.URIFactory;
 

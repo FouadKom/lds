@@ -18,7 +18,7 @@ import lds.config.ConfigParam;
 import lds.feature.Feature;
 import lds.resource.R;
 import lds.measures.LdSimilarity;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

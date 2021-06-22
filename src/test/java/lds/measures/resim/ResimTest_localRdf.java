@@ -12,8 +12,8 @@ import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
+import ldq.LdDataset;
+import ldq.LdDatasetFactory;
 
 /**
  *

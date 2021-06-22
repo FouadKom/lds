@@ -7,7 +7,7 @@ import org.junit.After;
 import org.junit.Test;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 
 public class LdManagerTest {

@@ -18,8 +18,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.vocabulary.OWL;
-import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
+import ldq.LdDataset;
+import ldq.LdDatasetFactory;
 
 /**
  *

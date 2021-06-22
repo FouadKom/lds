@@ -7,6 +7,7 @@ package lds.LdManager;
 
 import java.util.ArrayList;
 import java.util.List;
+import ldq.LdDataset;
 import lds.LdManager.ontologies.Ontology;
 import lds.resource.R;
 import org.apache.jena.query.ParameterizedSparqlString;
@@ -14,7 +15,6 @@ import org.apache.jena.query.QuerySolution;
 import org.apache.jena.query.ResultSet;
 import org.apache.jena.vocabulary.OWL;
 import org.openrdf.model.URI;
-import sc.research.ldq.LdDataset;
 
 /**
  *

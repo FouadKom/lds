@@ -11,7 +11,7 @@ import lds.dataset.LdDatasetCreator;
 import lds.engine.LdSimilarityEngine;
 import lds.measures.Measure;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

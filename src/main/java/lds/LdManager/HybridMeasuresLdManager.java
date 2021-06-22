@@ -9,7 +9,7 @@ import java.util.List;
 import lds.indexing.LdIndex;
 import lds.indexing.LdIndexerManager;
 import lds.resource.R;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

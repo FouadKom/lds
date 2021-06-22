@@ -5,7 +5,7 @@
  */
 package lds.LdManager;
 
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

@@ -18,8 +18,8 @@ import org.apache.jena.rdf.model.Resource;
 import org.apache.jena.shared.PrefixMapping;
 import org.apache.jena.shared.impl.PrefixMappingImpl;
 import static org.junit.Assert.fail;
-import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
+import ldq.LdDataset;
+import ldq.LdDatasetFactory;
 
 public class LdDatasetCreator {
         

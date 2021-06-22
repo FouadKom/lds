@@ -11,7 +11,7 @@ import lds.dataset.DBpediaChapter;
 import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.measures.weight.WeightMethod;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 /**
  *
  * @author Fouad Komeiha

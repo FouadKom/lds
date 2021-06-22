@@ -11,7 +11,7 @@ import static lds.dataset.LdDatasetCreator.getDBpediaHDTDataset;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

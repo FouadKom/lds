@@ -7,7 +7,7 @@ package lds.engine;
 
 import lds.benchmark.BenchmarkFile;
 import lds.measures.Measure;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 import lds.config.Config;
 import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;

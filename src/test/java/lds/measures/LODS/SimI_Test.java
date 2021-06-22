@@ -11,7 +11,7 @@ import lds.config.Config;
 import lds.config.ConfigParam;
 import lds.dataset.LdDatasetCreator;
 import lds.measures.lods.ontologies.*;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 import lds.measures.lods.SimI;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;

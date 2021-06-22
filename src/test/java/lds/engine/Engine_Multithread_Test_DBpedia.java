@@ -8,7 +8,7 @@ import lds.dataset.LdDatasetCreator;
 import lds.measures.Measure;
 import lds.resource.R;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 public class Engine_Multithread_Test_DBpedia {
 

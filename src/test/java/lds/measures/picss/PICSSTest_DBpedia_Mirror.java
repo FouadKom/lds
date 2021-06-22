@@ -11,7 +11,7 @@ import lds.dataset.LdDatasetCreator;
 import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

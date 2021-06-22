@@ -12,7 +12,7 @@ import lds.dataset.LdDatasetCreator;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 /**
  *
  * @author Fouad Komeiha

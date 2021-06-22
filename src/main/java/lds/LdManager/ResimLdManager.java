@@ -12,7 +12,7 @@ import lds.indexing.LdIndex;
 import lds.indexing.LdIndexerManager;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

@@ -17,7 +17,7 @@ import org.mapdb.DBMaker;
 import org.mapdb.HTreeMap;
 import org.mapdb.Serializer;
 import org.mapdb.serializer.SerializerArrayTuple;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

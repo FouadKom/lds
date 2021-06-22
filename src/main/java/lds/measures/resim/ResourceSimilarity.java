@@ -15,7 +15,7 @@ import lds.config.Config;
 import lds.config.ConfigParam;
 import lds.resource.R;
 import org.openrdf.model.URI;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 import lds.measures.LdSimilarity;
 import lds.measures.weight.Weight;
 

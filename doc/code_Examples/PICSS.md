@@ -14,7 +14,7 @@ import lds.LdManager.ontologies.Ontology;
 import lds.config.Config;
 import lds.config.ConfigParam;
 import lds.resource.R;
-import sc.research.ldq.*;
+import ldq.*;
 import lds.measures.LdSimilarity;
 
 /**

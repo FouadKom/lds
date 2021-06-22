@@ -2,7 +2,7 @@ package lds.resource;
 
 import org.apache.jena.query.QueryFactory;
 
-import sc.research.ldq.LdDatasetFactory;
+import ldq.LdDatasetFactory;
 
 public class LdResourceFactory {
 	private static LdResourceFactory factory;

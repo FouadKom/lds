@@ -20,7 +20,7 @@ import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import static org.junit.Assert.assertEquals;
 import org.junit.Test;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 import slib.utils.i.Conf;
 import test.utility.Util.SplitedList;
 

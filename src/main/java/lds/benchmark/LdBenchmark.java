@@ -18,7 +18,7 @@ import org.apache.commons.csv.*;
 import java.nio.file.Paths;
 import lds.dataset.LdDatasetCreator;
 import org.apache.jena.query.ParameterizedSparqlString;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 
 public class LdBenchmark {

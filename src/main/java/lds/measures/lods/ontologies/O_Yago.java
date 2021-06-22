@@ -11,7 +11,7 @@ import lds.LdManager.ontologies.YagoLdManager;
 import lds.config.Config;
 import lds.config.ConfigParam;
 import lds.resource.R;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

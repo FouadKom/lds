@@ -15,7 +15,7 @@ import lds.resource.R;
 import lds.measures.LdSimilarity;
 import lds.measures.lods.ontologies.O;
 import lds.utility.Utility;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

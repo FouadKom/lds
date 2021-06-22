@@ -20,7 +20,7 @@ import lds.config.ConfigParam;
 import lds.resource.R;
 import lds.measures.LdSimilarity;
 import lds.measures.lods.ontologies.O;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 /**
  *

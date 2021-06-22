@@ -6,7 +6,7 @@ import lds.LdManager.ontologies.DBpediaLdManager;
 import lds.config.Config;
 import lds.config.ConfigParam;
 import lds.resource.R;
-import sc.research.ldq.LdDataset;
+import ldq.LdDataset;
 
 
 public class O_DBpedia implements O {

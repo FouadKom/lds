@@ -16,8 +16,8 @@ import static lds.measures.resim.ResimTest_localRdf.dataSetDir;
 import lds.resource.R;
 import lds.resource.LdResourcePair;
 import static org.junit.Assert.fail;
-import sc.research.ldq.LdDataset;
-import sc.research.ldq.LdDatasetFactory;
+import ldq.LdDataset;
+import ldq.LdDatasetFactory;
 import slib.utils.i.Conf;
 
 /**
