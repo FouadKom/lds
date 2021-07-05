@@ -1,136 +1,162 @@
 <project xmlns="http://maven.apache.org/POM/4.0.0"
-	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
-	<modelVersion>4.0.0</modelVersion>
-	<groupId>sc.research</groupId>
-	<artifactId>lds</artifactId>
-	<version>0.0.1</version>
-	<name>lds</name>
+    xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+    xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <groupId>io.github.FouadKom</groupId>
+    <artifactId>lds</artifactId>
+    <version>0.0.1</version>
 
-	<dependencies>
-		<dependency>
-			<groupId>junit</groupId>
-			<artifactId>junit</artifactId>
-			<version>4.13.1</version>
-		 <type>jar</type>
-		</dependency>
-		<dependency>
-			<groupId>org.apache.tinkerpop</groupId>
-			<artifactId>gremlin-core</artifactId>
-			<version>3.3.3</version>
-		</dependency>
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>A Java library for Linked Open Data based semantic similarity measures.</description>
+    <url>https://github.com/FouadKom/lds/blob/master/doc/General_Explanation_of_the_Library.md</url>
 
-		<dependency>
-			<groupId>org.apache.tinkerpop</groupId>
-			<artifactId>tinkergraph-gremlin</artifactId>
-			<version>3.3.3</version>
-		</dependency>
+    <licenses>
+        <license>
+            <name>GNU Affero General Public License v3.0</name>
+            <url>https://www.gnu.org/licenses/</url>
+        </license>
+    </licenses>
 
-		<dependency>
-			<groupId>com.github.sharispe</groupId>
-			<artifactId>slib-sml</artifactId>
-			<version>0.9.1</version>
-			<type>jar</type>
-		</dependency>
-		<dependency>
-                      <groupId>org.apache.jena</groupId>
-                      <artifactId>jena-core</artifactId>
-                      <version>3.7.0</version>
-                      <type>jar</type>
-               </dependency>
-               
-                <dependency>
-                    <groupId>org.apache.jena</groupId>
-                    <artifactId>jena-arq</artifactId>
-                    <version>3.7.0</version>
-                        <type>jar</type>
-                </dependency>
-                
-                <dependency>
-                    <groupId>org.apache.jena</groupId>
-                    <artifactId>jena-base</artifactId>
-                    <version>3.7.0</version>
-                    <scope>test</scope>
-                </dependency>
+    <developers>
+        <developer>
+          <name>Fouad Komeiha</name>
+          <email>fouadkomeiha.94@gmail.com</email>
+          <organization>University of Tours, France</organization>
+          <organizationUrl>https://www.univ-tours.fr/</organizationUrl>
+        </developer>
 
-                <dependency>
-                    <groupId>org.apache.jena</groupId>
-                    <artifactId>apache-jena</artifactId>
-                    <version>3.17.0</version>
-                    <type>pom</type>
-                </dependency>
+        <developer>
+          <name>Nasredine Cheniki</name>
+          <email>Nacer.Cheniki@gmail.com</email>
+          <organization>University of Tours, France</organization>
+          <organizationUrl>https://www.univ-tours.fr/</organizationUrl>
+        </developer>        
+    </developers>
+    
+    <scm>
+        <connection>scm:git:git://github.com/FouadKom/lds.git</connection>
+        <developerConnection>scm:git:git://github.com/FouadKom/lds.git</developerConnection>
+        <url>http://github.com/FouadKom/lds</url>
+   </scm>
 
-		<dependency>
-			<groupId>commons-io</groupId>
-			<artifactId>commons-io</artifactId>
-			<version>2.7</version>
-		</dependency>
+    <dependencies>
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>4.13.1</version>
+            <type>jar</type>
+        </dependency>
 
+        <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>gremlin-core</artifactId>
+            <version>3.3.3</version>
+        </dependency>
 
-		<dependency>
-			<groupId>com.google.code.gson</groupId>
-			<artifactId>gson</artifactId>
-			<version>2.8.5</version>
-		</dependency>
+        <dependency>
+            <groupId>org.apache.tinkerpop</groupId>
+            <artifactId>tinkergraph-gremlin</artifactId>
+            <version>3.3.3</version>
+        </dependency>
 
+        <dependency>
+            <groupId>com.github.sharispe</groupId>
+            <artifactId>slib-sml</artifactId>
+            <version>0.9.1</version>
+            <type>jar</type>
+        </dependency>
 
-		<dependency>
-			<groupId>org.mapdb</groupId>
-			<artifactId>mapdb</artifactId>
-			<version>3.0.7</version>
-		</dependency>
-                
-                <dependency>
-			<groupId>eu.wdaqua</groupId>
-			<artifactId>hdt-api</artifactId>
-			<version>2.0</version>
-		</dependency>
-                
-             <dependency>
-                      <groupId>eu.wdaqua</groupId>
-                      <artifactId>hdt-jena</artifactId>
-                      <version>2.0</version>
-                      <type>jar</type>
-             </dependency>
-             
-             <dependency>
-                        <groupId>org.apache.jena</groupId>
-                        <artifactId>jena-tdb</artifactId>
-                        <version>3.7.0</version>
-             </dependency>
-             
-             <dependency>
-              <groupId>org.apache.commons</groupId>
-              <artifactId>commons-math3</artifactId>
-              <version>3.5</version>
-              <type>jar</type>
-             </dependency>
-                 
-                <dependency>
-                <groupId>org.apache.commons</groupId>
-                <artifactId>commons-csv</artifactId>
-                <version>1.7</version>
-                        <type>jar</type>
-                </dependency>
-                
-            </dependencies>
-	<build>
-		
-		<plugins>
-                    <plugin>
-                        <groupId>org.apache.maven.plugins</groupId>
-                        <artifactId>maven-compiler-plugin</artifactId>
-                        <version>3.5.1</version>
-                        <configuration>
-                            <source>1.8</source>
-                            <target>1.8</target>
-                        </configuration>
-                    </plugin>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-core</artifactId>
+            <version>3.7.0</version>
+            <type>jar</type>
+       </dependency>
 
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-arq</artifactId>
+            <version>3.7.0</version>
+            <type>jar</type>
+        </dependency>
 
-		</plugins>
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-base</artifactId>
+            <version>3.7.0</version>
+            <scope>test</scope>
+        </dependency>
 
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>apache-jena</artifactId>
+            <version>3.17.0</version>
+            <type>pom</type>
+        </dependency>
 
-		
-	</build>
+        <dependency>
+            <groupId>commons-io</groupId>
+            <artifactId>commons-io</artifactId>
+            <version>2.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.8.5</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.mapdb</groupId>
+            <artifactId>mapdb</artifactId>
+            <version>3.0.7</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.wdaqua</groupId>
+            <artifactId>hdt-api</artifactId>
+            <version>2.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>eu.wdaqua</groupId>
+            <artifactId>hdt-jena</artifactId>
+            <version>2.0</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-tdb</artifactId>
+            <version>3.7.0</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-math3</artifactId>
+            <version>3.5</version>
+            <type>jar</type>
+        </dependency>
+
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-csv</artifactId>
+            <version>1.7</version>
+            <type>jar</type>
+        </dependency>                
+    </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.5.1</version>
+                <configuration>
+                    <source>1.8</source>
+                    <target>1.8</target>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>                
 </project>
