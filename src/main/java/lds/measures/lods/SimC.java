@@ -76,6 +76,7 @@ public class SimC extends LODS implements LdSimilarity{
         try {
             
             commonOntologies = getCommonOntologies(a, b);
+            System.out.println(commonOntologies.size());
             
         } catch (Exception ex) {
             Logger.getLogger(SimI.class.getName()).log(Level.SEVERE, null, ex);
@@ -165,6 +166,11 @@ public class SimC extends LODS implements LdSimilarity{
         
         Map<String, List<String>> categories_a = this.getCategories(a, initialOntology , supLevel , subLevel); 
         Map<String, List<String>> categories_b = this.getCategories(b, initialOntology , supLevel , subLevel);
+        
+        if(categories_a == null || categories_b == null || categories_a.isEmpty() || categories_b.isEmpty() ){
+            System.out.println("null or empty categories");
+            return 0;
+        }
 
         /*Map<String, List<String>> categories_a = new HashMap<>(); 
         Map<String, List<String>> categories_b = new HashMap<>();        
@@ -183,8 +189,7 @@ public class SimC extends LODS implements LdSimilarity{
         }*/
         
         if(dataAugmentation){
-            commonOntologies = getCommonOntologies(a , b);
-            
+            commonOntologies = getCommonOntologies(a , b);            
             
         }
         
@@ -286,6 +291,11 @@ public class SimC extends LODS implements LdSimilarity{
         
         List<String> categories_a = categories.get(initialOntologyName);
         
+        if(categories_a == null){
+            System.out.println("null category");
+            return null;
+        }
+        
         for(String category:categories_a){
                 categories.putAll(get_Extra_Categories(new R(category) , initialOntology , super_level , sub_level));
         }        
@@ -316,7 +326,7 @@ public class SimC extends LODS implements LdSimilarity{
         if(ontologyName.contains("DBpedia"))
             ontologyName = "DBpedia";
         
-        if( (super_level > supLevel || super_level > 2) || (sub_level > supLevel || sub_level > 2))
+        if( (super_level > supLevel || super_level > 4) || (sub_level > supLevel || sub_level > 4))
             return categories;   
         
         List<String> categories_a = initialOntology.getBroaderCategories(a, 0);
@@ -327,7 +337,10 @@ public class SimC extends LODS implements LdSimilarity{
         for(String category:categories_a){
             R subject = new R(category);
             O subject_ontology = Ontology.getOntologyFromNameSpace(subject.getNamespace());
-            subject_ontology.initializeOntology(config);
+            if(subject_ontology!=null)
+                subject_ontology.initializeOntology(config);
+            else
+                continue;
             
             categories.putAll(get_Broader_Categories(subject , subject_ontology  , super_level + 1));
             categories.putAll(get_Narrower_Categories(subject , subject_ontology  , sub_level + 1));
@@ -374,7 +387,7 @@ public class SimC extends LODS implements LdSimilarity{
         if(level > supLevel || level > 2)
             return categories;        
         
-        List<String> categories_a = initialOntology.getBroaderCategories(a, 0);
+        List<String> categories_a = initialOntology.getNarrowerCategories(a, 0);
         categories.put(ontologyName, categories_a);
         
         for(String category:categories_a){

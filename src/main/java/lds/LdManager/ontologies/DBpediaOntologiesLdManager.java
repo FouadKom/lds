@@ -5,9 +5,17 @@
  */
 package lds.LdManager.ontologies;
 
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import static java.lang.System.in;
+import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
 import lds.dataset.LdDatasetCreator;
 import lds.measures.lods.ontologies.O;
 import lds.resource.R;
@@ -20,6 +28,13 @@ import org.apache.jena.shared.impl.PrefixMappingImpl;
 import org.apache.jena.vocabulary.OWL;
 import ldq.LdDataset;
 import ldq.LdDatasetFactory;
+import org.apache.http.NameValuePair;
+import org.apache.http.client.utils.URLEncodedUtils;
+import org.apache.http.message.BasicNameValuePair;
+import org.apache.jena.atlas.web.TypedInputStream;
+import org.apache.jena.query.QueryExecution;
+import org.apache.jena.query.QueryExecutionFactory;
+import org.apache.jena.riot.web.HttpOp;
 
 /**
  *
@@ -36,7 +51,7 @@ public class DBpediaOntologiesLdManager {
         prefixes.setNsPrefix("dbpedia-owl", "http://dbpedia.org/ontology/");
   
         this.dataSet = LdDatasetFactory.getInstance()
-//                                       .service("https://dbpedia.org/sparql")
+                                       .service("https://dbpedia.org/sparql?force=true")
                                        .name("dbpedia")
 //                                       .defaultGraph("http://dbpedia.org")
                                        .prefixes(prefixes).create(); 
@@ -218,12 +233,12 @@ public class DBpediaOntologiesLdManager {
      }
      */
      
-     public List<String> getCategories(R a){
+     public List<String> getCategories(R a) throws IOException{
         List<String> initialCategories = new ArrayList<>();
         
         ParameterizedSparqlString query_cmd = dataSet.prepareQuery();      
         
-        String queryStr = "SELECT * " + (dataSet.getDefaultGraph() == null ? ("") : "from <" + dataSet.getDefaultGraph()+ ">") 
+        String queryStr = "SELECT ?c " + (dataSet.getDefaultGraph() == null ? ("") : "from <" + dataSet.getDefaultGraph()+ ">") 
                                       + " WHERE  { <" + a.getUri() + "> <http://purl.org/dc/terms/subject> ?c}";
 //                                + " FILTER  ( REGEX (STR (?c), ";
 //        
@@ -231,7 +246,7 @@ public class DBpediaOntologiesLdManager {
 //            queryStr = queryStr + namespace + ") ||  REGEX (STR (?c), ";
 //        }
         
-        
+        /*
         query_cmd.setCommandText(queryStr);
 
         ResultSet rs = dataSet.executeSelectQuery(query_cmd.toString());
@@ -242,13 +257,26 @@ public class DBpediaOntologiesLdManager {
             initialCategories.add(category);
 
         }
+        */
+            
+        List<NameValuePair> valuePairs = new ArrayList<NameValuePair>();
+        valuePairs.add(new BasicNameValuePair("query", queryStr));
+        String params = URLEncodedUtils.format(valuePairs , StandardCharsets.UTF_8);
+        String url = dataSet.getLink() + "/sparql?" + params;
+        TypedInputStream stream = HttpOp.execHttpGet(url);
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream)); 
+        String line;
+        while ((line = br.readLine()) != null) {
+            if(!line.contains("uri"))
+                continue;
+            line = line.replace("<binding name=\"c\"><uri>", "").replace("</uri></binding>", "").trim();
+            initialCategories.add(line);
+        }
         
         return initialCategories;
-        
-        
      }
 
-    public List<String> getBroaderCategories(R a , int level) {
+    public List<String> getBroaderCategories(R a , int level) throws IOException {
         List<String> broaderCategories = new ArrayList<>();
         
         ParameterizedSparqlString query_cmd = dataSet.prepareQuery();      
@@ -261,9 +289,9 @@ public class DBpediaOntologiesLdManager {
 //            queryStr = queryStr + namespace + ") ||  REGEX (STR (?c), ";
 //        }
         
-        
+        /*
         query_cmd.setCommandText(queryStr);
-
+        
         ResultSet rs = dataSet.executeSelectQuery(query_cmd.toString());
 
         for (; rs.hasNext();) {
@@ -272,11 +300,26 @@ public class DBpediaOntologiesLdManager {
             broaderCategories.add(category);
 
         }
+        */
+        
+        List<NameValuePair> valuePairs = new ArrayList<NameValuePair>();
+        valuePairs.add(new BasicNameValuePair("query", queryStr));
+        String params = URLEncodedUtils.format(valuePairs , StandardCharsets.UTF_8);
+        String url = dataSet.getLink() + "/sparql?" + params;
+        TypedInputStream stream = HttpOp.execHttpGet(url);
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream)); 
+        String line;
+        while ((line = br.readLine()) != null) {
+            if(!line.contains("uri"))
+                continue;
+            line = line.replace("<binding name=\"c\"><uri>", "").replace("</uri></binding>", "").trim();
+            broaderCategories.add(line);
+        }
         
         return broaderCategories;
     }
 
-    public List<String> getNarrowerCategories(R a , int level) {
+    public List<String> getNarrowerCategories(R a , int level) throws IOException {
         List<String> narrowerCategories = new ArrayList<>();
         
         ParameterizedSparqlString query_cmd = dataSet.prepareQuery();      
@@ -289,9 +332,9 @@ public class DBpediaOntologiesLdManager {
 //            queryStr = queryStr + namespace + ") ||  REGEX (STR (?c), ";
 //        }
         
-        
+        /*
         query_cmd.setCommandText(queryStr);
-
+        
         ResultSet rs = dataSet.executeSelectQuery(query_cmd.toString());
 
         for (; rs.hasNext();) {
@@ -299,6 +342,21 @@ public class DBpediaOntologiesLdManager {
             String category = soln.getResource("c").getURI();
             narrowerCategories.add(category);
 
+        }
+        */
+        
+        List<NameValuePair> valuePairs = new ArrayList<NameValuePair>();
+        valuePairs.add(new BasicNameValuePair("query", queryStr));
+        String params = URLEncodedUtils.format(valuePairs , StandardCharsets.UTF_8);
+        String url = dataSet.getLink() + "/sparql?" + params;
+        TypedInputStream stream = HttpOp.execHttpGet(url);
+        BufferedReader br = new BufferedReader(new InputStreamReader(stream)); 
+        String line;
+        while ((line = br.readLine()) != null) {
+            if(!line.contains("uri"))
+                continue;
+            line = line.replace("<binding name=\"c\"><uri>", "").replace("</uri></binding>", "").trim();
+            narrowerCategories.add(line);
         }
         
         return narrowerCategories;

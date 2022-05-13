@@ -13,7 +13,6 @@ import lds.dataset.LdDatasetCreator;
 import lds.measures.lods.ontologies.*;
 import ldq.LdDataset;
 import lds.measures.lods.SimC;
-import lds.resource.LdResourceFactory;
 import lds.resource.R;
 import org.junit.Test;
 
@@ -32,23 +31,23 @@ public class SimC_Test {
         Config config = new Config();
         config.addParam(ConfigParam.useIndexes, false);
         config.addParam(ConfigParam.LdDatasetMain , dataSetMain);
-        config.addParam(ConfigParam.dataAugmentation , false);
-        config.addParam(ConfigParam.sup, 1);
-        config.addParam(ConfigParam.sub, 1);
+        config.addParam(ConfigParam.dataAugmentation , true);
+        config.addParam(ConfigParam.sup, 2);
+        config.addParam(ConfigParam.sub, 2);
 
         List<O> ontologyList = new ArrayList<>();
 
         O dbpedia = new O_DBpedia();
         ontologyList.add(dbpedia);
 
-        /*O dbpedia_de = new O_DBpedia_de();
+        O dbpedia_de = new O_DBpedia_de();
         ontologyList.add(dbpedia_de);
 
         O dbpedia_fr = new O_DBpedia_fr();
         ontologyList.add(dbpedia_fr);
 
         O yago = new O_Yago();
-        ontologyList.add(yago);*/
+        ontologyList.add(yago);
 
 //        O wikiData = new O_WikiData();
 //        ontologyList.add(wikiData);        
@@ -60,7 +59,7 @@ public class SimC_Test {
         simc.loadIndexes();
 
 //        R r1 = new R("http://dbpedia.org/resource/New_York_City");
-//        R r2 = new R("http://dbpedia.org/resource/London");
+//        R r2 = new R("http://dbpedia.org/resource/Paris");
 
          R r1 = new R("http://dbpedia.org/resource/The_Noah");
          R r2 = new R("http://dbpedia.org/resource/The_Pack_(2010_film)");

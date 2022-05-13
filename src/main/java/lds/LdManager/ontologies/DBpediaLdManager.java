@@ -5,6 +5,7 @@
  */
 package lds.LdManager.ontologies;
 
+import java.io.IOException;
 import java.util.List;
 import lds.config.Config;
 import lds.config.ConfigParam;
@@ -114,7 +115,7 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     */
     
     @Override
-    public List<String> getCategories(R a) {
+    public List<String> getCategories(R a) throws IOException {
         if(useIndex){
              return initialCategoriesIndex.getListFromIndex(datasetMain , a.getUri().stringValue() , baseClassPath + "getCategories"  , a);
         }
@@ -123,7 +124,7 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     }
     
     @Override
-    public List<String> getBroaderCategories(R a , int level) {
+    public List<String> getBroaderCategories(R a , int level) throws IOException {
         if(useIndex){
              return broaderCategoriesIndex.getListFromIndex(datasetMain , a.getUri().stringValue() , baseClassPath + "getCategories"  , a);
         }
@@ -132,7 +133,7 @@ public class DBpediaLdManager extends DBpediaOntologiesLdManager {
     }
 
     @Override
-    public List<String> getNarrowerCategories(R a , int level) {
+    public List<String> getNarrowerCategories(R a , int level) throws IOException {
         if(useIndex){
              return narrowerCategoriesIndex.getListFromIndex(datasetMain , a.getUri().stringValue() , baseClassPath + "getCategories"  , a);
         }

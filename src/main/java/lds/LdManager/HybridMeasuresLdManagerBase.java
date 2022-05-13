@@ -16,6 +16,7 @@ import org.apache.jena.query.ResultSet;
 import org.apache.jena.rdf.model.Literal;
 import org.apache.jena.rdf.model.RDFNode;
 import ldq.LdDataset;
+import org.apache.jena.vocabulary.OWL;
 
 /**
  *
@@ -25,7 +26,7 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
     protected String baseClassPath = "lds.LdManager.HybridMeasuresLdManagerBase.";
     
     public HybridMeasuresLdManagerBase(LdDataset dataset) {
-        super(dataset);
+        super(dataset);        
     }
 
     public List<String> getIngoingFeatures(R a) {
@@ -58,6 +59,39 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
         else
             return null;
     }
+    
+    public List<String> getAugmentedIngoingFeatures(R a) {
+        String edge = null;
+        String subject = null;
+        
+        List<String> features = new ArrayList<>();
+
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery(); 
+
+        query_cmd.setCommandText("select distinct ?property ?subject\n "
+                                    + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
+                                    + "where {<" + a.getUri() + "> <" + OWL.sameAs + "> ?augmented."
+                                            + "?subject ?property  ?augmented}");
+
+
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+                subject = Ontology.compressValue(qs.getResource("subject"));
+                edge = Ontology.compressValue(qs.getResource("property"));
+                features.add(edge + "|" + subject + "|" + "In");
+
+        }
+
+        dataset.close();
+        
+        if(! features.isEmpty())
+            return features;
+        else
+            return null;        
+    }
+    
 
     public List<String> getOutgoingFeatures(R a) {
         return getOutgoingFeatures(a , true);
@@ -74,6 +108,47 @@ public class HybridMeasuresLdManagerBase extends LdManagerBase {
         query_cmd.setCommandText("select distinct ?property ?object\n "
                                     + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n") 
                                     + "where {<" + a.getUri() + "> ?property ?object ");
+        
+        if(filterURI)
+            query_cmd.append(". \n filter isuri(?object)}");
+        else
+            query_cmd.append("}");
+        
+        ResultSet resultSet = dataset.executeSelectQuery(query_cmd.toString());
+
+        while (resultSet.hasNext()) {
+                QuerySolution qs = resultSet.nextSolution();
+                RDFNode node = qs.get("object");
+                if(! node.isLiteral())               
+                    object = Ontology.compressValue(qs.getResource("object"));
+                else
+                    object = qs.getLiteral("object").getLexicalForm();
+
+                edge = Ontology.compressValue(qs.getResource("property"));
+                features.add(edge + "|" +  object + "|" + "Out");
+
+        }
+
+        dataset.close();
+
+        if(! features.isEmpty())
+            return features;
+        else
+            return null;
+    }
+    
+    public List<String> getAugmentedOutgoingFeatures(R a , boolean filterURI) {
+        String edge = null;
+        String object = null;
+        
+        List<String> features = new ArrayList<>();
+
+        ParameterizedSparqlString query_cmd = dataset.prepareQuery();
+
+        query_cmd.setCommandText("select distinct ?property ?object\n "
+                                    + (dataset.getDefaultGraph() == null ? ("") : "from <" + dataset.getDefaultGraph()+ "> \n")
+                                    + "where {<" + a.getUri() + "> <" + OWL.sameAs + "> ?augmented." 
+                                    + "?augmented ?property ?object ");
         
         if(filterURI)
             query_cmd.append(". \n filter isuri(?object)}");

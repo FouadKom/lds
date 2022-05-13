@@ -5,6 +5,7 @@
  */
 package lds.LdManager.ontologies;
 
+import java.io.IOException;
 import java.util.List;
 import lds.dataset.LdDatasetCreator;
 import lds.indexing.LdIndex;
@@ -72,7 +73,7 @@ public class YagoLdManager extends DBpediaOntologiesLdManager {
 //    }
     
     @Override
-    public List<String> getCategories(R a ) {
+    public List<String> getCategories(R a ) throws IOException {
         if(useIndex){
              return categoriesIndex.getListFromIndex(dataSetInitial , a.getUri().stringValue() , baseClassPath + "getCategories"  , a );
         }

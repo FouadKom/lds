@@ -34,6 +34,9 @@ public class Ontology {
             case "http://dbpedia.org/ontology/":
                 ontology = new O_DBpedia();
                 break;
+            case "http://dbpedia.org/resource/":
+                ontology = new O_DBpedia();
+                break;
             case "http://dbpedia.org/class/yago/":
                 ontology = new O_Yago();
                 break;

@@ -4,11 +4,23 @@
     <modelVersion>4.0.0</modelVersion>
     <groupId>io.github.FouadKom</groupId>
     <artifactId>lds</artifactId>
-    <version>0.0.1</version>
+    <version>1.0-SNAPSHOT</version>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>A Java library for Linked Open Data based semantic similarity measures.</description>
+    <description>A Java library for Linked Open Data based semantic similarity measures</description>
     <url>https://github.com/FouadKom/lds/blob/master/doc/General_Explanation_of_the_Library.md</url>
+    
+    <distributionManagement>
+      <snapshotRepository>
+        <id>ossrh</id>
+        <url>https://s01.oss.sonatype.org/content/repositories/snapshots</url>
+      </snapshotRepository>
+      <repository>
+        <id>ossrh</id>
+        <url>https://s01.oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+      </repository>
+    </distributionManagement>
+
 
     <licenses>
         <license>
@@ -86,6 +98,12 @@
             <version>3.7.0</version>
             <scope>test</scope>
         </dependency>
+        
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-tdb</artifactId>
+            <version>3.7.0</version>
+        </dependency>
 
         <dependency>
             <groupId>org.apache.jena</groupId>
@@ -123,12 +141,6 @@
             <artifactId>hdt-jena</artifactId>
             <version>2.0</version>
             <type>jar</type>
-        </dependency>
-
-        <dependency>
-            <groupId>org.apache.jena</groupId>
-            <artifactId>jena-tdb</artifactId>
-            <version>3.7.0</version>
         </dependency>
 
         <dependency>

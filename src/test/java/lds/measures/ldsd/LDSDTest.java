@@ -37,6 +37,7 @@ public class LDSDTest {
         /*Intiialize the conf object which contains the necessary parameters for the measure
         you can use the default conf as follows. This creattes a conf with default parameters and no indexing by default*/
         Config config = LdConfigFactory.createDefaultConf(Measure.LDSD_cw);
+        config.addParam(ConfigParam.useIndexes , true);
 
         //creates a new similarity class object and passes the config that contains necessary parameters to it, also loads needed indexes if necessary
         //LDSD similarity calculation

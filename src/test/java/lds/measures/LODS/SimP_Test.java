@@ -25,7 +25,8 @@ public class SimP_Test {
         LdDataset dataSetMain = LdDatasetCreator.getDBpediaDataset();
 
         Config config = new Config();
-        config.addParam(ConfigParam.useIndexes, true);
+        config.addParam(ConfigParam.useIndexes, false);
+        config.addParam(ConfigParam.dataAugmentation, false);
         config.addParam(ConfigParam.LdDatasetMain , dataSetMain);
         config.addParam(ConfigParam.resourcesCount , 2350906);        
         

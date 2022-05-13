@@ -19,9 +19,12 @@ import ldq.LdDataset;
  */
 public class SimPLdManager extends HybridMeasuresLdManager {
     private boolean useIndex;
+    private boolean dataAugmentation;
         
     private LdIndex ingoingFeaturesIndex;
     private LdIndex outgoingFeaturesIndex;
+    private LdIndex augmentedIngoingFeaturesIndex;
+    private LdIndex augmentedOutgoingFeaturesIndex;
     private LdIndex countIngoingFeaturesIndex;
     private LdIndex countOutgoingFeaturesIndex;
     private LdIndex countResourcesIndex;
@@ -30,6 +33,11 @@ public class SimPLdManager extends HybridMeasuresLdManager {
 
     public SimPLdManager(LdDataset dataset , boolean useIndex) throws Exception {
         super(dataset , useIndex);
+    }
+    
+    public SimPLdManager(LdDataset dataset , boolean useIndex, boolean dataAugmentation) throws Exception {
+        super(dataset , useIndex);
+        this.dataAugmentation = dataAugmentation;
     }
     
     @Override
@@ -44,6 +52,13 @@ public class SimPLdManager extends HybridMeasuresLdManager {
         outgoingFeaturesIndex = manager.loadIndex(outgoingFeaturesIndexFile);
         countIngoingFeaturesIndex = manager.loadIndex(countOutgoingFeaturesIndexFile);
         countOutgoingFeaturesIndex = manager.loadIndex(countIngoingFeaturesIndexFile);
+        
+        if(dataAugmentation){
+            String augmentedIngoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/LODS/SimP/simp_augmentedIngoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+            String augmentedOutgoingFeaturesIndexFile = System.getProperty("user.dir") + "/Indexes/LODS/SimP/simp_augmentedOutgoingFeatures_index_" + dataset.getName().toLowerCase().replace(" ", "_") + ".db";
+            augmentedIngoingFeaturesIndex = manager.loadIndex(augmentedIngoingFeaturesIndexFile);
+            augmentedOutgoingFeaturesIndex = manager.loadIndex(augmentedOutgoingFeaturesIndexFile);
+        }
             
     }
     
@@ -55,7 +70,12 @@ public class SimPLdManager extends HybridMeasuresLdManager {
             
             manager.closeIndex(outgoingFeaturesIndex);
             manager.closeIndex(countIngoingFeaturesIndex);
-            manager.closeIndex(countOutgoingFeaturesIndex);            
+            manager.closeIndex(countOutgoingFeaturesIndex);
+
+           if(dataAugmentation){
+               manager.closeIndex(augmentedIngoingFeaturesIndex);
+               manager.closeIndex(augmentedOutgoingFeaturesIndex);
+           } 
             
         }
         
@@ -72,6 +92,14 @@ public class SimPLdManager extends HybridMeasuresLdManager {
         Optional.ofNullable(IngoingStrings).ifPresent(features_a::addAll);
         Optional.ofNullable(OutgoingStrings).ifPresent(features_a::addAll);
         
+        if(dataAugmentation){
+            List<String> augmentedIngoingStrings = getAugmentedIngoingFeatures(a);
+            List<String> augmentedOutgoingStrings = getAugmentedOutgoingFeatures(a);
+            
+            Optional.ofNullable(augmentedIngoingStrings).ifPresent(features_a::addAll);
+            Optional.ofNullable(augmentedOutgoingStrings).ifPresent(features_a::addAll);
+        }
+        
         return features_a;
     }
     
@@ -82,6 +110,24 @@ public class SimPLdManager extends HybridMeasuresLdManager {
        }
 
        return super.getOutgoingFeatures(a , false);
+    }
+    
+   
+    public List<String> getAugmentedOutgoingFeatures(R a){
+       if (useIndex) {
+             return augmentedOutgoingFeaturesIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getAugmentedOutgoingFeatures" , a );
+       }
+
+       return super.getAugmentedOutgoingFeatures(a , false);
+    }
+    
+    @Override
+    public List<String> getAugmentedIngoingFeatures(R a){
+       if (useIndex) {
+             return augmentedIngoingFeaturesIndex.getListFromIndex(dataset , Utility.createKey(a) , baseClassPath + "getAugmentedIngoingFeatures" , a );
+       }
+
+       return super.getAugmentedIngoingFeatures(a);
     }
     
     @Override
