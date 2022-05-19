@@ -19,11 +19,13 @@ public class Util {
 	
 		StmtIterator iter = model.listStatements(null, property, (RDFNode) null);
 
-		if (iter.hasNext()) {
+	//	if (iter.hasNext()) {
 			Statement stmt = iter.nextStatement();
-			RDFNode object = stmt.getObject();
-			return object;
-		}
+                        if(stmt != null){
+                            RDFNode object = stmt.getObject();
+                            return object;
+                        }
+	//	}
 
 		return null;
 

@@ -5,8 +5,11 @@
  */
 package lds.measures.lods.ontologies;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lds.LdManager.ontologies.YagoLdManager;
 import lds.config.Config;
 import lds.config.ConfigParam;
@@ -87,7 +90,12 @@ public class O_Yago implements O{
     
     @Override
     public List<String> getCategories(R r) {
-        return yagoldManager.getCategories(r); 
+        try { 
+            return yagoldManager.getCategories(r);
+        } catch (IOException ex) {
+            Logger.getLogger(O_Yago.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     @Override

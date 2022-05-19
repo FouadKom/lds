@@ -1,7 +1,10 @@
 package lds.measures.lods.ontologies;
 
+import java.io.IOException;
 import java.util.Arrays;
 import java.util.List;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import lds.LdManager.ontologies.DBpediaLdManager;
 import lds.config.Config;
 import lds.config.ConfigParam;
@@ -61,17 +64,32 @@ public class O_DBpedia implements O {
     
     @Override
     public List<String> getCategories(R r) {
-       return dbpedialdManager.getCategories(r);  
+        try {  
+            return dbpedialdManager.getCategories(r);
+        } catch (IOException ex) {
+            Logger.getLogger(O_DBpedia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     @Override
     public List<String> getBroaderCategories(R r , int level) {
-       return dbpedialdManager.getBroaderCategories(r , level);  
+        try {  
+            return dbpedialdManager.getBroaderCategories(r , level);
+        } catch (IOException ex) {
+            Logger.getLogger(O_DBpedia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
     
     @Override
     public List<String> getNarrowerCategories(R r , int level) {
-       return dbpedialdManager.getNarrowerCategories(r , level);  
+        try {  
+            return dbpedialdManager.getNarrowerCategories(r , level);
+        } catch (IOException ex) {
+            Logger.getLogger(O_DBpedia.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
     }
        
     
