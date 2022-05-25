@@ -16,7 +16,7 @@ import org.junit.Test;
 
 /**
  *
- * @author LENOVO
+ * @author Fouad Komeiha
  */
 public class HDTTest {
     

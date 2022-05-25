@@ -68,7 +68,7 @@
         <dependency>
             <groupId>org.apache.tinkerpop</groupId>
             <artifactId>tinkergraph-gremlin</artifactId>
-            <version>3.3.3</version>
+            <version>3.3.3</version>        
         </dependency>
 
         <dependency>
@@ -81,7 +81,7 @@
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>jena-core</artifactId>
-            <version>4.2.0</version>
+            <version>3.7.0</version>
             <type>jar</type>
        </dependency>
 
@@ -108,7 +108,14 @@
         <dependency>
             <groupId>org.apache.jena</groupId>
             <artifactId>apache-jena</artifactId>
-            <version>3.17.0</version>
+            <version>3.7.0</version>
+            <type>pom</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>org.apache.jena</groupId>
+            <artifactId>jena-db</artifactId>
+            <version>3.7.0</version>
             <type>pom</type>
         </dependency>
 
@@ -132,15 +139,15 @@
 
         <dependency>
             <groupId>eu.wdaqua</groupId>
-            <artifactId>hdt-api</artifactId>
-            <version>2.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>eu.wdaqua</groupId>
             <artifactId>hdt-jena</artifactId>
             <version>2.0</version>
             <type>jar</type>
+        </dependency>
+        
+        <dependency>
+            <groupId>eu.wdaqua</groupId>
+            <artifactId>hdt-api</artifactId>
+            <version>2.0</version>
         </dependency>
 
         <dependency>
@@ -155,10 +162,20 @@
             <artifactId>commons-csv</artifactId>
             <version>1.7</version>
             <type>jar</type>
-        </dependency>                
-    </dependencies>
-
+        </dependency>
+        
+        <dependency>
+            <groupId>log4j</groupId>
+            <artifactId>log4j</artifactId>
+            <version>1.2.17</version>
+            <scope>test</scope>
+            <type>jar</type>
+        </dependency>
+        
+    </dependencies>   
+    
     <build>
+   
         <plugins>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
@@ -167,6 +184,7 @@
                 <configuration>
                     <source>1.8</source>
                     <target>1.8</target>
+                    <showDeprecation>true</showDeprecation>
                 </configuration>
             </plugin>
                         
