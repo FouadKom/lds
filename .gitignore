@@ -11,10 +11,10 @@
 *.hdt.index.v1-1
 
 # others
-
 /.settings/
 /.vscode/
 .DS_Store
 .classpath
 .factorypath
-.project 
+.project
+pom.xml.versionsBackup

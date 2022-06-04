@@ -1,3 +1,5 @@
+[![License: AGPL v3](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](https://www.gnu.org/licenses/agpl-3.0)&nbsp; [![Maven Central](https://maven-badges.herokuapp.com/maven-central/io.github.FouadKom/lds/badge.svg)](https://maven-badges.herokuapp.com/maven-central/io.github.FouadKom/lds)
+
 # lds
 **LDS** (Linked Data Similarity) is a JAVA Library for the calculaton of **LOD** based semantic similarity. **LDS** implements similarity measures such as:
 
@@ -22,7 +24,18 @@
 * [Correlation calculation using LdBenchmark](./doc/Calculationg_Correlation_Using_LdBenchmark.md)
 * [Adding your similarity measure](./doc/Adding_Your_Measure.md)
 
-## Getting Started
+## Using LDS in your project:
+
+LDS is availabe as a maven dependency:
+
+``` 
+<dependency>
+  <groupId>io.github.FouadKom</groupId>
+  <artifactId>lds</artifactId>
+  <version>1.0.0</version>
+</dependency>
+```
+## Using LDS as a standalone library:
 
 ### Prerequisites
 [Apache Maven](https://maven.apache.org/) is needed for the installation and build of the library.
